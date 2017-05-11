@@ -1,11 +1,12 @@
 /*------------------------my----------------------*/
 
 .my-topsection {
-    padding-top: 68px;
+    padding-top: 15px;
 }
 
 .my-body {
     font-size: 18px;
+    background-color: #fafafa;
 }
 
 .my-form {
@@ -34,6 +35,37 @@
     padding-right: 20px;
     padding-top: 30px;
     padding-bottom: 30px;
+}
+
+.my-panel {
+    background-color: white;
+    margin-bottom: auto;
+    margin-top: 15px;
+    padding-left: -15px;
+    padding-right: -15px;
+}
+
+.my-list-panel {
+    background-color: white;
+    padding: 15px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+.my-gap-top {
+    margin-top: 15px;
+}
+
+.my-gap-left {
+    margin-left: 15px;
+}
+
+.my-gap-right {
+    margin-right: 15px;
+}
+
+.my-gap-bottom {
+    margin-bottom: 15px;
 }
 
 
@@ -141,7 +173,7 @@
 
 .my-list-item {
     padding: 15px;
-    font-size: 22px;
+    font-size: 18px;
     display: block;
     border: 1px solid #bbbbbb;
     border-left-width: 0px;
@@ -152,7 +184,7 @@
     padding-left: 10px;
     padding-right: 20px;
     padding-bottom: -15px;
-    font-size: 22px;
+    font-size: 18px;
 }
 
 .my-list-item span {
@@ -170,7 +202,7 @@
 
 .my-list-item .badge .fa {
     color: black;
-    font-size: 22px;
+    font-size: 18px;
     padding-right: 0px;
 }
 
@@ -182,6 +214,60 @@
 .my-list-item:last-child {
     border-bottom-right-radius: 0px;
     border-bottom-left-radius: 0px;
+}
+
+.my-list-item-heading {
+    font-size: 18px;
+    color: #444444;
+}
+
+.my-list-item-text {
+    font-size: 16px;
+    color: #aaaaaa;
+}
+
+.my-list-item-badge {
+    background-color: transparent;
+}
+
+.my-list-item-badge .fa {
+    color: black;
+    font-size: 18px;
+    padding-right: 0px;
+}
+
+.my-list-item-detail {
+    padding: 10px 15px 10px 15px;
+    font-size: 18px;
+    display: block;
+    border: 1px solid #bbbbbb;
+    border-width: 0px;
+    height: 72px;
+    margin-bottom: 10px;
+    background-color: white;
+}
+
+.my-list-item-detail:first-child {
+    border-top-right-radius: 0px;
+    border-top-left-radius: 0px;
+}
+
+.my-list-item-detail:last-child {
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+}
+
+.my-list-item-detail-badge {
+    background-color: transparent;
+}
+
+.my-list-item-detail-badge div i {
+    color: black;
+    font-size: 18px;
+    padding-right: 0px;
+    text-align: right;
+    height: 42px;
+    line-height: 42px;
 }
 
 

@@ -1,0 +1,132 @@
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>验证您的手机号码</title>
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.bootcss.com/bootstrap-validator/0.5.3/css/bootstrapValidator.min.css" rel="stylesheet">
+    <!-- JS -->
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap-validator/0.5.3/js/bootstrapValidator.min.js"></script>
+    <link href="css/my.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('form').bootstrapValidator({
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                disabled: true,
+                excluded: ':disabled',
+                fields: {
+                    validateCode: {
+                        validators: {
+                            message: '验证失败',
+                            notEmpty: {
+                                message: '输入验证码',
+                            },
+                            threshold: 6,
+                            remote: { //ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}  
+                                url: 'validator16.do', //验证地址
+                                message: '验证码错误', //提示消息
+                                delay: 2000, //每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                                type: 'POST' //请求方式
+                                /**自定义提交数据，默认值提交当前input value
+                                 * 
+                                 */
+                                /*data: function(validator) {
+                                    return {
+                                        validateCode: $('[name="validateCode"]').val()
+                                    };
+                                }*/
+                            }
+                        }
+                    },
+                    inputmobile: {
+                        validators: {
+                            notEmpty: {
+                                message: '请输入手机'
+                            },
+                            stringLength: {
+                                min: 8,
+                                max: 30,
+                                message: '手机长度必须在8到11之间'
+                            }
+                        }
+                    }
+                }
+            });
+
+        }); //ready
+
+        var validateCode_static = "";
+
+        var InterValObj; //timer变量，控制时间
+        var count = 5; //间隔函数，1秒执行
+        var curCount; //当前剩余秒数
+
+        function sendMessage() {　
+            curCount = count;　　 //设置button效果，开始计时
+            $("#submitBtn").attr("disabled", "true");
+            $("#submitBtn").val("请在" + curCount + "秒内输入验证码");
+            InterValObj = window.setInterval(SetRemainTime, 1000); //启动计时器，1秒执行一次
+            　　 //向后台发送处理数据
+            $.ajax({　　
+                type: "POST", //用POST方式传输
+                　　dataType: "text", //数据格式:JSON
+                　　url: 'verfymobile.json', //目标地址
+                　　 //data: "dealType=" + dealType + "&uid=" + uid + "&code=" + code,
+                　　error: function(XMLHttpRequest, textStatus, errorThrown) {},
+                　　success: function(msg) {
+                    var jsonObj = $.parseJSON(msg);
+                    validateCode_static = jsonObj.validateCode;
+                }
+            });
+        }
+
+        //timer处理函数
+        function SetRemainTime() {
+            if (curCount == 0) {
+                window.clearInterval(InterValObj); //停止计时器
+                $("#submitBtn").removeAttr("disabled"); //启用按钮
+                $("#submitBtn").val("重新发送验证码");
+            } else {
+                curCount--;
+                $("#submitBtn").val("请在" + curCount + "秒内输入验证码");
+            }
+        }
+
+    </script>
+</head>
+
+<body>
+    <div class="section my-topsection">
+
+        <div class="container">
+            <form id="changpwdform" class="my-form" role="form" data-toggle="validator" action="#">
+                <div class="form-group">
+                    <label for="InputMoblie">验证手机</label>
+                    <input type="tel" name="inputmobile" class="form-control my-tel" id="InputMoblie" value="13676788788" required>
+                </div>
+                <div class="form-group" style="padding-bottom:80px;">
+                    <label for="validateCodeGroup">验证码</label>
+                    <div id="validateCodeGroup">
+                        <div class="col-xs-6" style="padding-left:0px;">
+                            <input type="number" name="validateCode" class="form-control col-xs-6" id="InputValidateCode" placeholder="------" maxlength="6" required>
+                        </div>
+                        <div class="col-xs-2">&nbsp;</div>
+                        <a href="#" class="btn btn-success col-xs-4" onclick="sendMessage()">验证</a>
+                    </div>
+                </div>
+
+                <button id="submitBtn" type="submit" class="btn btn-primary col-xs-12" style="font-size:22px;">注册</button>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>
