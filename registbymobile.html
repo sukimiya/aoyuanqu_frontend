@@ -60,11 +60,26 @@
                     }
                 }
             });
+            $("#submitBtn").on("click", function() {
+                if (validateCode_static != null && $("InputValidateCode").val() == validateCode_static) {
 
+                    var $this = $(this);
+                    $this.button('loading');
+                    setTimeout(function() {
+                        $this.button('reset');
+                    }, 30000); //30秒超时
+                }
+
+            });
+            $("#InputValidateCode").on("change", function() {
+                if (validateCode_static != null && $("InputValidateCode").val() == validateCode_static) {
+                    $("#submitBtn").attr("disabled", "no");
+                }
+            });
         }); //ready
 
-        var validateCode_static = "";
-
+        var validateCode_static = null;
+        //----------------Reference from http://www.cnblogs.com/xcsn/archive/2013/04/22/3035240.html--------
         var InterValObj; //timer变量，控制时间
         var count = 5; //间隔函数，1秒执行
         var curCount; //当前剩余秒数
@@ -110,7 +125,7 @@
             <form id="changpwdform" class="my-form" role="form" data-toggle="validator" action="#">
                 <div class="form-group">
                     <label for="InputMoblie">验证手机</label>
-                    <input type="tel" name="inputmobile" class="form-control my-tel" id="InputMoblie" value="13676788788" required>
+                    <input type="tel" name="inputmobile" class="form-control my-tel" id="InputMoblie" required>
                 </div>
                 <div class="form-group" style="padding-bottom:80px;">
                     <label for="validateCodeGroup">验证码</label>
@@ -123,7 +138,7 @@
                     </div>
                 </div>
 
-                <button id="submitBtn" type="submit" class="btn btn-primary col-xs-12" style="font-size:22px;">注册</button>
+                <button id="submitBtn" type="submit" class="btn btn-primary col-xs-12" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> 请稍等" style="font-size:22px;">注册</button>
             </form>
         </div>
     </div>
