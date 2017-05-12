@@ -11,8 +11,10 @@
     <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://cdn.bootcss.com/bootstrap-validator/0.5.3/js/bootstrapValidator.min.js"></script>
+    <script type="text/javascript" src="js/my.js"></script>
     <link href="css/my.css" rel="stylesheet" type="text/css">
     <script type="text/javascript">
+        var redirectionLocation = "http://wxapp.aoyuanqu.com";
         $(document).ready(function() {
             $('form').bootstrapValidator({
                 feedbackIcons: {
@@ -31,7 +33,7 @@
                             },
                             threshold: 6,
                             remote: { //ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}  
-                                url: 'validator16.do', //验证地址
+                                url: 'verfymobile.json', //验证地址
                                 message: '验证码错误', //提示消息
                                 delay: 2000, //每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
                                 type: 'POST' //请求方式
@@ -61,21 +63,45 @@
                 }
             });
             $("#submitBtn").on("click", function() {
-                if (validateCode_static != null && $("InputValidateCode").val() == validateCode_static) {
 
-                    var $this = $(this);
-                    $this.button('loading');
-                    setTimeout(function() {
-                        $this.button('reset');
-                    }, 30000); //30秒超时
-                }
+                var $this = $(this);
+                $this.button('loading');
+
+                var fv_timestamp = Date.parse(new Date());
+                var fv_mobileNumber = $("#InputMoblie")
+                $.ajax({　　
+                    type: "POST", //用POST方式传输
+                    　　dataType: "text", //数据格式:JSON
+                    　　url: 'registbymobile.json', //目标地址
+                    data: "mobile=" + fv_mobileNumber + "&timestamp=" + fv_timestamp,
+                    　　error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        //
+                    },
+                    　　success: function(msg) {
+                        var jsonObj = $.parseJSON(msg);
+                        debugger;
+                        if (jsonObj.result == 0) {
+                            window.location = redirectionLocation;
+                        }
+                    }
+                });
+                setTimeout(function() {
+                    $this.button('reset');
+                    alert("请检查连接");
+                }, 30000); //30秒超时
+
 
             });
             $("#InputValidateCode").on("change", function() {
                 if (validateCode_static != null && $("InputValidateCode").val() == validateCode_static) {
-                    $("#submitBtn").attr("disabled", "no");
+                    $("#submitBtn").removeAttr("disabled");
                 }
             });
+            var request = GetRequest();
+            if (request["redict"]) {
+                $.querySelector
+                redirectionLocation = request["redict"];
+            }
         }); //ready
 
         var validateCode_static = null;
@@ -98,7 +124,12 @@
                 　　error: function(XMLHttpRequest, textStatus, errorThrown) {},
                 　　success: function(msg) {
                     var jsonObj = $.parseJSON(msg);
-                    validateCode_static = jsonObj.validateCode;
+                    debugger;
+                    if (jsonObj.valid) {
+                        validateCode_static = jsonObj.validateCode;
+                    } else {
+                        alert("发送验证码错误");
+                    }
                 }
             });
         }
@@ -122,7 +153,7 @@
     <div class="section my-topsection">
 
         <div class="container">
-            <form id="changpwdform" class="my-form" role="form" data-toggle="validator" action="#">
+            <form id="changpwdform" class="my-form" role="form" data-toggle="validator">
                 <div class="form-group">
                     <label for="InputMoblie">验证手机</label>
                     <input type="tel" name="inputmobile" class="form-control my-tel" id="InputMoblie" required>
@@ -138,7 +169,7 @@
                     </div>
                 </div>
 
-                <button id="submitBtn" type="submit" class="btn btn-primary col-xs-12" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> 请稍等" style="font-size:22px;">注册</button>
+                <button id="submitBtn" class="btn btn-primary col-xs-12" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> 请稍等" style="font-size:22px;">注册</button>
             </form>
         </div>
     </div>
