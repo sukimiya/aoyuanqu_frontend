@@ -35,14 +35,14 @@
                                 message: '验证码错误', //提示消息
                                 delay: 2000, //每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
                                 type: 'POST' //请求方式
-                                /**自定义提交数据，默认值提交当前input value
-                                 * 
-                                 */
-                                /*data: function(validator) {
-                                    return {
-                                        validateCode: $('[name="validateCode"]').val()
-                                    };
-                                }*/
+                                    /**自定义提交数据，默认值提交当前input value
+                                     * 
+                                     */
+                                    /*data: function(validator) {
+                                        return {
+                                            validateCode: $('[name="validateCode"]').val()
+                                        };
+                                    }*/
                             }
                         }
                     },
@@ -81,13 +81,13 @@
         var validateCode_static = null;
         //----------------Reference from http://www.cnblogs.com/xcsn/archive/2013/04/22/3035240.html--------
         var InterValObj; //timer变量，控制时间
-        var count = 5; //间隔函数，1秒执行
+        var count = 60; //间隔函数，1秒执行
         var curCount; //当前剩余秒数
 
         function sendMessage() {　
             curCount = count;　　 //设置button效果，开始计时
-            $("#submitBtn").attr("disabled", "true");
-            $("#submitBtn").val("请在" + curCount + "秒内输入验证码");
+            $("#verfiyBtn").attr("disabled", "true");
+            $("#verfiyBtn").val("请在" + curCount + "秒内输入验证码");
             InterValObj = window.setInterval(SetRemainTime, 1000); //启动计时器，1秒执行一次
             　　 //向后台发送处理数据
             $.ajax({　　
@@ -107,11 +107,11 @@
         function SetRemainTime() {
             if (curCount == 0) {
                 window.clearInterval(InterValObj); //停止计时器
-                $("#submitBtn").removeAttr("disabled"); //启用按钮
-                $("#submitBtn").val("重新发送验证码");
+                $("#verfiyBtn").removeAttr("disabled"); //启用按钮
+                $("#verfiyBtn").val("重新发送验证码");
             } else {
                 curCount--;
-                $("#submitBtn").val("请在" + curCount + "秒内输入验证码");
+                $("#verfiyBtn").val("请在" + curCount + "秒内输入验证码");
             }
         }
 
@@ -134,7 +134,7 @@
                             <input type="number" name="validateCode" class="form-control col-xs-6" id="InputValidateCode" placeholder="------" maxlength="6" required>
                         </div>
                         <div class="col-xs-2">&nbsp;</div>
-                        <a href="#" class="btn btn-success col-xs-4" onclick="sendMessage()">验证</a>
+                        <a id="verfiyBtn" href="#" class="btn btn-success col-xs-4" onclick="sendMessage()">验证</a>
                     </div>
                 </div>
 
