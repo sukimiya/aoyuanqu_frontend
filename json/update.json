@@ -1,0 +1,87 @@
+{
+    "resualt": 0,
+    "totalPages": 2,
+    "curPage": 1,
+    "lists": [
+        {
+            "name": "张三锦",
+            "support": true,
+            "finace": true,
+            "yqt": true,
+            "id": "1",
+            "title": "法人"
+        },
+        {
+            "name": "王莎",
+            "support": true,
+            "finace": true,
+            "yqt": true,
+            "id": "2",
+            "title": "财务"
+        },
+        {
+            "name": "木锦里",
+            "support": false,
+            "finace": false,
+            "yqt": true,
+            "id": "3",
+            "title": "员工"
+        },
+        {
+            "name": "刘先锋",
+            "support": false,
+            "finace": false,
+            "yqt": true,
+            "id": "4",
+            "title": "职员"
+        },
+        {
+            "name": "辽余元",
+            "support": false,
+            "finace": false,
+            "yqt": true,
+            "id": "5",
+            "title": "职员"
+        },
+        {
+            "name": "孔明",
+            "support": false,
+            "finace": false,
+            "yqt": true,
+            "id": "6",
+            "title": "职员"
+        },
+        {
+            "name": "夏侯渊",
+            "support": false,
+            "finace": false,
+            "yqt": true,
+            "id": "7",
+            "title": "职员"
+        },
+        {
+            "name": "吴三桂",
+            "support": false,
+            "finace": false,
+            "yqt": true,
+            "id": "8",
+            "title": "职员"
+        },
+        {
+            "name": "周瑜",
+            "support": false,
+            "finace": false,
+            "yqt": true,
+            "id": "9",
+            "title": "职员"
+        },
+        {
+            "name": "黄盖",
+            "support": false,
+            "finace": false,
+            "yqt": true,
+            "id": "10",
+            "title": "职员"
+        }
+    ]
+}

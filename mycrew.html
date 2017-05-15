@@ -1,6 +1,7 @@
 <!--reference from http://www.jq22.com/jquery-info6960-->
 <!--http://www.bootcss.com/p/bootstrap-switch/-->
 <!--http://www.cnblogs.com/piuba/archive/2013/01/06/2847295.html-->
+<!--https://github.com/sukimiya/dropload-->
 <html>
 
 <head>
@@ -9,64 +10,365 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.bootcss.com/bootstrap-switch/3.3.4/css/bootstrap3/bootstrap-switch.min.css" rel="stylesheet">
+
+    <link href="css/highlight.css" rel="stylesheet" type="text/css">
+    <link href="css/main.css" rel="stylesheet" type="text/css">
+    <link href="css/dropload.css" rel="stylesheet" type="text/css">
     <link href="css/my.css" rel="stylesheet" type="text/css">
 </head>
 
 <body class="my-body">
-    <div class="section my-topsection">
+    <div class="section my-topsection" id="listcontainer">
         <div class="container">
             <div class="input-group">
                 <input type="text" class="form-control input-lg"><span class="input-group-addon btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></span>
             </div>
         </div>
-        <div class="list-group my-gap-top">
-            <a href="#" class="list-group-item my-list-item-detail">
+        <div id="mycrews" class="list-group my-gap-top">
+            <a href="javascript:onItemClickHandler(1)" class="list-group-item my-list-item-detail">
                 <div class="container col-xs-8">
                     <div class="row">
                         <span class="my-list-item-heading clearfix">张三锦</span>
                         <span class="my-list-item-text">法人</span>
                     </div>
-
                 </div>
                 <span class="badge col-xs-4 my-list-item-detail-badge">
-                            <div class="clearfix text-right">
-                                <i class="fa fa-angle-right" aria-hidden="true" style="color:#5066b4;"></i>
-                            </div>
-                        </span>
+                    <div class="clearfix text-right">
+                        <i class="fa fa-angle-right" aria-hidden="true" style="color:#5066b4;"></i>
+                    </div>
+                </span>
             </a>
-            <a href="#" class="list-group-item my-list-item-detail">
+            <a href="javascript:onItemClickHandler(2)" class="list-group-item my-list-item-detail">
                 <div class="container col-xs-8">
                     <div class="row">
                         <span class="my-list-item-heading clearfix">张三锦</span>
                         <span class="my-list-item-text">法人</span>
                     </div>
-
                 </div>
                 <span class="badge col-xs-4 my-list-item-detail-badge">
-                            <div class="clearfix text-right">
-                                <i class="fa fa-angle-right" aria-hidden="true" style="color:#5066b4;"></i>
-                            </div>
-                        </span>
+                        <div class="clearfix text-right">
+                            <i class="fa fa-angle-right" aria-hidden="true" style="color:#5066b4;"></i>
+                        </div>
+                    </span>
             </a>
-            <a href="#" class="list-group-item my-list-item-detail">
+            <a href="javascript:onItemClickHandler(3)" class="list-group-item my-list-item-detail">
                 <div class="container col-xs-8">
                     <div class="row">
                         <span class="my-list-item-heading clearfix">张三锦</span>
                         <span class="my-list-item-text">法人</span>
                     </div>
-
                 </div>
                 <span class="badge col-xs-4 my-list-item-detail-badge">
-                            <div class="clearfix text-right">
-                                <i class="fa fa-angle-right" aria-hidden="true" style="color:#5066b4;"></i>
-                            </div>
-                        </span>
+                    <div class="clearfix text-right">
+                        <i class="fa fa-angle-right" aria-hidden="true" style="color:#5066b4;"></i>
+                    </div>
+                </span>
             </a>
+        </div>
+    </div>
+    <div class="modal fade" id="mysetting">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only"></span>
+                    </button>
+                    <h4 id="mysetTitle">某某某的权限设置</h4>
+
+                </div>
+                <div class="modal-body">
+                    <div class="row my-gap-top" style="display:block;background-color:white;border-radius:12px;">
+                        <div class="col-xs-5 col-sm-2 my-gap-left">
+                            <span style="color:#636363;">允许访问财政扶持</span>
+                        </div>
+                        <div class="col-xs-5 col-sm-2 clearfix">
+                            <div class="switch">
+                                <input id="finsupri" name="finsuppri" type="checkbox" data-on-text="<i class='fa fa-check icon-white'></i>" data-off-text="<i class='fa fa-close' style='color:#337ab7'></i>" checked />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row my-gap-top" style="display:block;background-color:white;border-radius:12px;">
+                        <div class="col-xs-5 col-sm-2 my-gap-left">
+                            <span style="color:#636363;">允许访问财税数据</span>
+                        </div>
+                        <div class="col-xs-5 col-sm-2 clearfix">
+                            <div class="switch">
+                                <input id="finpri" name="finpri" type="checkbox" data-on-text="<i class='fa fa-check icon-white'></i>" data-off-text="<i class='fa fa-close' style='color:#337ab7'></i>" checked />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row my-gap-top" style="display:block;background-color:white;border-radius:12px;">
+                        <div class="col-xs-5 col-sm-2 my-gap-left">
+                            <span style="color:#636363;">允许访问园企通</span>
+                        </div>
+                        <div class="col-xs-5 col-sm-2 clearfix">
+                            <div class="switch">
+                                <input id="callmepri" name="callmepri" type="checkbox" data-on-text="<i class='fa fa-check icon-white'></i>" data-off-text="<i class='fa fa-close' style='color:#337ab7'></i>" checked />
+                            </div>
+                        </div>
+                    </div>
+                    <dir class="row my-gap-top" style="padding-left:15px;padding-right:15px;">
+                        <a href="javascript:deletePerson()" class="btn btn-Danger col-xs-12 my-gap-top my-gap-bottom" style="font-size:22px;padding:5px;">移除</a>
+                        <a class="btn btn-success col-xs-12 my-gap-top" data-dismiss="modal" style="font-size:22px;padding:5px;">确定</a>
+                    </dir>
+                </div>
+
+            </div>
         </div>
     </div>
 
     <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap-switch/3.3.4/js/bootstrap-switch.min.js"></script>
+    <script type="text/javascript" src="dist/dropload.min.js"></script>
+    <script src="js/highlight.js"></script>
+    <script src="https://unpkg.com/bootstrap-switch"></script>
+    <script src="js/main.js"></script>
+    <script type="text/javascript">
+        var mycrewsdata = [{
+            "name": "张三锦"
+        }, {
+            "name": "张三锦"
+        }, {
+            "name": "张三锦"
+        }];
+        var selectId = -1;
+        var themodalisshow = false;
+        var curPage = 0;
+        var tatalPages = 0;
+        var searchKey = "";
+
+        function onItemClickHandler(uid) {
+            selectId = uid;
+            var thename = mycrewsdata[selectId - 1].name; //获得名字
+            $("#mysetTitle").text(thename + "的权限");
+            $("#mysetting").modal("toggle");
+        }
+
+        function deletePerson() {
+            //当设置窗口显示，并且被选中列表中一项的时候
+            if (selectId != -1 && themodalisshow) {
+                $.ajax({　　
+                    type: "POST", //用POST方式传输
+                    　　dataType: "json", //数据格式:JSON
+                    　　url: 'mycrowdeleteperson.json', //目标地址
+                    　　data: "prority=" + 0 + "&uid=" + selectId,
+                    　　error: function(XMLHttpRequest, textStatus, errorThrown) {},
+                    　　success: function(jsonObj) {
+                        if (jsonObj.resault) {
+                            dropload.resetload();
+                        } else {
+                            debugger;
+                            alert("获取数据错误");
+                        }
+                    }
+                });
+            }
+        }
+        var dropload = $("#listcontainer").dropload({
+            domUp: {
+                domClass: "dropload-up",
+                domRefresh: "<div class='dropload-refresh'><i class='fa fa-arrow-down'></i>下拉刷新</div>",
+                domUpdate: "<div class='dropload-update'><i class='fa fa-arrow-up'></i>释放更新</div>",
+                domLoad: "<div class='dropload-load'><i class='fa fa-circle-o-notch fa-spin'></i>加载中...</div>"
+            },
+            domDown: {
+                domClass: "dropload-down",
+                domRefresh: "<div class='dropload-refresh'><i class='fa fa-arrow-up'></i>上拉刷新</div>",
+                domUpdate: "<div class='dropload-update'><i class='fa fa-arrow-down'></i>释放更新</div>",
+                domLoad: "<div class='dropload-load'><i class='fa fa-circle-o-notch fa-spin'></i>加载中...</div>"
+            },
+            loadUpFn: function(me) {
+                $.ajax({
+                    type: 'GET',
+                    url: 'json/update.json',
+                    data: "page=" + curPage + "&key=" + searchKey,
+                    dataType: 'json',
+                    success: function(data) {
+                        if (!jsonObj.resault) {
+                            var result = "";
+                            for (var i = 0; i < data.lists.length; i++) {
+                                var node = data.lists[i];
+                                result += '<a href="javascript:onItemClickHandler(' +
+                                    node.id +
+                                    ')" class="list-group-item my-list-item-detail"><div class ="container col-xs-8"><div class="row"><span class = "my-list-item-heading clearfix" > ' +
+                                    node.name +
+                                    '</span><span class="my-list-item-text">' +
+                                    node.title +
+                                    '</span></div></div><span class="badge col-xs-4 my-list-item-detail-badge"><div class="clearfix text-right"><i class="fa fa-angle-right" aria-hidden="true" style="color:#5066b4;"></i></div></span></a>';
+                            }
+                            mycrewsdata = data.lists;
+                        }
+                        // 为了测试，延迟1秒加载
+                        setTimeout(function() {
+                            $('#mycrews').html(result);
+                            //每次数据加载完，必须重置
+                            dropload.resetload();
+                        }, 1000);
+                    },
+                    error: function(xhr, type) {
+                        alert('Ajax error!');
+                        //即使加载出错，也得重置
+                        dropload.resetload();
+                    }
+                });
+            },
+            loadDownFn: function(me) {
+                $.ajax({
+                    type: 'GET',
+                    url: 'json/more.json',
+                    data: "page=" + curPage + "&key=" + searchKey,
+                    dataType: 'json',
+                    success: function(data) {
+                        if (!data.resault) {
+                            curPage = data.curPage;
+                            var result = "";
+                            for (var i = 0; i < data.lists.length; i++) {
+                                var node = data.lists[i];
+                                result += '<a href="javascript:onItemClickHandler(' +
+                                    node.id +
+                                    ')" class="list-group-item my-list-item-detail"><div class ="container col-xs-8"><div class="row"><span class = "my-list-item-heading clearfix" > ' +
+                                    node.name +
+                                    '</span><span class="my-list-item-text">' +
+                                    node.title +
+                                    '</span></div></div><span class="badge col-xs-4 my-list-item-detail-badge"><div class="clearfix text-right"><i class="fa fa-angle-right" aria-hidden="true" style="color:#5066b4;"></i></div></span></a>';
+                            }
+                            mycrewsdata = data.lists;
+                        } else {
+                            debugger;
+                            alert("获取数据错误");
+                        }
+                        // 为了测试，延迟1秒加载
+                        setTimeout(function() {
+                            $('#mycrews').append(result);
+                            // 每次数据加载完，必须重置
+                            dropload.resetload();
+                        }, 1000);
+
+                    },
+                    error: function(xhr, type) {
+                        alert('Ajax error!');
+                        // 即使加载出错，也得重置
+                        dropload.resetload();
+                    }
+                });
+            }
+        });
+
+        $(document).ready(function() {
+            $("#mysetting").on("show.bs.modal", function() {
+                themodalisshow = true;
+            });
+            $("#mysetting").on("hide.bs.modal", function() {
+                themodalisshow = false;
+            });
+            //-----------获取第一页数据----------
+            $.ajax({　　
+                type: "GET", //用POST方式传输
+                　　dataType: "json", //数据格式:JSON
+                　　url: 'json/update.json', //目标地址
+                　　data: "page=" + curPage,
+                　　error: function(XMLHttpRequest, textStatus, errorThrown) {},
+                　　success: function(jsonObj) {
+                    if (!jsonObj.resault) {
+                        tatalPages = jsonObj.totalPages;
+                        curPage = jsonObj.curPage;
+                        if (jsonObj.lists) {
+                            var result = "";
+                            for (var i = 0; i < jsonObj.lists.length; i++) {
+                                var node = jsonObj.lists[i];
+                                result += '<a href="javascript:onItemClickHandler(' +
+                                    node.id +
+                                    ')" class="list-group-item my-list-item-detail"><div class ="container col-xs-8"><div class="row"><span class = "my-list-item-heading clearfix" > ' +
+                                    node.name +
+                                    '</span><span class="my-list-item-text">' +
+                                    node.title +
+                                    '</span></div></div><span class="badge col-xs-4 my-list-item-detail-badge"><div class="clearfix text-right"><i class="fa fa-angle-right" aria-hidden="true" style="color:#5066b4;"></i></div></span></a>';
+                            }
+                            mycrewsdata = jsonObj.lists;
+                        }
+                        $('#mycrews').html(result);
+                        dropload.resetload();
+                    } else {
+                        debugger;
+                        alert("获取数据错误");
+                    }
+                }
+            });
+            /*-------------权限按钮
+             *switch按钮采用ajax验证提交的方式，触发之后马上提交不用点确定按钮
+             */
+            //财政扶持
+            $('#finsupri').on('switchChange.bootstrapSwitch', function(e, data) {
+                var $el = e,
+                    value = data;
+                $.ajax({
+                    url: 'json/updateprio.json', //目标地址
+                    type: "POST",
+                    dataType: "json",
+                    data: "support=" + value + "&uid=" + selectId,
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {},
+                    success: function(jsonObj) {
+                        debugger;
+                        if (jsonObj.resualt == 0) {
+                            if (jsonObj.support == true)
+                                $('#finsupri').bootstrapSwitch('state', true);
+                            else
+                                $('#finsupri').bootstrapSwitch('state', false);
+                        }
+                    }
+                });
+                console.log(e, $el, value);
+            });
+            //财政数据
+            $('#finpri').on('switchChange.bootstrapSwitch', function(e, data) {
+                var $el = e,
+                    value = data;
+                $.ajax({
+                    url: 'json/updateprio.json', //目标地址
+                    type: "POST",
+                    dataType: "json",
+                    data: "finace=" + value + "&uid=" + selectId,
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {},
+                    success: function(jsonObj) {
+                        debugger;
+                        if (jsonObj.resualt == 0) {
+                            if (jsonObj.finace == true)
+                                $('#finpri').bootstrapSwitch('state', true);
+                            else
+                                $('#finpri').bootstrapSwitch('state', false);
+                        }
+                    }
+                });
+                console.log(e, $el, value);
+            });
+            //园企通
+            $('#callmepri').on('switchChange.bootstrapSwitch', function(e, data) {
+                var $el = e,
+                    value = data;
+                $.ajax({
+                    url: 'json/updateprio.json', //目标地址
+                    type: "POST",
+                    dataType: "json",
+                    data: "call=" + value + "&uid=" + selectId,
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {},
+                    success: function(jsonObj) {
+                        debugger;
+                        if (jsonObj.resualt == 0) {
+                            if (jsonObj.call == true)
+                                $('#callmepri').bootstrapSwitch('state', true);
+                            else
+                                $('#callmepri').bootstrapSwitch('state', false);
+                        }
+                    }
+                });
+                console.log(e, $el, value);
+            });
+        });
+
+    </script>
 </body>
 
 </html>

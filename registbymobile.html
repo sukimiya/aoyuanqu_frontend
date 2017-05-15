@@ -15,6 +15,11 @@
     <link href="css/my.css" rel="stylesheet" type="text/css">
     <script type="text/javascript">
         var redirectionLocation = "http://wxapp.aoyuanqu.com";
+        var validateCode_static = null;
+        //----------------Reference from http://www.cnblogs.com/xcsn/archive/2013/04/22/3035240.html--------
+        var InterValObj; //timer变量，控制时间
+        var count = 60; //间隔函数，1秒执行
+        var curCount; //当前剩余秒数
         $(document).ready(function() {
             $('form').bootstrapValidator({
                 feedbackIcons: {
@@ -102,49 +107,39 @@
                 $.querySelector
                 redirectionLocation = request["redict"];
             }
-        }); //ready
-
-        var validateCode_static = null;
-        //----------------Reference from http://www.cnblogs.com/xcsn/archive/2013/04/22/3035240.html--------
-        var InterValObj; //timer变量，控制时间
-        var count = 60; //间隔函数，1秒执行
-        var curCount; //当前剩余秒数
-
-        function sendMessage() {　
-            curCount = count;　　 //设置button效果，开始计时
-            $("#verfiyBtn").attr("disabled", "true");
-            $("#verfiyBtn").val("请在" + curCount + "秒内输入验证码");
-            InterValObj = window.setInterval(SetRemainTime, 1000); //启动计时器，1秒执行一次
-            　　 //向后台发送处理数据
-            $.ajax({　　
-                type: "POST", //用POST方式传输
-                　　dataType: "text", //数据格式:JSON
-                　　url: 'verfymobile.json', //目标地址
-                　　 //data: "dealType=" + dealType + "&uid=" + uid + "&code=" + code,
-                　　error: function(XMLHttpRequest, textStatus, errorThrown) {},
-                　　success: function(msg) {
-                    var jsonObj = $.parseJSON(msg);
-                    debugger;
-                    if (jsonObj.valid) {
-                        validateCode_static = jsonObj.validateCode;
-                    } else {
-                        alert("发送验证码错误");
+            $("#verfiyBtn").on("click", function() {
+                curCount = count;　　 //设置button效果，开始计时
+                $("#verfiyBtn").attr("disabled", "on");
+                var intid = setInterval(function() {
+                    curCount--;
+                    $("#verfiyBtn").text(curCount);
+                    //$("#verfiyBtn").attr("data-loading-text", " " + curCount);
+                    //document.title = "验证您的手机号码：" + curCount;
+                    if (curCount <= 0) {
+                        $("#verfiyBtn").text("重新验证");
+                        $("#verfiyBtn").removeAttr("disabled");
+                        clearInterval(intid);
                     }
-                }
+                }, 1000);
+                //
+                $.ajax({　　
+                    type: "POST", //用POST方式传输
+                    　　dataType: "text", //数据格式:JSON
+                    　　url: 'verfymobile.json', //目标地址
+                    　　 //data: "dealType=" + dealType + "&uid=" + uid + "&code=" + code,
+                    　　error: function(XMLHttpRequest, textStatus, errorThrown) {},
+                    　　success: function(msg) {
+                        var jsonObj = $.parseJSON(msg);
+                        if (jsonObj.valid) {
+                            validateCode_static = jsonObj.validateCode;
+                        } else {
+                            alert("发送验证码错误");
+                            debugger;
+                        }
+                    }
+                });
             });
-        }
-
-        //timer处理函数
-        function SetRemainTime() {
-            if (curCount == 0) {
-                window.clearInterval(InterValObj); //停止计时器
-                $("#verfiyBtn").removeAttr("disabled"); //启用按钮
-                $("#verfiyBtn").val("重新发送验证码");
-            } else {
-                curCount--;
-                $("#verfiyBtn").val("请在" + curCount + "秒内输入验证码");
-            }
-        }
+        }); //ready
 
     </script>
 </head>
@@ -165,11 +160,11 @@
                             <input type="number" name="validateCode" class="form-control col-xs-6" id="InputValidateCode" placeholder="------" maxlength="6" required>
                         </div>
                         <div class="col-xs-2">&nbsp;</div>
-                        <a id="verfiyBtn" href="#" class="btn btn-success col-xs-4" onclick="sendMessage()">验证</a>
+                        <button id="verfiyBtn" href="#" class="btn btn-success col-xs-4" onclick="javascript:void()">验证</button>
                     </div>
                 </div>
 
-                <button id="submitBtn" class="btn btn-primary col-xs-12" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> 请稍等" style="font-size:22px;">注册</button>
+                <button id="submitBtn" class="btn btn-primary col-xs-12" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> " style="font-size:22px;">注册</button>
             </form>
         </div>
     </div>
