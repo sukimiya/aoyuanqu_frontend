@@ -7,88 +7,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" media="screen">
-    <style>
-        body {
-            padding: 50px;
-            /*边距*/
-        }
-        /*设置list列表的样式*/
-        
-        ul.list-group.col-lg-4>li {
-            background-color: #c952ca;
-            color: white;
-            text-align: center;
-            font-size: 125%;
-        }
-        
-        ul.list-group.col-lg-4>li.list-group-item:first-child {
-            background-color: #64086f;
-            font-size: 200%;
-        }
-        
-        .badge {
-            background-color: #FAFAD2;
-            color: #FF8C00;
-        }
-    </style>
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>  
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>  
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>  
-    <![endif]-->
+    <link href="css/style.css" rel="stylesheet" media="screen">
+    
 </head>
 
 <body>
-
-    <div class="container">
-        <div class="row">
-            <ul class="list-group col-lg-4">
-                <li class="list-group-item">Bronze Package</li>
-                <li class="list-group-item">Unlimited users</li>
-                <li class="list-group-item">Unlimited storage</li>
-                <li class="list-group-item">Forum Support</li>
-                <li class="list-group-item">$9/Month</li>
-                <li class="list-group-item">
-                    <a href="#">
-                        <!-- 按钮 -->
-                        <button class="btn btn-lg btn-default">Buy Now</button>
-                    </a>
-                </li>
-            </ul>
-            <ul class="list-group col-lg-4">
-                <li class="list-group-item">
-                    <!-- badge标签 -->
-                    Gold Package<span class="badge">Most Preferred</span>
-                </li>
-                <li class="list-group-item">Unlimited users</li>
-                <li class="list-group-item">Unlimited storage</li>
-                <li class="list-group-item">24X7 Support</li>
-                <li class="list-group-item">$25/Month</li>
-                <li class="list-group-item">
-                    <a href="#">
-                        <button class="btn btn-lg btn-warning">Buy Now</button>
-                    </a>
-                </li>
-            </ul>
-            <ul class="list-group col-lg-4">
-                <li class="list-group-item">Silver Package</li>
-                <li class="list-group-item">Unlimited users</li>
-                <li class="list-group-item">Unlimited storage</li>
-                <li class="list-group-item">email support</li>
-                <li class="list-group-item">$15/Month</li>
-                <li class="list-group-item">
-                    <a href="#">
-                        <button class="btn btn-lg btn-success">Buy Now</button>
-                    </a>
-                </li>
-            </ul>
-        </div>
+    
+    <div class="warp">
+        <textarea></textarea>
     </div>
-
+    
     <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/alert.js"></script>
+    <script src="js/jquery.flexText.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('textarea').flexText();
+        });
+
+    </script>
 </body>
 
 </html>

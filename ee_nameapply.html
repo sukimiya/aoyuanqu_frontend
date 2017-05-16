@@ -1,0 +1,204 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>企业名称预先核准申请书</title>
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.bootcss.com/bootstrap-validator/0.5.3/css/bootstrapValidator.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
+    <link href="css/style.css" rel="stylesheet" type="text/css">
+    <link href="css/my.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="my-body">
+
+    <div style="padding:0px;marging:0px;background-size: cover;overflow-y:visible;">
+        <img class="col-xs-4 col-xs-offset-4 img-responsive my-gap-top" src="images/dfa8c6ef0acedc844c59669f4f24fe1a.png">
+        <div class="section my-topsection">
+
+            <div class="container" style="vertical-align:mid;">
+                <div class="col-xs-12 text-center my-gap-bottom">
+                    <!--h3> 企业名称预先核准申请书</h3-->
+                </div>
+
+            </div>
+            <div class="container">
+                <form id="naform" class="my-form" role="form" data-toggle="validator">
+                    <div class="form-group my-form-group">
+                        <label for="apply_name">预查企业名称</label>
+                        <input type="text" name="apply_name" class="form-control my-input" id="apply_name" required>
+                    </div>
+                    <div class="form-group my-form-group">
+                        <label for="apply_name2">备选企业字号</label>
+                        <input type="text" name="apply_name2" class="form-control my-input" id="apply_name2" required>
+                        <input type="text" name="apply_name3" class="form-control my-input my-gap-top" id="apply_name3" required>
+                        <input type="text" name="apply_name4" class="form-control my-input my-gap-top" id="apply_name4" required>
+                    </div>
+                    <div class="form-group my-form-group wrap">
+                        <label for="actual_address">实际经营地址</label>
+                        <textarea name="actual_address" class="form-control" required style="font-size:18px;border-color: #5066b4;"></textarea>
+                    </div>
+                    <div class="form-group my-form-group wrap">
+                        <label for="manage_range">经营范围</label>
+                        <textarea name="manage_range" class="form-control" required style="font-size:18px;border-color: #5066b4;"></textarea>
+                    </div>
+                    <label for="register_money">注册资本</label>
+                    <div class="input-group my-form-group">
+                        <input type="number" name="register_money" class="form-control my-input">
+                        <span class="input-group-addon">万元</span>
+                    </div>
+                    <div class="form-group my-form-group">
+                        <label for="register_kink">注册公司类型</label>
+                        <select name="register_kind" class="selectpicker mycompany-select">
+                            <option>有限责任公司</option>
+                            <option>非公司企业法人</option>
+                            <option>合伙企业</option>
+                            <option>股份有限公司</option>
+                            <option>企业非法人分支机构</option>
+                            <option>个人独资企业</option>
+                            <option>分公司</option>
+                            <option>营业单位</option>
+                        </select>
+                    </div>
+                    <hr>
+                    <label class="my-gap-bottom">投资人信息</label>
+                    <div class="list-group my-list">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-xs-3">名称</div>
+                                <div class="col-xs-5">证件号码</div>
+                                <div class="col-xs-3">投资比例</div>
+                                <a href="javascript:delectAInvestor(1)" class="col-xs-1">&nbsp;</a>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-3">名称</div>
+                                <div class="col-xs-5">证件号码</div>
+                                <div class="col-xs-3">投资比例</div>
+                                <a href="javascript:delectAInvestor(1)" class="col-xs-1">
+                                    <spanstyle="color:#ff000000"><i class='fa fa-minus-square'></i></span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <a id="addinvestorBtn" class="btn btn-success col-xs-6 col-xs-offset-3 my-gap-bottom">添加</a>
+                    </div>
+                    <hr class="my-gap-top">
+                    <div class="form-group">
+                        <label for="register_name">注册经办人姓名</label>
+                        <input type="text" name="register_name" class="form-control my-input" id="register_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register_phone">注册经办人电话</label>
+                        <input type="text" name="register_phone" class="form-control my-input" id="register_phone" required>
+                    </div>
+                    <hr>
+                    <div class="form-group my-form-group wrap">
+                        <label for="apply_remark">备注</label>
+                        <textarea name="apply_remark" class="form-control" required style="font-size:18px;border-color: #5066b4;"></textarea>
+                    </div>
+                    <hr>
+                    <div class="row text-center">
+                        <span style="color:red;"><h3>重要提示</h3></span>
+                        <div class="wrap clearfix">
+                            <textarea required style="font-size:14px;border-color: #5066b4;padding:15px;">    (1)由于上海地区企业数量众多，为了帮助客户快速通过工商预查名，建议公司名称尽量采用“生僻”字号！
+                                
+    (2)经营范围字符130字为上限（其中包括标点符号
+                                
+    (3)请在有效期内完善“工商注册面签”信息
+                                
+    (4)如有任何问题请致电岗位服务电话021-57320084
+                            </textarea>
+                        </div>
+                    </div>
+                    <button id="submitBtn" class="btn btn-primary col-xs-12 my-gap-bottom">申请</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="addinvestorpanel">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only"></span>
+                    </button>
+                    <h4 id="mysetTitle">新增投资人</h4>
+
+                </div>
+                <div class="modal-body">
+                    <form class="my-form" role="form">
+                        <div class="form-group my-form-group">
+                            <label for="apply_name">名称或姓名</label>
+                            <input type="text" name="apply_name" class="form-control my-input" id="apply_name" required>
+                        </div>
+                        <div class="input-group my-form-group my-gap-bottom" style="font-size:18px;">
+                            <span class="input-group-addon">职务</span>
+                            <select name="qygd_jobtitle" class="col-xs-12">
+                                <option>法人</option>
+                                <option>股东</option>
+                            </select>
+                        </div>
+                        <div class="form-group my-form-group">
+                            <label for="apply_name">证件号</label>
+                            <input type="text" name="apply_name" class="form-control my-input" id="apply_name" required>
+                        </div>
+                        <label for="register_money">投资金额</label>
+                        <div class="input-group my-form-group">
+                            <input type="number" name="register_money" class="form-control my-input">
+                            <span class="input-group-addon">万元</span>
+                        </div>
+                        <label>投资人身份证</label>
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div id="imgcontainer1" class="text-center col-xs-6  col-sm-9 my-gap-right" style="width:100px;height:100px;border-radius:8px;background-color:#d3d3d3;border-color:#888888">&nbsp;<br><span style="padding-top:38px">正面</span></div>
+                                <div id="imgcontainer2" class="text-center col-xs-6  col-sm-9 " style="width:100px;height:100px;border-radius:8px;background-color:#d3d3d3;border-color:#888888;">&nbsp;<br><span style="padding-top:38px">反面</span></div>
+                            </div>
+                        </div>
+                        <div class="container">
+                            <a class="btn btn-success col-xs-12 my-gap-top" data-dismiss="modal" style="font-size:22px;padding:5px;">确定</a>
+                        </div>
+
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap-validator/0.5.3/js/bootstrapValidator.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript" src="js/jquery.flexText.min.js"></script>
+    <script type="text/javascript" src="js/my.js"></script>
+    <script type="text/javascript">
+        function addAinvestorToList(data) {
+
+        }
+
+        $(document).ready(function() {
+            $('textarea').flexText();
+            $("#addinvestorBtn").on("click", function() {
+                $("#addinvestorpanel").modal("toggle");
+                //setFromDisabled("naform", true);
+            });
+
+            wx.chooseImage({
+                count: 1,
+                sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+                sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+                success: function(res) {
+                    var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+                }
+            });
+        });
+
+    </script>
+</body>
+
+</html>
