@@ -46,7 +46,7 @@
                     </div>
                     <label for="register_money">注册资本</label>
                     <div class="input-group my-form-group">
-                        <input type="number" name="register_money" class="form-control my-input">
+                        <input type="number" name="register_money" class="form-control my-input" value="0">
                         <span class="input-group-addon">万元</span>
                     </div>
                     <div class="form-group my-form-group">
@@ -64,23 +64,17 @@
                     </div>
                     <hr>
                     <label class="my-gap-bottom">投资人信息</label>
-                    <div class="list-group my-list">
-                        <div class="container-fluid">
-                            <div class="row">
-                                <div class="col-xs-3">名称</div>
-                                <div class="col-xs-5">证件号码</div>
-                                <div class="col-xs-3">投资比例</div>
-                                <a href="javascript:delectAInvestor(1)" class="col-xs-1">&nbsp;</a>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-3">名称</div>
-                                <div class="col-xs-5">证件号码</div>
-                                <div class="col-xs-3">投资比例</div>
-                                <a href="javascript:delectAInvestor(1)" class="col-xs-1">
-                                    <spanstyle="color:#ff000000"><i class='fa fa-minus-square'></i></span>
-                                </a>
-                            </div>
-                        </div>
+
+                    <div class="row">
+                        <div class="col-xs-3">名称</div>
+                        <div class="col-xs-5">证件号码</div>
+                        <div class="col-xs-3">投资比例</div>
+                        <a href="javascript:delectAInvestor(1)" class="col-xs-1">&nbsp;</a>
+                    </div>
+                    <div id="investorlists" class="list-group my-list">
+                        <!--a href="javascript:delectAInvestor(1)" class="col-xs-1">
+                                <spanstyle="color:#ff000000"><i class='fa fa-minus-square'></i></span>
+                            </a-->
                     </div>
                     <div class="form-group clearfix">
                         <a id="addinvestorBtn" class="btn btn-success col-xs-6 col-xs-offset-3 my-gap-bottom">添加</a>
@@ -133,23 +127,23 @@
                 <div class="modal-body">
                     <form class="my-form" role="form">
                         <div class="form-group my-form-group">
-                            <label for="apply_name">名称或姓名</label>
-                            <input type="text" name="apply_name" class="form-control my-input" id="apply_name" required>
+                            <label for="qygd_name">名称或姓名</label>
+                            <input type="text" name="qygd_name" class="form-control my-input" id="qygd_name" required>
                         </div>
                         <div class="input-group my-form-group my-gap-bottom" style="font-size:18px;">
                             <span class="input-group-addon">职务</span>
-                            <select name="qygd_jobtitle" class="col-xs-12">
+                            <select id="qygd_jobtitle" name="qygd_jobtitle" class="col-xs-12">
                                 <option>法人</option>
                                 <option>股东</option>
                             </select>
                         </div>
                         <div class="form-group my-form-group">
-                            <label for="apply_name">证件号</label>
-                            <input type="text" name="apply_name" class="form-control my-input" id="apply_name" required>
+                            <label for="qygd_idnumber">证件号</label>
+                            <input type="text" name="qygd_idnumber" class="form-control my-input" id="qygd_idnumber" required>
                         </div>
-                        <label for="register_money">投资金额</label>
+                        <label for="qygd_investment">投资金额</label>
                         <div class="input-group my-form-group">
-                            <input type="number" name="register_money" class="form-control my-input">
+                            <input id="qygd_investment" type="number" name="qygd_investment" class="form-control my-input">
                             <span class="input-group-addon">万元</span>
                         </div>
                         <label>投资人身份证</label>
@@ -160,7 +154,7 @@
                             </div>
                         </div>
                         <div class="container">
-                            <a class="btn btn-success col-xs-12 my-gap-top" data-dismiss="modal" style="font-size:22px;padding:5px;">确定</a>
+                            <a href="javascript:onInvestorOKHandler()" class="btn btn-success col-xs-12 my-gap-top" style="font-size:22px;padding:5px;">确定</a>
                         </div>
 
                     </form>
@@ -177,25 +171,114 @@
     <script type="text/javascript" src="js/jquery.flexText.min.js"></script>
     <script type="text/javascript" src="js/my.js"></script>
     <script type="text/javascript">
-        function addAinvestorToList(data) {
+        var investorAry = [];
+        var isAddMode = true;
 
+        function addAinvestorToList(data) {
+            var rsstr = '<a href="javascript:editInvestor(' + data["order"] + ')" class="list-group-item my-list-item"><div class="col-xs-3"><span style="font-size:14px;">' +
+                data["qygd_name"] +
+                '</span></div><div class="col-xs-5"><span style="font-size:14px;">' +
+                data["qygd_idnumber"] +
+                '<span></div><div class="col-xs-3"><span style="font-size:14px;">' +
+                calculate_qygd_investment(data["qygd_investment"]) +
+                '</span></div></a>';
+            $("#investorlists").append(rsstr);
+            investorAry.push(data);
         }
 
+        function calculate_qygd_investment(investment) {
+            return "0%";
+        }
+
+        function editInvestor(index) {
+            debugger;
+            if (investorAry.length > index) {
+                var investor = investorAry[index];
+                $("#qygd_name").val(investor["qygd_name"]);
+                $("#qygd_idnumber").val(investor["qygd_idnumber"]);
+                $("#qygd_investment").val(investor["qygd_investment"]);
+                $("#qygd_jobtitle").val(investor["qygd_jobtitle"]);
+                isAddMode = false;
+                $("#addinvestorpanel").modal("toggle");
+            }
+        }
+
+        function onInvestorOKHandler() {
+            if (isAddMode) {
+                var newdata = {};
+                newdata["order"] = investorAry.length;
+                newdata["qygd_name"] = $("#qygd_name").val();
+                newdata["qygd_idnumber"] = $("#qygd_idnumber").val();
+                newdata["qygd_investment"] = $("#qygd_investment").val();
+                newdata["qygd_jobtitle"] = $("#qygd_jobtitle").val();
+                newdata["qygd_pic1"] = "";
+                newdata["qygd_pic2"] = "";
+                newdata["qygd_pic3"] = "";
+                addAinvestorToList(newdata);
+            }
+            $("#addinvestorpanel").modal("hide");
+        }
+
+        function getApplyFromJSON() {
+            var jsonobj = {};
+            jsonobj["apply_name"] = $("#apply_name").val();
+            jsonobj["apply_name2"] = $("#apply_name2").val();
+            jsonobj["apply_name3"] = $("#apply_name3").val();
+            jsonobj["apply_name4"] = $("#apply_name4").val();
+            jsonobj["actual_address"] = $("#actual_address").val();
+            jsonobj["manage_range"] = $("#manage_range").val();
+            jsonobj["register_money"] = $("#register_money").val();
+            jsonobj["register_kind"] = $("#register_kind").val();
+            jsonobj["register_name"] = $("#register_name").val();
+            jsonobj["apply_remark"] = $("#apply_remark").val();
+            jsonobj["arr"] = [];
+            for (var i = 0; i < investorAry.length; i++) {
+                var ainvestor = investorAry[i];
+                if (ainvestor["qygd_jobtitle"] == "法人") {
+                    jsonobj["tzfr_name"] = $("#qygd_name").val();
+                    jsonobj["tzfr_idnumber"] = $("#qygd_idnumber").val();
+                    jsonobj["tzfr_investment"] = $("#qygd_investment").val();
+                    jsonobj["tzfr_pic1"] = $("#qygd_pic1").val();
+                    jsonobj["tzfr_pic2"] = $("#qygd_pic2").val();
+                    jsonobj["tzfr_pic3"] = $("#qygd_pic3").val();
+                } else {
+                    jsonobj["arr"].push(ainvestor);
+                }
+            }
+            return jsonobj;
+        }
         $(document).ready(function() {
             $('textarea').flexText();
+            $("#submitBtn").on("click", function() {
+                $.ajax({
+                    type: "POST",
+                    url: "json/ee_nameapply.json",
+                    data: getApplyFromJSON(),
+                    dataType: "json",
+                    success: function(data) {
+                        if (data.ret == 0) {
+                            window.location = "ee_progress.html";
+                        }
+                    },
+                    error: function(xhr, type) {
+                        alert("提交时发生错误!");
+                    }
+
+                });
+            });
             $("#addinvestorBtn").on("click", function() {
+                isAddMode = true;
                 $("#addinvestorpanel").modal("toggle");
                 //setFromDisabled("naform", true);
             });
-
-            wx.chooseImage({
-                count: 1,
-                sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
-                sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
-                success: function(res) {
-                    var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
-                }
-            });
+            /*wx.chooseImage({
+                                count: 1,
+                                sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+                                sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+                                success: function(res) {
+                                    var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+                                }
+                            });*/
         });
 
     </script>
