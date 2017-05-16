@@ -1,0 +1,43 @@
+{
+    "apply_name": "asdfa",
+    "apply_name2": "asdfa",
+    "apply_name3": "asdfa",
+    "apply_name4": "asdfa",
+    "register_money": "100",
+    "register_kind": "100",
+    "actual_address": "asdfa",
+    "manage_range": "asdfa",
+    "tzfr_name": "asdfa",
+    "tzfr_idnumber": "asdfa",
+    "tzfr_pic1": "asdfa",
+    "tzfr_pic2": "asdfa",
+    "qygd_name": "asdfa",
+    "gygd_investment": "asdfa",
+    "gygd_pic1": "asdfa",
+    "qygd_pic2": "asdfa",
+    "register_name": "asdfa",
+    "register_phone": "asdfa",
+    "apply_state": "0",
+    "apply_remark": "asdfa",
+    "allow_notice": "asdfa",
+    "arr": [
+        {
+            "qygd_name": "60",
+            "qygd_idnumber": "苹果",
+            "qygd_investment": "3232",
+            "qygd_percent": "1",
+            "qygd_pic1": "2",
+            "qygd_pic2": "3",
+            "o2o_id": "3"
+        },
+        {
+            "qygd_name": "70",
+            "qygd_idnumber": "雪梨",
+            "qygd_investment": "2222",
+            "qygd_percent": "2",
+            "qygd_pic1": "5",
+            "qygd_pic2": "5",
+            "o2o_id": "5"
+        }
+    ]
+}
