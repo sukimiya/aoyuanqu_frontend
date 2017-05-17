@@ -10,6 +10,251 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
     <link href="css/style.css" rel="stylesheet" type="text/css">
     <link href="css/my.css" rel="stylesheet" type="text/css">
+
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
+    <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap-validator/0.5.3/js/bootstrapValidator.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript" src="js/jquery.flexText.min.js"></script>
+    <script src="https://cdn.bootcss.com/json2/20160511/json2.min.js"></script>
+    <script type="text/javascript" src="js/my.js"></script>
+    <script type="text/javascript">
+        var investorAry = [];
+        var isAddMode = true;
+
+
+        function uploadImgWithName(picname, theimg) {
+            var imgpath = "";
+            wx.chooseImage({
+                count: 1,
+                sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+                sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+                success: function(res) {
+                    debugger;
+                    var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为
+                    imgpath = localIds;
+                    theimg.css("background-image", "url(" + localIds + ")");
+                    $.ajax({
+                        type: "POST",
+                        url: "json/uploadfiles.json",
+                        dataType:"json",
+                        enctype: 'multipart/form-data',
+                        data: {
+                            file: imgpath
+                        },
+                        success: function(ret) {
+                            debugger;
+                            if (ret == 0) {
+                                $(picname).val(ret.picid);
+                            }
+                        }
+                    });
+                }
+            });
+
+        }
+
+        function addAinvestorToList(data) {
+            var rsstr = '<a href="javascript:editInvestor(' + data["order"] + ')" class="list-group-item my-list-item"><div class="col-xs-3"><span style="font-size:14px;">' +
+                data["qygd_name"] +
+                '</span></div><div class="col-xs-5"><span style="font-size:14px;">' +
+                data["qygd_idnumber"] +
+                '<span></div><div class="col-xs-3"><span style="font-size:14px;">' +
+                calculate_qygd_investment(data["qygd_investment"]) +
+                '</span></div></a>';
+            $("#investorlists").append(rsstr);
+            investorAry.push(data);
+        }
+
+        function calculate_qygd_investment(investment) {
+            return "0%";
+        }
+        function getRemotePic(picid){
+            var rsstr = picid;//remoteaddress+"/"+picid
+            return rsstr;
+        }
+        function editInvestor(index) {
+            debugger;
+            if (investorAry.length > index) {
+                var investor = investorAry[index];
+                $("#qygd_name").val(investor["qygd_name"]);
+                $("#qygd_idnumber").val(investor["qygd_idnumber"]);
+                $("#qygd_investment").val(investor["qygd_investment"]);
+                $("#qygd_jobtitle").val(investor["qygd_jobtitle"]);
+                $("#qygd_pic1"+"_img").css("background-image", "url('"+getRemotePic(investor["qygd_pic1"])+"')");
+                $("#qygd_pic2"+"_img").css("background-image", "url('"+getRemotePic(investor["qygd_pic2"])+"')");
+                $("#qygd_pic3"+"_img").css("background-image", "url('"+getRemotePic(investor["qygd_pic3"])+"')");
+                //这里需要服务器上图片显示的方法
+                isAddMode = false;
+                $("#addinvestorpanel").modal("toggle");
+            }
+        }
+
+        function onInvestorOKHandler() {
+            if (isAddMode) {
+                var newdata = {};
+                newdata["order"] = investorAry.length;
+                newdata["qygd_name"] = $("#qygd_name").val();
+                newdata["qygd_idnumber"] = $("#qygd_idnumber").val();
+                newdata["qygd_investment"] = $("#qygd_investment").val();
+                newdata["qygd_jobtitle"] = $("#qygd_jobtitle").val();
+                newdata["qygd_pic1"] = $("#qygd_pic1").val();
+                newdata["qygd_pic2"] = $("#qygd_pic2").val();
+                newdata["qygd_pic3"] = $("#qygd_pic3").val();
+                addAinvestorToList(newdata);
+            }
+            $("#addinvestorpanel").modal("hide");
+        }
+
+        function getApplyFromJSON() {
+            var jsonobj = {};
+            jsonobj["apply_name"] = $("#apply_name").val();
+            jsonobj["apply_name2"] = $("#apply_name2").val();
+            jsonobj["apply_name3"] = $("#apply_name3").val();
+            jsonobj["apply_name4"] = $("#apply_name4").val();
+            jsonobj["actual_address"] = $("#actual_address").val();
+            jsonobj["manage_range"] = $("#manage_range").val();
+            jsonobj["register_money"] = $("#register_money").val();
+            jsonobj["register_kind"] = $("#register_kind").val();
+            jsonobj["register_name"] = $("#register_name").val();
+            jsonobj["register_phone"] = $("#register_phone").val();
+            jsonobj["apply_remark"] = $("#apply_remark").val();
+            jsonobj["arr"] = [];
+            for (var i = 0; i < investorAry.length; i++) {
+                var ainvestor = investorAry[i];
+                if (ainvestor["qygd_jobtitle"] == "法人") {
+                    jsonobj["tzfr_name"] = $("#qygd_name").val();
+                    jsonobj["tzfr_idnumber"] = $("#qygd_idnumber").val();
+                    jsonobj["tzfr_investment"] = $("#qygd_investment").val();
+                    jsonobj["tzfr_pic1"] = $("#qygd_pic1").val();
+                    jsonobj["tzfr_pic2"] = $("#qygd_pic2").val();
+                    jsonobj["tzfr_pic3"] = $("#qygd_pic3").val();
+                } else {
+                    jsonobj["arr"].push(ainvestor);
+                }
+            }
+            JSON.stringify
+            var jstr = JSON.stringify(jsonobj);
+            console.log(jstr);
+            return jstr;
+        }
+        $(document).ready(function() {
+            $('textarea').flexText();
+            $('form').bootstrapValidator({
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    apply_name: {
+                        validators: {
+                            message: '验证企业名称失败',
+                            notEmpty: {
+                                message: '输入验证码',
+                            },
+                            threshold: 6,
+                            remote: { //ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}  
+                                url: 'json/ee_nameapply_verfiy.json', //验证地址
+                                message: '企业名称已使用', //提示消息
+                                delay: 2000, //每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                                type: 'POST' //请求方式
+                                /**自定义提交数据，默认值提交当前input value
+                                 * 
+                                 */
+                                /*data: function(validator) {
+                                    return {
+                                        validateCode: $('[name="validateCode"]').val()
+                                    };
+                                }*/
+                            }
+                        }
+                    },
+                    apply_name2: {
+                        validators: {
+                            message: '验证企业名称失败',
+                            notEmpty: {
+                                message: '输入验证码',
+                            },
+                            threshold: 6,
+                            remote: { //ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}  
+                                url: 'json/ee_nameapply_verfiy.json', //验证地址
+                                message: '企业名称已使用', //提示消息
+                                delay: 2000, //每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                                type: 'POST' //请求方式
+                                /**自定义提交数据，默认值提交当前input value
+                                 * 
+                                 */
+                                /*data: function(validator) {
+                                    return {
+                                        validateCode: $('[name="validateCode"]').val()
+                                    };
+                                }*/
+                            }
+                        }
+                    }
+
+                }
+            }).on('success.form.bv', function(e) {
+                e.preventDefault();
+                alert("验证通过");
+            });
+            $("#submitBtn").on("click", function() {
+                var $this = $(this);
+                $this.button('loading');
+                $.ajax({
+                    type: "POST",
+                    url: "json/ee_nameapply.json",
+                    data: getApplyFromJSON(),
+                    dataType: "json",
+                    success: function(data) {
+                        if (data.ret == 0) {
+                            window.location = "ee_progress.html";
+                        }
+                    },
+                    error: function(xhr, type) {
+                        alert("提交时发生错误!");
+                    }
+
+                });
+            });
+            $("#addinvestorBtn").on("click", function() {
+                isAddMode = true;
+                debugger;
+                $("#qygd_name").val("");
+                $("#qygd_idnumber").val("");
+                $("#qygd_investment").val("");
+                $("#qygd_jobtitle").val("法人");
+                $("#qygd_pic1"+"_img").css("background-image", "url('')");
+                $("#qygd_pic2"+"_img").css("background-image", "url('')");
+                $("#qygd_pic3"+"_img").css("background-image", "url('')");
+                //setFromDisabled("naform", true);
+            });
+            /*$("#apply_name").on("change", function() {
+                $.ajax({
+                    type: "POST", //用POST方式传输
+                    　　dataType: "json", //数据格式:JSON
+                    　　url: 'json/ee_nameapply_verfiy.json', //目标地址
+                    data: "applay_name=" + $("#apply_name").val(),
+                    　　error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        //
+                    },
+                    　　success: function(msg) {
+                        if (msg.valid == false) {
+                            debugger;
+                            $("form")
+                                .bootstrapValidator('updateStatus', 'applay_name', 'NOT_VALIDATED')
+                                .bootstrapValidator('validateField', 'applay_name');
+                        }
+                    }
+                });
+            });*/
+
+
+        });
+
+    </script>
 </head>
 
 <body class="my-body">
@@ -17,12 +262,10 @@
     <div style="padding:0px;marging:0px;background-size: cover;overflow-y:visible;">
         <img class="col-xs-4 col-xs-offset-4 img-responsive my-gap-top" src="images/dfa8c6ef0acedc844c59669f4f24fe1a.png">
         <div class="section my-topsection">
-
             <div class="container" style="vertical-align:mid;">
                 <div class="col-xs-12 text-center my-gap-bottom">
                     <!--h3> 企业名称预先核准申请书</h3-->
                 </div>
-
             </div>
             <div class="container">
                 <form id="naform" class="my-form" role="form" data-toggle="validator">
@@ -45,9 +288,9 @@
                         <textarea id="manage_range" name="manage_range" class="form-control" required style="font-size:18px;border-color: #5066b4;"></textarea>
                     </div>
                     <label for="register_money">注册资本</label>
-                    <div class="input-group my-form-group">
-                        <input type="number" id="register_money" name="register_money" class="form-control my-input" value="0">
-                        <span class="input-group-addon">万元</span>
+                    <div class="form-group my-form-group">
+                        <input type="number" id="register_money" name="register_money" class="form-control my-input">
+                        <span>万元</span>
                     </div>
                     <div class="form-group my-form-group">
                         <label for="register_kink">注册公司类型</label>
@@ -96,15 +339,11 @@
                     <hr>
                     <div class="row text-center">
                         <span style="color:red;"><h3>重要提示</h3></span>
-                        <div class="wrap clearfix">
-                            <textarea required style="font-size:14px;border-color: #5066b4;padding:15px;">    (1)由于上海地区企业数量众多，为了帮助客户快速通过工商预查名，建议公司名称尽量采用“生僻”字号！
-                                
-    (2)经营范围字符130字为上限（其中包括标点符号
-                                
-    (3)请在有效期内完善“工商注册面签”信息
-                                
-    (4)如有任何问题请致电岗位服务电话021-57320084
-                            </textarea>
+                        <div class="clearfix" style="text-align:left;font-size:14px;border-color: #5066b4;padding:15px;">
+                            <p>(1)由于上海地区企业数量众多，为了帮助客户快速通过工商预查名，建议公司名称尽量采用“生僻”字号！<br> (2)经营范围字符130字为上限（其中包括标点符号
+                                <br> (3)请在有效期内完善“工商注册面签”信息
+                                <br> (4)如有任何问题请致电岗位服务电话021-57320084
+                            </p>
                         </div>
                     </div>
                     <a id="submitBtn" class="btn btn-primary col-xs-12 my-gap-bottom" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>提交申请中">申请</a>
@@ -130,8 +369,8 @@
                             <label for="qygd_name">名称或姓名</label>
                             <input type="text" name="qygd_name" class="form-control my-input" id="qygd_name" required>
                         </div>
-                        <div class="input-group my-form-group my-gap-bottom" style="font-size:18px;">
-                            <span class="input-group-addon">职务</span>
+                        <div class="form-group my-form-group my-gap-bottom" style="font-size:18px;">
+                            <span>职务</span>
                             <select id="qygd_jobtitle" name="qygd_jobtitle" class="col-xs-12">
                                 <option>法人</option>
                                 <option>股东</option>
@@ -141,18 +380,23 @@
                             <label for="qygd_idnumber">证件号</label>
                             <input type="text" name="qygd_idnumber" class="form-control my-input" id="qygd_idnumber" required>
                         </div>
-                        <label for="qygd_investment">投资金额</label>
-                        <div class="input-group my-form-group">
+
+                        <div class="form-group my-form-group">
+                            <label for="qygd_investment">投资金额</label>
                             <input id="qygd_investment" type="number" name="qygd_investment" class="form-control my-input">
-                            <span class="input-group-addon">万元</span>
+                            <span>万元</span>
                         </div>
                         <label>投资人身份证</label>
                         <div class="container-fluid">
                             <div class="row">
-                                <div id="imgcontainer1" class="text-center col-xs-6  col-sm-9 my-gap-right" style="width:100px;height:100px;border-radius:8px;background-color:#d3d3d3;border-color:#888888">&nbsp;<br><span style="padding-top:38px">正面</span></div>
-                                <div id="imgcontainer2" class="text-center col-xs-6  col-sm-9 " style="width:100px;height:100px;border-radius:8px;background-color:#d3d3d3;border-color:#888888;">&nbsp;<br><span style="padding-top:38px">反面</span></div>
+                                <div onclick="uploadImgWithName('#qygd_pic1',this)" id="qygd_pic1_img" class="text-center col-xs-6  col-sm-9 my-gap-right" style="width:100px;height:100px;border-radius:8px;background-color:#d3d3d3;border-color:#888888">&nbsp;<br><span style="padding-top:38px">正面</span></div>
+                                <div id="qygd_pic2_img" class="text-center col-xs-6  col-sm-9 " style="width:100px;height:100px;border-radius:8px;background-color:#d3d3d3;border-color:#888888;" onclick="uploadImgWithName('#qygd_pic2',this)">&nbsp;<br><span style="padding-top:38px">反面</span></div>
+                                <div id="qygd_pic3_img" class="text-center col-xs-6  col-sm-9 " style="width:100px;height:100px;border-radius:8px;background-color:#d3d3d3;border-color:#888888;" onclick="uploadImgWithName('#qygd_pic3',this)">&nbsp;<br><span style="padding-top:38px">证件照</span></div>
                             </div>
                         </div>
+                        <input type="hidden" id="qygd_pic1">
+                        <input type="hidden" id="qygd_pic2">
+                        <input type="hidden" id="qygd_pic3">
                         <div class="container">
                             <a href="javascript:onInvestorOKHandler()" class="btn btn-success col-xs-12 my-gap-top" style="font-size:22px;padding:5px;">确定</a>
                         </div>
@@ -163,131 +407,7 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
-    <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="https://cdn.bootcss.com/bootstrap-validator/0.5.3/js/bootstrapValidator.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
-    <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
-    <script type="text/javascript" src="js/jquery.flexText.min.js"></script>
-    <script src="https://cdn.bootcss.com/json2/20160511/json2.min.js"></script>
-    <script type="text/javascript" src="js/my.js"></script>
-    <script type="text/javascript">
-        var investorAry = [];
-        var isAddMode = true;
 
-        function addAinvestorToList(data) {
-            var rsstr = '<a href="javascript:editInvestor(' + data["order"] + ')" class="list-group-item my-list-item"><div class="col-xs-3"><span style="font-size:14px;">' +
-                data["qygd_name"] +
-                '</span></div><div class="col-xs-5"><span style="font-size:14px;">' +
-                data["qygd_idnumber"] +
-                '<span></div><div class="col-xs-3"><span style="font-size:14px;">' +
-                calculate_qygd_investment(data["qygd_investment"]) +
-                '</span></div></a>';
-            $("#investorlists").append(rsstr);
-            investorAry.push(data);
-        }
-
-        function calculate_qygd_investment(investment) {
-            return "0%";
-        }
-
-        function editInvestor(index) {
-            debugger;
-            if (investorAry.length > index) {
-                var investor = investorAry[index];
-                $("#qygd_name").val(investor["qygd_name"]);
-                $("#qygd_idnumber").val(investor["qygd_idnumber"]);
-                $("#qygd_investment").val(investor["qygd_investment"]);
-                $("#qygd_jobtitle").val(investor["qygd_jobtitle"]);
-                isAddMode = false;
-                $("#addinvestorpanel").modal("toggle");
-            }
-        }
-
-        function onInvestorOKHandler() {
-            if (isAddMode) {
-                var newdata = {};
-                newdata["order"] = investorAry.length;
-                newdata["qygd_name"] = $("#qygd_name").val();
-                newdata["qygd_idnumber"] = $("#qygd_idnumber").val();
-                newdata["qygd_investment"] = $("#qygd_investment").val();
-                newdata["qygd_jobtitle"] = $("#qygd_jobtitle").val();
-                newdata["qygd_pic1"] = " ";
-                newdata["qygd_pic2"] = " ";
-                newdata["qygd_pic3"] = " ";
-                addAinvestorToList(newdata);
-            }
-            $("#addinvestorpanel").modal("hide");
-        }
-
-        function getApplyFromJSON() {
-            var jsonobj = {};
-            jsonobj["apply_name"] = $("#apply_name").val();
-            jsonobj["apply_name2"] = $("#apply_name2").val();
-            jsonobj["apply_name3"] = $("#apply_name3").val();
-            jsonobj["apply_name4"] = $("#apply_name4").val();
-            jsonobj["actual_address"] = $("#actual_address").val();
-            jsonobj["manage_range"] = $("#manage_range").val();
-            jsonobj["register_money"] = $("#register_money").val();
-            jsonobj["register_kind"] = $("#register_kind").val();
-            jsonobj["register_name"] = $("#register_name").val();
-            jsonobj["register_phone"] = $("#register_phone").val();
-            jsonobj["apply_remark"] = $("#apply_remark").val();
-            jsonobj["arr"] = [];
-            for (var i = 0; i < investorAry.length; i++) {
-                var ainvestor = investorAry[i];
-                if (ainvestor["qygd_jobtitle"] == "法人") {
-                    jsonobj["tzfr_name"] = $("#qygd_name").val();
-                    jsonobj["tzfr_idnumber"] = $("#qygd_idnumber").val();
-                    jsonobj["tzfr_investment"] = $("#qygd_investment").val();
-                    jsonobj["tzfr_pic1"] = $("#qygd_pic1").val();
-                    jsonobj["tzfr_pic2"] = $("#qygd_pic2").val();
-                    jsonobj["tzfr_pic3"] = $("#qygd_pic3").val();
-                } else {
-                    jsonobj["arr"].push(ainvestor);
-                }
-            }JSON.stringify
-            var jstr = JSON.stringify(jsonobj);
-            console.log(jstr);
-            return jstr;
-        }
-        $(document).ready(function() {
-            $('textarea').flexText();
-            $("#submitBtn").on("click", function() {
-                var $this = $(this);
-                $this.button('loading');
-                $.ajax({
-                    type: "POST",
-                    url: "json/ee_nameapply.json",
-                    data: getApplyFromJSON(),
-                    dataType: "json",
-                    success: function(data) {
-                        if (data.ret == 0) {
-                            window.location = "ee_progress.html";
-                        }
-                    },
-                    error: function(xhr, type) {
-                        alert("提交时发生错误!");
-                    }
-
-                });
-            });
-            $("#addinvestorBtn").on("click", function() {
-                isAddMode = true;
-                $("#addinvestorpanel").modal("toggle");
-                //setFromDisabled("naform", true);
-            });
-            /*wx.chooseImage({
-                                count: 1,
-                                sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
-                                sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
-                                success: function(res) {
-                                    var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
-                                }
-                            });*/
-        });
-
-    </script>
 </body>
 
 </html>
