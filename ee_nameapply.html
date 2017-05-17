@@ -38,20 +38,20 @@
                     </div>
                     <div class="form-group my-form-group wrap">
                         <label for="actual_address">实际经营地址</label>
-                        <textarea name="actual_address" class="form-control" required style="font-size:18px;border-color: #5066b4;"></textarea>
+                        <textarea id="actual_address" name="actual_address" class="form-control" required style="font-size:18px;border-color: #5066b4;"></textarea>
                     </div>
                     <div class="form-group my-form-group wrap">
                         <label for="manage_range">经营范围</label>
-                        <textarea name="manage_range" class="form-control" required style="font-size:18px;border-color: #5066b4;"></textarea>
+                        <textarea id="manage_range" name="manage_range" class="form-control" required style="font-size:18px;border-color: #5066b4;"></textarea>
                     </div>
                     <label for="register_money">注册资本</label>
                     <div class="input-group my-form-group">
-                        <input type="number" name="register_money" class="form-control my-input" value="0">
+                        <input type="number" id="register_money" name="register_money" class="form-control my-input" value="0">
                         <span class="input-group-addon">万元</span>
                     </div>
                     <div class="form-group my-form-group">
                         <label for="register_kink">注册公司类型</label>
-                        <select name="register_kind" class="selectpicker mycompany-select">
+                        <select id="register_kind" name="register_kind" class="selectpicker mycompany-select">
                             <option>有限责任公司</option>
                             <option>非公司企业法人</option>
                             <option>合伙企业</option>
@@ -107,7 +107,7 @@
                             </textarea>
                         </div>
                     </div>
-                    <button id="submitBtn" class="btn btn-primary col-xs-12 my-gap-bottom">申请</button>
+                    <a id="submitBtn" class="btn btn-primary col-xs-12 my-gap-bottom" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>提交申请中">申请</a>
                 </form>
 
             </div>
@@ -169,6 +169,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
     <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
     <script type="text/javascript" src="js/jquery.flexText.min.js"></script>
+    <script src="https://cdn.bootcss.com/json2/20160511/json2.min.js"></script>
     <script type="text/javascript" src="js/my.js"></script>
     <script type="text/javascript">
         var investorAry = [];
@@ -211,9 +212,9 @@
                 newdata["qygd_idnumber"] = $("#qygd_idnumber").val();
                 newdata["qygd_investment"] = $("#qygd_investment").val();
                 newdata["qygd_jobtitle"] = $("#qygd_jobtitle").val();
-                newdata["qygd_pic1"] = "";
-                newdata["qygd_pic2"] = "";
-                newdata["qygd_pic3"] = "";
+                newdata["qygd_pic1"] = " ";
+                newdata["qygd_pic2"] = " ";
+                newdata["qygd_pic3"] = " ";
                 addAinvestorToList(newdata);
             }
             $("#addinvestorpanel").modal("hide");
@@ -230,6 +231,7 @@
             jsonobj["register_money"] = $("#register_money").val();
             jsonobj["register_kind"] = $("#register_kind").val();
             jsonobj["register_name"] = $("#register_name").val();
+            jsonobj["register_phone"] = $("#register_phone").val();
             jsonobj["apply_remark"] = $("#apply_remark").val();
             jsonobj["arr"] = [];
             for (var i = 0; i < investorAry.length; i++) {
@@ -244,12 +246,16 @@
                 } else {
                     jsonobj["arr"].push(ainvestor);
                 }
-            }
-            return jsonobj;
+            }JSON.stringify
+            var jstr = JSON.stringify(jsonobj);
+            console.log(jstr);
+            return jstr;
         }
         $(document).ready(function() {
             $('textarea').flexText();
             $("#submitBtn").on("click", function() {
+                var $this = $(this);
+                $this.button('loading');
                 $.ajax({
                     type: "POST",
                     url: "json/ee_nameapply.json",
