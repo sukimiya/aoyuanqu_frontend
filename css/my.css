@@ -63,15 +63,16 @@
 .my-gap-bottom {
     margin-bottom: 15px;
 }
-.my-form-group{
-    
-}
-.my-input{
-    font-size:18px;
+
+.my-form-group {}
+
+.my-input {
+    font-size: 18px;
     background-color: #FFFFFF;
     border-color: #5066b4;
 }
-.my-textarea{
+
+.my-textarea {
     display: block;
     width: 100%;
     height: 34px;
@@ -83,13 +84,25 @@
     border: 1px solid #5066b4;
     border-radius: 8px;
     border-color: #5066b4;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
-    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
-    -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
-    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
     color: black;
 }
+
+.my-picbackground {
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
+    background-color: #E5E5E4;
+    border: 1px solid #d3d3d3;
+}
+
+
+
+
 /*------------------------my.html----------------------*/
 
 .my-navbar-left-btn {
@@ -289,6 +302,24 @@
     text-align: right;
     height: 42px;
     line-height: 42px;
+}
+
+.my-list-item-42 {
+    padding: 10px;
+    font-size: 12px;
+    display: block;
+    border: 1px solid #bbbbbb;
+    border-left-width: 0px;
+    border-right-width: 0px;
+    border-top-width: 0px;
+    margin: 0px;
+    height: 42px;
+}
+
+.my-list-item-42 div {
+    font-size: 14px;
+    padding: 0px;
+    margin: 0px;
 }
 
 

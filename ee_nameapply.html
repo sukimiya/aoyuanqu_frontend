@@ -3,6 +3,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="0">
     <title>企业名称预先核准申请书</title>
     <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css">
@@ -15,7 +18,7 @@
     <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://cdn.bootcss.com/bootstrap-validator/0.5.3/js/bootstrapValidator.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
-    <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script src="js/jweixin-1.2.0.js"></script>
     <script type="text/javascript" src="js/jquery.flexText.min.js"></script>
     <script src="https://cdn.bootcss.com/json2/20160511/json2.min.js"></script>
     <script type="text/javascript" src="js/my.js"></script>
@@ -28,27 +31,31 @@
             var imgpath = "";
             wx.chooseImage({
                 count: 1,
-                sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
-                sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+                sizeType: ['original', 'compressed'], 
+                sourceType: ['album', 'camera'],
                 success: function(res) {
-                    debugger;
-                    var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为
+                    var localIds = res.localIds;
                     imgpath = localIds;
-                    theimg.css("background-image", "url(" + localIds + ")");
+                    $(theimg).attr("src",imgpath);
+                    console.log("本地图片id:"+imgpath);
                     $.ajax({
                         type: "POST",
                         url: "json/uploadfiles.json",
-                        dataType:"json",
+                        dataType: "json",
                         enctype: 'multipart/form-data',
                         data: {
                             file: imgpath
                         },
                         success: function(ret) {
-                            debugger;
                             if (ret == 0) {
                                 $(picname).val(ret.picid);
                             }
+                        },
+                        fail:function(e){
+                            debugger;
+                            console.log("上传失败了");
                         }
+                        
                     });
                 }
             });
@@ -68,12 +75,19 @@
         }
 
         function calculate_qygd_investment(investment) {
+            var totalInvestment = Number($("#register_money").val());
+            if(Number(investment)){
+                var rsstr = Math.floor(investment/totalInvestment * 10000)/100;
+                return rsstr + "%" ;
+            }
             return "0%";
         }
-        function getRemotePic(picid){
-            var rsstr = picid;//remoteaddress+"/"+picid
+
+        function getRemotePic(picid) {
+            var rsstr = picid; //remoteaddress+"/"+picid
             return rsstr;
         }
+
         function editInvestor(index) {
             debugger;
             if (investorAry.length > index) {
@@ -82,9 +96,9 @@
                 $("#qygd_idnumber").val(investor["qygd_idnumber"]);
                 $("#qygd_investment").val(investor["qygd_investment"]);
                 $("#qygd_jobtitle").val(investor["qygd_jobtitle"]);
-                $("#qygd_pic1"+"_img").css("background-image", "url('"+getRemotePic(investor["qygd_pic1"])+"')");
-                $("#qygd_pic2"+"_img").css("background-image", "url('"+getRemotePic(investor["qygd_pic2"])+"')");
-                $("#qygd_pic3"+"_img").css("background-image", "url('"+getRemotePic(investor["qygd_pic3"])+"')");
+                $("#qygd_pic1" + "_img").attr("src",getRemotePic(investor["qygd_pic1"]));
+                $("#qygd_pic2" + "_img").attr("src",getRemotePic(investor["qygd_pic2"]));
+                $("#qygd_pic3" + "_img").attr("src",getRemotePic(investor["qygd_pic3"]));
                 //这里需要服务器上图片显示的方法
                 isAddMode = false;
                 $("#addinvestorpanel").modal("toggle");
@@ -106,9 +120,11 @@
             }
             $("#addinvestorpanel").modal("hide");
         }
-
+        var thebillid=0;
         function getApplyFromJSON() {
             var jsonobj = {};
+            thebillid = Date.parse(new Date());
+            jsonobj["id"] = thebillid;
             jsonobj["apply_name"] = $("#apply_name").val();
             jsonobj["apply_name2"] = $("#apply_name2").val();
             jsonobj["apply_name3"] = $("#apply_name3").val();
@@ -210,7 +226,7 @@
                     dataType: "json",
                     success: function(data) {
                         if (data.ret == 0) {
-                            window.location = "ee_progress.html";
+                            window.location = "ee_progress.html?thebillid="+thebillid;
                         }
                     },
                     error: function(xhr, type) {
@@ -221,37 +237,16 @@
             });
             $("#addinvestorBtn").on("click", function() {
                 isAddMode = true;
-                debugger;
                 $("#qygd_name").val("");
                 $("#qygd_idnumber").val("");
                 $("#qygd_investment").val("");
                 $("#qygd_jobtitle").val("法人");
-                $("#qygd_pic1"+"_img").css("background-image", "url('')");
-                $("#qygd_pic2"+"_img").css("background-image", "url('')");
-                $("#qygd_pic3"+"_img").css("background-image", "url('')");
+                $("#qygd_pic1" + "_img").attr("src","images/picframe.svg");
+                $("#qygd_pic2" + "_img").attr("src","images/picframe.svg");
+                $("#qygd_pic3" + "_img").attr("src","images/picframe.svg");
                 //setFromDisabled("naform", true);
+                $("#addinvestorpanel").modal("toggle");
             });
-            /*$("#apply_name").on("change", function() {
-                $.ajax({
-                    type: "POST", //用POST方式传输
-                    　　dataType: "json", //数据格式:JSON
-                    　　url: 'json/ee_nameapply_verfiy.json', //目标地址
-                    data: "applay_name=" + $("#apply_name").val(),
-                    　　error: function(XMLHttpRequest, textStatus, errorThrown) {
-                        //
-                    },
-                    　　success: function(msg) {
-                        if (msg.valid == false) {
-                            debugger;
-                            $("form")
-                                .bootstrapValidator('updateStatus', 'applay_name', 'NOT_VALIDATED')
-                                .bootstrapValidator('validateField', 'applay_name');
-                        }
-                    }
-                });
-            });*/
-
-
         });
 
     </script>
@@ -334,7 +329,7 @@
                     <hr>
                     <div class="form-group my-form-group wrap">
                         <label for="apply_remark">备注</label>
-                        <textarea name="apply_remark" class="form-control" required style="font-size:18px;border-color: #5066b4;"></textarea>
+                        <textarea id="apply_remark" name="apply_remark" class="form-control" required style="font-size:18px;border-color: #5066b4;"></textarea>
                     </div>
                     <hr>
                     <div class="row text-center">
@@ -389,9 +384,20 @@
                         <label>投资人身份证</label>
                         <div class="container-fluid">
                             <div class="row">
-                                <div onclick="uploadImgWithName('#qygd_pic1',this)" id="qygd_pic1_img" class="text-center col-xs-6  col-sm-9 my-gap-right" style="width:100px;height:100px;border-radius:8px;background-color:#d3d3d3;border-color:#888888">&nbsp;<br><span style="padding-top:38px">正面</span></div>
-                                <div id="qygd_pic2_img" class="text-center col-xs-6  col-sm-9 " style="width:100px;height:100px;border-radius:8px;background-color:#d3d3d3;border-color:#888888;" onclick="uploadImgWithName('#qygd_pic2',this)">&nbsp;<br><span style="padding-top:38px">反面</span></div>
-                                <div id="qygd_pic3_img" class="text-center col-xs-6  col-sm-9 " style="width:100px;height:100px;border-radius:8px;background-color:#d3d3d3;border-color:#888888;" onclick="uploadImgWithName('#qygd_pic3',this)">&nbsp;<br><span style="padding-top:38px">证件照</span></div>
+                                <a class="col-xs-4" href="javascript:uploadImgWithName('#qygd_pic1','#qygd_pic1_img')" style="border:0px solid #000">
+                                <img id="qygd_pic1_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
+                                </a>
+                                <a class="col-xs-4"  href="javascript:uploadImgWithName('#qygd_pic2','#qygd_pic2_img')" style="border:0px solid #000">
+                                <img id="qygd_pic2_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
+                                </a>
+                                <a class="col-xs-4" href="javascript:uploadImgWithName('#qygd_pic3','#qygd_pic3_img')" style="border:0px solid #000">
+                                <img id="qygd_pic3_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
+                                </a>
+                              </div>
+                            <div class="row">
+                                <label class="col-xs-4" style="font-size:14px;font-weight:normal">正面</label>
+                                <label class="col-xs-4" style="font-size:14px;font-weight:normal">反面</label>
+                                <label class="col-xs-4" style="font-size:14px;font-weight:normal">证件照</label>
                             </div>
                         </div>
                         <input type="hidden" id="qygd_pic1">

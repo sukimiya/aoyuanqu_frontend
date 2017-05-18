@@ -26,8 +26,10 @@
             "qygd_idnumber": "苹果",
             "qygd_investment": "3232",
             "qygd_percent": "1",
+            "qygd_jobtitle": "法人",
             "qygd_pic1": "2",
             "qygd_pic2": "3",
+            "qygd_pic3": "3",
             "o2o_id": "3"
         },
         {
@@ -35,8 +37,10 @@
             "qygd_idnumber": "雪梨",
             "qygd_investment": "2222",
             "qygd_percent": "2",
+            "qygd_jobtitle": "股东",
             "qygd_pic1": "5",
             "qygd_pic2": "5",
+            "qygd_pic3": "5",
             "o2o_id": "5"
         }
     ]
