@@ -213,7 +213,9 @@
     border-left-width: 0px;
     border-right-width: 0px;
 }
-
+.my-list-item a{
+    text-align: left;
+}
 .my-list-item i {
     padding-left: 10px;
     padding-right: 20px;
@@ -243,11 +245,13 @@
 .my-list-item:first-child {
     border-top-right-radius: 0px;
     border-top-left-radius: 0px;
+    border-top: 0px none #FFF;
 }
 
 .my-list-item:last-child {
     border-bottom-right-radius: 0px;
     border-bottom-left-radius: 0px;
+    border-bottom: 0px none #FFF;
 }
 
 .my-list-item-heading {
