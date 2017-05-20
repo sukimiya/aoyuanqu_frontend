@@ -1,0 +1,215 @@
+<!----------Reference from---------------->
+<!----------https://segmentfault.com/a/1190000006108996----->
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>核准通知</title>
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="css/my.css" rel="stylesheet" type="text/css">
+    <style>
+        .addd {
+            position: absolute;
+            position: relative;
+        }
+
+    </style>
+</head>
+
+<body class="my-body" style="background-image:url('images/cloudbgxd301.png');background-size: cover;">
+    <div class="section my-topsection" style="height:30%;">
+
+        <div class="container" style="vertical-align:mid;">
+            <div class="col-xs-10 col-xs-offset-1 text-center" style="color:white;">
+                <p>&nbsp;</p>
+                <span style="font-size:16px;">恭喜您！<br>工商查名正式通过！</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" style="height:70%;">
+
+        <style type="text/css">
+            .wrp {
+                width: 100%;
+                height: 100%;
+            }
+
+            .box {
+                color: white;
+                background-color: #3e8e41;
+                width: 220px;
+                height: 220px;
+                overflow: auto;
+            }
+
+            .wrp1 {
+                position: relative;
+            }
+
+            .box1 {
+                margin: auto;
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: 0;
+                bottom: 0;
+            }
+
+            .wrp2 {
+                position: relative;
+            }
+
+            .box2 {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                margin-left: -100px;
+                /* (width + padding)/2 */
+                margin-top: -75px;
+                /* (height + padding)/2 */
+            }
+
+            .wrp3 {
+                position: relative;
+            }
+
+            .box3 {
+                margin: auto;
+                position: absolute;
+                top: 40%;
+                left: 50%;
+                -webkit-transform: translate(-50%, -50%);
+                -ms-transform: translate(-50%, -50%);
+                transform: translate(-50%, -50%);
+            }
+
+            .submitbtn {
+                margin: auto;
+                position: absolute;
+                bottom: 15px;
+                left: 15px;
+                right: 15px;
+                height: 52px;
+                width: 90%;
+            }
+            .uploadbtn {
+                margin: auto;
+                position: absolute;
+                bottom: 102px;
+                left: 15px;
+                right: 15px;
+                width: 20%;
+            }
+        </style>
+        <div class="wrp wrp2">
+            <a href="javascript:uploadImgWithName('#qygd_pic1','#qygd_pic1_img')">
+                <img id="qygd_pic1_img" src="images/picframe.svg" class="img-responsive my-picbackground box box3" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
+            </a>
+            
+            <button id="uploadBtn" class="btn btn-success uploadbtn" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>正在上传..."><span style="font-size:18px">拍照上传</span></button>
+            <button id="submistBtn" class="btn btn-primary submitbtn"><span style="font-size:22px">确定</span></button>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript" src="js/my.js"></script>
+    <script type="text/javascript">
+        var theimagesid = "";
+
+        function showRemoteImg(mename) {
+            if ($(mename).attr("src") == "images/picframe.svg") return;
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                data: '{"id":' + GetRequest["id"] + '}',
+                url: "json/applynotify.json",
+                success: function(ret) {
+                    getRemotePic(ret.pic, $(mename))
+                },
+                error: function(e) {
+
+                }
+
+            });
+
+        }
+
+        function uploadImgWithName(theimg) {
+            var imgpath = "";
+            wx.chooseImage({
+                count: 1,
+                sizeType: ['original', 'compressed'],
+                sourceType: ['album', 'camera'],
+                success: function(res) {
+                    var localIds = res.localIds;
+                    imgpath = localIds;
+                    $(theimg).attr("src", imgpath);
+                    console.log("本地图片id:" + imgpath);
+                    $.ajax({
+                        type: "POST",
+                        url: "json/uploadfiles.json",
+                        dataType: "json",
+                        enctype: 'multipart/form-data',
+                        data: {
+                            file: imgpath
+                        },
+                        success: function(ret) {
+                            if (ret == 0) {
+                                theimagesid = ret.picid;
+                                getRemotePic(ret.picid, $(theimg));
+                            }
+                        },
+                        fail: function(e) {
+                            debugger;
+                            console.log("上传失败了");
+                        }
+
+                    });
+                }
+            });
+
+        }
+        $(document).ready(function() {
+            //showRemoteImg(#qygd_pic1_img');
+            $("#submistBtn").on("click", function(me) {
+                if(theimagesid!="")
+                $.ajax({
+                        type: "POST",
+                        url: "json/ee_u_applynotify.json",
+                        dataType: "json",
+                        data: {
+                            id: theimagesid
+                        },
+                        success: function(ret) {
+                            if (ret.result == 0) {
+                                window.location= "ee_u_progress.html?id="+ret.id;
+                            }
+                        },
+                        fail: function(e) {
+                            debugger;
+                            console.log("提交失败了");
+                        }
+
+                    });
+            });
+            $("#uploadBtn").on("click", function(me) {
+                if (theimagesid != "") {
+                    var $this = $(this);
+                    $this.button('loading');
+                    
+                    uploadImgWithName("#qygd_pic1_img");
+                    
+                    
+                }
+            });
+        });
+
+    </script>
+</body>
+
+</html>

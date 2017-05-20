@@ -215,6 +215,7 @@
 }
 .my-list-item a{
     text-align: left;
+    text-overflow:ellipsis;
 }
 .my-list-item i {
     padding-left: 10px;

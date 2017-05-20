@@ -1,0 +1,147 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>核准通知</title>
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="css/my.css" rel="stylesheet" type="text/css">
+    <style type="text/css">
+        .triangle {
+            height: 0px;
+            width: 0px;
+            border-width: 8px;
+            border-style: solid;
+            border-color: transparent #FAFAFA transparent transparent;
+            margin-top: 16px;
+            margin-bottom: 16px;
+            float: left;
+        }
+
+        .bobble-box {
+            background-color: #FAFAFA;
+            border-radius: 5px;
+            height: 48px;
+            padding: 14px;
+            display: block;
+        }
+
+        .cricle-num {
+            color: #5A5A5A;
+            font-weight: bold;
+            border-radius: 16px;
+            height: 32px;
+            width: 32px;
+            border: 2px solid #5078B4;
+            padding: 4px;
+            margin-top: 8px;
+            background-color: white;
+            float: left;
+        }
+
+        .bobble-item-bg {
+            padding: 15px;
+            background-repeat: repeat-y;
+            background-image: url('images/311.png');
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="section my-topsection">
+        <div class="container">
+            <div class="bobble-item-bg clearfix">
+                <div class="text-center cricle-num">1</div>
+                <div style="color:#FAFAFA">
+                    <div class="triangle"></div>
+                    <a id="item1" class="col-xs-9 bobble-box clearfix">工商预查名&nbsp;<span class="badge">12</span></a>
+                </div>
+            </div>
+            <div class="bobble-item-bg clearfix">
+                <div class="text-center cricle-num">2</div>
+                <div style="color:#FAFAFA">
+                    <div class="triangle"></div>
+                    <a id="item2" class="col-xs-9 bobble-box clearfix">工商核准通知&nbsp;<span class="badge">12</span></a>
+                </div>
+            </div>
+            <div class="bobble-item-bg clearfix">
+                <div class="text-center cricle-num">3</div>
+                <div style="color:#FAFAFA">
+                    <div class="triangle"></div>
+                    <a id="item3" class="col-xs-9 bobble-box clearfix">工商注册面签&nbsp;<span class="badge">12</span></a>
+                </div>
+            </div>
+            <div class="bobble-item-bg clearfix">
+                <div class="text-center cricle-num">4</div>
+                <div style="color:#FAFAFA">
+                    <div class="triangle"></div>
+                    <a id="item4" class="col-xs-9 bobble-box clearfix">营业执照发放&nbsp;<span class="badge">12</span></a>
+                </div>
+            </div>
+            <div class="bobble-item-bg clearfix">
+                <div class="text-center cricle-num">5</div>
+                <div style="color:#FAFAFA">
+                    <div class="triangle"></div>
+                    <a id="item5" class="col-xs-9 bobble-box clearfix">银行开户及三方协议&nbsp;<span class="badge">12</span></a>
+                </div>
+            </div>
+            <div class="bobble-item-bg clearfix">
+                <div class="text-center cricle-num">6</div>
+                <div style="color:#FAFAFA">
+                    <div class="triangle"></div>
+                    <a id="item6" class="col-xs-9 bobble-box clearfix">税种核定预约&nbsp;<span class="badge">12</span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/my.js"></script>
+    <script type="text/javascript">
+        function onloginHandler(ret){
+            
+        }
+        function gotoNameApply(){
+            window.location = "ee_u_nameapplylist.html";
+        }
+        function gotoApplyNotify(){
+            window.location = "ee_u_applynotifylist.html";
+        }
+        function gotoMeetting(){
+            window.location = "ee_u_meettinglist.html";
+        }
+        function gotoCA(){
+            window.location = "ee_u_calist.html";
+        }
+        function gotoCheckTax(){
+            window.location = "ee_u_checktaxlist.html";
+        }
+        function gotoEEFinish(){
+            window.location = "ee_u_eefinishlist.html";
+        }
+        $(document).ready(function(){
+            var uinfo = getsessioninfo();
+            if(uinfo == null){
+                logins(onloginHandler);
+                return;
+            }
+            if(uinfo["pri_ee_u_1"]){
+                $("#item1").attr("href","javascript:gotoNameApply()");
+                $("#item2").attr("href","javascript:gotoApplyNotify()");
+            }
+            if(uinfo["pri_ee_u_2"]){
+                $("#item1").attr("href","javascript:gotoMeetting()");
+                $("#item2").attr("href","javascript:gotoCA()");
+            }
+            if(uinfo["pri_ee_u_3"]){
+                $("#item1").attr("href","javascript:gotoCheckTax()");
+                $("#item2").attr("href","javascript:gotoEEFinish()");
+            }
+        });
+    </script>
+</body>
+
+</html>

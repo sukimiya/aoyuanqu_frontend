@@ -39,17 +39,11 @@
             });
         });
 
-        function getRemotePic(picid) {
-            var rsstr = picid; //remoteaddress+"/"+picid
-            return rsstr;
-        }
-
         function onInvestorOKHandler() {
             $("#addinvestorpanel").modal("hide");
         }
 
         function pressJSONData(jsonobj) {
-            debugger;
             $("#apply_name").val(jsonobj["apply_name"]);
             $("#apply_name").append("<option>" + jsonobj["apply_name"] + "</option>");
             $("#apply_name").append("<option>" + jsonobj["apply_name2"] + "</option>");
@@ -158,8 +152,7 @@
                     </div>
                     <label for="register_money">注册资金</label>
                     <div class="input-group my-form-group">
-                        <label>注册资金</label>
-                        <input type="number" id="register_money" name="register_money" style="font-size:16px;">
+                        <input type="number" id="register_money" disabled="yes" name="register_money" class="form-control my-input">
                         <span class="input-group-addon">万元</span>
                     </div>
                     <div class="form-group my-form-group">
@@ -233,23 +226,20 @@
                     <form class="my-form" role="form">
                         <div class="form-group my-form-group">
                             <label for="qygd_name">名称或姓名</label>
-                            <input type="text" name="qygd_name" class="form-control my-input" id="qygd_name" required>
+                            <input type="text" name="qygd_name" disabled="yes" class="form-control my-input" id="qygd_name" required>
                         </div>
-                        <div class="form-group my-form-group my-gap-bottom" style="font-size:18px;">
-                            <span>职务</span>
-                            <select id="qygd_jobtitle" name="qygd_jobtitle" class="col-xs-12">
-                                <option>法人</option>
-                                <option>股东</option>
-                            </select>
+                        <div class="form-group my-form-group my-gap-bottom" disabled="yes" style="font-size:18px;">
+                            <label for="qygd_name">职务</label>
+                            <input type="text" name="qygd_jobtitle" disabled="yes" class="form-control my-input" id="qygd_jobtitle" required>
                         </div>
                         <div class="form-group my-form-group">
                             <label for="qygd_idnumber">证件号</label>
-                            <input type="text" name="qygd_idnumber" class="form-control my-input" id="qygd_idnumber" required>
+                            <input type="text" name="qygd_idnumber" disabled="yes" class="form-control my-input" id="qygd_idnumber" required>
                         </div>
 
                         <div class="form-group my-form-group">
                             <label for="qygd_investment">投资金额</label>
-                            <input id="qygd_investment" type="number" name="qygd_investment" class="form-control my-input">
+                            <input id="qygd_investment" type="number" disabled="yes" name="qygd_investment" class="form-control my-input">
                             <span>万元</span>
                         </div>
                         <label>投资人身份证</label>
