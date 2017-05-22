@@ -1,47 +1,57 @@
-﻿{
+{
     "resualt": 0,
     "totalPages": 2,
     "curPage": 1,
     "lists": [
         {
             "company": "张三锦",
-            "cid": "1"
+            "cid": "1",
+            "state":3
         },
         {
             "company": "王莎",
-            "cid": "2"
+            "cid": "2",
+            "state":3
         },
         {
             "company": "木锦里",
-            "cid": "3"
+            "cid": "3",
+            "state":3
         },
         {
             "company": "刘先锋",
-            "cid": "4"
+            "cid": "4",
+            "state":3
         },
         {
             "company": "辽余元",
-            "cid": "5"
+            "cid": "5",
+            "state":3
         },
         {
             "company": "孔明",
-            "cid": "6"
+            "cid": "6",
+            "state":3
         },
         {
             "company": "夏侯渊",
-            "cid": "7"
+            "cid": "7",
+            "state":3
         },
         {
             "company": "吴三桂",
-            "cid": "8"
+            "cid": "8",
+            "state":3
         },
         {
             "company": "周瑜",
-            "cid": "9"
+            "cid": "9",
+            "state":3
         },
         {
             "company": "黄盖",
-            "cid": "10"
+            "cid": "10",
+            "state":3
         }
     ]
 }

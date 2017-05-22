@@ -3,6 +3,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="0">
     <title>核准通知</title>
     <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css">
@@ -102,28 +105,50 @@
     <script type="text/javascript" src="js/my.js"></script>
     <script type="text/javascript">
         function onloginHandler(ret){
-            
+            var uinfo = mygetsessioninfo();
+            if(uinfo == null){
+                return;
+            }
+            if(uinfo["pri_ee_u_1"]){
+                $("#item1").attr("href","javascript:gotoNameApply()");
+                $("#item2").attr("href","javascript:gotoApplyNotify()");
+            }
+            if(uinfo["pri_ee_u_2"]){
+                $("#item1").attr("href","javascript:gotoMeetting()");
+                $("#item2").attr("href","javascript:gotoCA()");
+            }
+            if(uinfo["pri_ee_u_3"]){
+                $("#item1").attr("href","javascript:gotoCheckTax()");
+                $("#item2").attr("href","javascript:gotoEEFinish()");
+            }
         }
-        function gotoNameApply(){
-            window.location = "ee_u_nameapplylist.html";
+
+        function gotoNameApply() {
+            window.location = "ee_nameapplylist.html";
         }
-        function gotoApplyNotify(){
-            window.location = "ee_u_applynotifylist.html";
+
+        function gotoApplyNotify() {
+            window.location = "ee_applynotifylist.html";
         }
-        function gotoMeetting(){
-            window.location = "ee_u_meettinglist.html";
+
+        function gotoMeetting() {
+            window.location = "ee_meettinglist.html";
         }
-        function gotoCA(){
-            window.location = "ee_u_calist.html";
+
+        function gotoCA() {
+            window.location = "ee_calist.html";
         }
-        function gotoCheckTax(){
-            window.location = "ee_u_checktaxlist.html";
+
+        function gotoCheckTax() {
+            window.location = "ee_checktaxlist.html";
         }
-        function gotoEEFinish(){
-            window.location = "ee_u_eefinishlist.html";
+
+        function gotoEEFinish() {
+            window.location = "ee_eefinishlist.html";
         }
-        $(document).ready(function(){
-            var uinfo = getsessioninfo();
+        $(document).ready(function() {
+            var uinfo = mygetsessioninfo();
+            debugger;
             if(uinfo == null){
                 logins(onloginHandler);
                 return;
@@ -141,6 +166,7 @@
                 $("#item2").attr("href","javascript:gotoEEFinish()");
             }
         });
+
     </script>
 </body>
 

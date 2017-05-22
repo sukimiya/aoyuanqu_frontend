@@ -1,0 +1,446 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="0">
+    <title>招商进度</title>
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="css/my.css" rel="stylesheet" type="text/css">
+    <style type="text/css">
+        .triangle {
+            height: 0px;
+            width: 0px;
+            border-width: 8px;
+            border-style: solid;
+            border-color: transparent #FAFAFA transparent transparent;
+            margin-top: 31px;
+            margin-bottom: 30px;
+            float: left;
+        }
+
+        .invers div .triangle {
+            height: 0px;
+            width: 0px;
+            border-width: 8px;
+            border-style: solid;
+            border-color: transparent #5078b4 transparent transparent;
+            margin-top: 31px;
+            margin-bottom: 30px;
+            float: left;
+        }
+
+        .bobble-box {
+            font-size: 16px;
+            background-color: #FAFAFA;
+            border-radius: 5px;
+            height: 46px;
+            padding: 14px;
+            display: block;
+            margin-top: 15px;
+        }
+
+        .invers div a {
+            color: white;
+            font-size: 16px;
+            background-color: #5078b4;
+            border-radius: 5px;
+            height: 48px;
+            padding: 14px;
+            display: block;
+        }
+
+        .cricle-num {
+            color: #5A5A5A;
+            font-weight: bold;
+            border-radius: 8px;
+            height: 16px;
+            width: 16px;
+            border: 1px solid #cccccc;
+            padding: 0px;
+            margin-top: 3px;
+            margin-right: 5px;
+            line-height: 13px;
+            background-color: white;
+            float: left;
+            font-size: 12px;
+            font-weight: normal;
+        }
+
+        .invers div a .cricle-num {
+            color: #FFFFFF;
+            font-weight: bold;
+            border-radius: 8px;
+            height: 16px;
+            width: 16px;
+            border: 1px solid #FFFFFF;
+            padding: 0px;
+            margin-top: 3px;
+            margin-right: 5px;
+            line-height: 13px;
+            background-color: #5078b4;
+            float: left;
+            font-size: 12px;
+            font-weight: normal;
+        }
+
+        .bobble-item-bg {
+            padding: 0px;
+            padding-top: 0px;
+            padding-bottom: 0px;
+            background-repeat: repeat-y;
+        }
+
+        .invers div a .badge {
+            background-color: dodgerblue;
+        }
+
+        .progress-label {
+            color: gainsboro;
+            text-align: right;
+            font-size: 14px;
+            height: 48px;
+            padding: 14px;
+            padding-left: 0px;
+            float: left;
+            margin-top: 15px;
+            margin-bottom: 14px;
+        }
+
+        .invers div .progress-label {
+            color: #fa3440;
+            text-align: right;
+            font-size: 14px;
+            height: 48px;
+            padding: 14px;
+            padding-left: 0px;
+            float: left;
+            margin-top: 15px;
+            margin-bottom: 14px;
+        }
+
+        .pgdided div .progress-label {
+            color: #636363;
+            text-align: right;
+            font-size: 14px;
+            height: 48px;
+            padding: 14px;
+            padding-left: 0px;
+            float: left;
+            margin-top: 15px;
+            margin-bottom: 14px;
+        }
+
+        .pgdided div .progress-line {
+            width: 15px;
+            padding: 0px;
+            float: left;
+            background-image: url(images/line_5078b4.png);
+        }
+
+        .invers div .progress-line {
+            width: 15px;
+            padding: 0px;
+            float: left;
+            background-image: url(images/line_5078b4.png);
+        }
+
+        .progress-line {
+            width: 15px;
+            padding: 0px;
+            float: left;
+            /*background-image: url(images/line_cccccc.png)*/
+            ;
+        }
+
+        .progress-pp {
+            border: 0px solid transparent;
+            border-radius: 4px;
+            margin-left: 4px;
+            margin-right: 4px;
+            margin-top: 35px;
+            margin-bottom: 35px;
+            background-color: #cccccc;
+            width: 7px;
+            height: 7px;
+        }
+
+        .pgdided div .progress-line .progress-pp {
+            border: 0px solid transparent;
+            border-radius: 4px;
+            margin-left: 4px;
+            margin-right: 4px;
+            margin-top: 35px;
+            margin-bottom: 35px;
+            background-color: #5078b4;
+            width: 7px;
+            height: 7px;
+        }
+
+        .invers div .progress-line .progress-pp {
+            border: 2px solid #FA3440;
+            border-radius: 7px;
+            margin-left: 0px;
+            margin-right: 0px;
+            margin-top: 31px;
+            margin-bottom: 0px;
+            background-color: white;
+            width: 14px;
+            height: 14px;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="pgdided clearfix">
+        <div>
+            <div id="item_label" class="col-xs-3">&nbsp;</div>
+            <div class="progress-line" style="height:10%">&nbsp;</div>
+        </div>
+    </div>
+    <div class="section">
+        <div class="container" style="padding:0px;">
+            <div id="item1" class="bobble-item-bg pgdided clearfix">
+
+                <div style="color:#FAFAFA">
+                    <div id="item1_label" class="col-xs-3 progress-label">已办</div>
+                    <div class="progress-line">
+                        <div class="progress-pp"></div>
+                    </div>
+                    <div class="triangle"></div>
+                    <a class="col-xs-7 bobble-box clearfix">
+                        <div class="text-center cricle-num">1</div>工商预查名&nbsp;</a>
+                </div>
+            </div>
+            <div id="item2" class="bobble-item-bg pgdided clearfix">
+
+                <div style="color:#FAFAFA">
+                    <div id="item2_label" class="col-xs-3 progress-label">已办</div>
+                    <div class="progress-line">
+                        <div class="progress-pp"></div>
+                    </div>
+                    <div class="triangle"></div>
+                    <a class="col-xs-7 bobble-box clearfix">
+                        <div class="text-center cricle-num">2</div>工商核准通知&nbsp;</a>
+                </div>
+            </div>
+            <div id="item3" class="bobble-item-bg invers clearfix">
+
+                <div style="color:#FAFAFA">
+                    <div id="item3_label" class="col-xs-3 progress-label">待完善信息</div>
+                    <div class="progress-line">
+                        <div class="progress-pp"></div>
+                    </div>
+                    <div class="triangle"></div>
+                    <a class="col-xs-7 bobble-box clearfix">
+                        <div class="text-center cricle-num">3</div>工商注册面签&nbsp;</a>
+                </div>
+            </div>
+            <div id="item4" class="bobble-item-bg clearfix">
+
+                <div style="color:#FAFAFA">
+                    <div id="item4_label" class="col-xs-3 progress-label">待签</div>
+                    <div class="progress-line">
+                        <div class="progress-pp"></div>
+                    </div>
+                    <div class="triangle"></div>
+                    <a class="col-xs-7 bobble-box clearfix">
+                        <div class="text-center cricle-num">4</div>营业执照发放&nbsp;</a>
+                </div>
+            </div>
+            <div id="item5" class="bobble-item-bg clearfix">
+
+                <div style="color:#FAFAFA">
+                    <div id="item5_label" class="col-xs-3 progress-label">待传</div>
+                    <div class="progress-line">
+                        <div class="progress-pp"></div>
+                    </div>
+                    <div class="triangle"></div>
+                    <a class="col-xs-7 bobble-box clearfix">
+                        <div class="text-center cricle-num">5</div>银行开户及三方协议&nbsp;</a>
+                </div>
+            </div>
+            <div id="item6" class="bobble-item-bg clearfix">
+
+                <div style="color:#FAFAFA">
+                    <div id="item6_label" class="col-xs-3 progress-label">待预约</div>
+                    <div class="progress-line">
+                        <div class="progress-pp"></div>
+                    </div>
+                    <div class="triangle"></div>
+                    <a class="col-xs-7 bobble-box clearfix">
+                        <div class="text-center cricle-num">6</div>税种核定预约&nbsp;</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/my.js"></script>
+    <script type="text/javascript">
+        function onloginHandler(ret) {
+            var uinfo = mygetsessioninfo();
+            if (uinfo == null) {
+                return;
+            }else{
+                getMyDatabyid();
+            }
+            
+        }
+        function onDataHandler(data){
+            if(data.result == 0){
+                        for(var i=0;i<data.lists.length;i++){
+                            var node = data.lists[i];
+                            var myelement = $("#item"+(i+1)+"_label");
+                            var mylink = $("#item"+(i+1)+" div .bobble-box");
+                            var myparent = $("#item"+(i+1));
+                            if(node.state==0){
+                                //还未处理的状态默认灰色
+                                myparent.removeClass("invers");
+                                myparent.removeClass("pgdided");
+                            }else if(node.state==1){
+                                //正在进行中的状态
+                                myparent.removeClass("pgdided");
+                                myparent.addClass("invers");
+                            }else{
+                                //完成态
+                                myparent.removeClass("invers");
+                                myparent.addClass("pgdided");
+                            }
+                            switch(i){
+                                case 0:
+                                    if(node.state == 2){
+                                        mylink.attr("href", "javascript:gotoNamePriview()");
+                                        myelement.text("已办");
+                                    }else if(node.state == 1){
+                                        mylink.attr("href", "javascript:gotoNameApply()");
+                                        myelement.text("退回");
+                                    }else{
+                                        mylink.attr("href", "javascript:gotoNameApply()");
+                                        myelement.text("待办");
+                                        myparent.removeClass("pgdided");
+                                        myparent.addClass("invers");
+                                    }
+                                    break;
+                                case 1:
+                                    if(node.state == 2){
+                                       myelement.text("已办");
+                                       mylink.attr("href", "javascript:gotoApplyNotify()");
+                                    }else if(node.state == 1){
+                                        myelement.text("待办");
+                                    }else{
+                                        myelement.text("待办");
+                                    }
+                                    break;
+                                case 2:
+                                    if(node.state == 1){
+                                        myelement.text("待完善信息");
+                                        mylink.attr("href", "javascript:gotoMeetting()");
+                                    }else if(node.state == 2){
+                                        myelement.text("面签预约成功");
+                                        mylink.attr("href", "javascript:gotoMeettingPriview()");
+                                    }else{
+                                        myelement.text("待审");
+                                    }
+                                    break;
+                                case 3:
+                                    if(node.state == 1){
+                                        myelement.text("已发放");
+                                        mylink.attr("href", "javascript:gotoCAPriview()");
+                                    }else if(node.state == 2){
+                                        mylink.attr("href", "javascript:gotoCA()");
+                                        myelement.text("已发放");
+                                    }else{
+                                        myelement.text("待签");
+                                    }
+                                    break;
+                                case 4:
+                                    if(node.state == 1){
+                                        myelement.text("待传");
+                                        mylink.attr("href", "javascript:gotoCheckTax()");
+                                    }else if(node.state == 2){
+                                        myelement.text("已传");
+                                    }else{
+                                        myelement.text("待传");
+                                    }
+                                    break;
+                                case 5:
+                                    if(node.state == 1){
+                                        myelement.text("待预约");
+                                        mylink.attr("href", "javascript:gotoEEFinish()");
+                                    }else if(node.state == 2){
+                                        myelement.text("已完成");
+                                        mylink.attr("href", "javascript:gotoEEFinish2()");
+                                    }else{
+                                        myelement.text("待预约");
+                                    }
+                                    break;
+                            }
+                            
+                        }
+                    }
+        }
+        function gotoNamePriview() {
+            window.location = "ee_nameprieview.html?id=" + GetRequest()['id'];
+        }
+        function gotoNameApply() {
+            window.location = "ee_nameapply.html?id=" + GetRequest()['id'];
+        }
+
+        function gotoApplyNotify() {
+            window.location = "ee_applynotify.html?id=" + GetRequest()['id'];
+        }
+
+        function gotoMeetting() {
+            window.location = "ee_meetting.html?id=" + GetRequest()['id'];
+        }
+
+        function gotoMeettingPriview() {
+            window.location = "ee_meettingpriview.html?id=" + GetRequest()['id'];
+        }
+
+        function gotoCAPriview() {
+            window.location = "ee_capriview.html?id=" + GetRequest()['id'];
+        }
+
+        function gotoCA() {
+            window.location = "ee_cadistribute.html?id=" + GetRequest()['id'];
+        }
+
+        function gotoCheckTax() {
+            window.location = "ee_checktax.html?id=" + GetRequest()['id'];
+        }
+
+        function gotoEEFinish() {
+            window.location = "ee_eefinish.html?id=" + GetRequest()['id'];
+        }
+
+        function gotoEEFinish2() {
+            window.location = "ee_eefinish2.html?id=" + GetRequest()['id'];
+        }
+        function getMyDatabyid(){
+            $.ajax({
+                type:"POST",
+                dataType:"json",
+                url:"json/ee_progress.json",
+                data:{
+                    id:GetRequest()['id']
+                },
+                success:function(data){
+                    onDataHandler(data);
+                }
+            });
+        }
+        $(document).ready(function() {
+            getMyDatabyid();
+        });
+
+    </script>
+</body>
+
+</html>

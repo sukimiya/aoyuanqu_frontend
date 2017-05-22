@@ -84,34 +84,39 @@ function OssUpload(param, file, fileName, callBack) {
 //------------------------------------------session
 
 function logins(logincallbackFn) {
-    $.ajax {
+    $.ajax({
+        type:"POST",
         url: "json/u_login.json",
-        success: function (ret) {
-            if (ret.result == 0) {
+        dataType: "json",
+        success: function (data, textStatus, request) {
+            debugger;
+            if (data.result == 0) {
                 var rsobj = {};
-                rsobj["userid"] = ret.userid;
-                rsobj["name"] = ret.name;
-                rsobj["charactor"] = ret.charactor;
-                sessionStorage.setItem("userid", ret.userid);
-                sessionStorage.setItem("name", ret.name);
-                sessionStorage.setItem("charactor", ret.charactor);
+                rsobj["userid"] = data.userid;
+                rsobj["name"] = data.name;
+                rsobj["charactor"] = data.charactor;
+                sessionStorage.setItem("userid", data.userid);
+                sessionStorage.setItem("name", data.name);
+                sessionStorage.setItem("charactor", data.charactor);
                 //如果角色大于10就是管理员
                 if (ret.charactor > 10) {
-                    sessionStorage.setItem("pri_ee_u_1", ret.pri_ee_u_1);
-                    sessionStorage.setItem("pri_ee_u_2", ret.pri_ee_u_2);
-                    sessionStorage.setItem("pri_ee_u_3", ret.pri_ee_u_3);
+                    sessionStorage.setItem("pri_ee_u_1", data.pri_ee_u_1);
+                    sessionStorage.setItem("pri_ee_u_2", data.pri_ee_u_2);
+                    sessionStorage.setItem("pri_ee_u_3", data.pri_ee_u_3);
                 }
-                logincallbackFn(true);
+                if (logincallbackFn)
+                    logincallbackFn(true);
                 console.log("登录成功");
-            }else{
-                logincallbackFn(false);
+            } else {
+                if (logincallbackFn)
+                    logincallbackFn(false);
                 console.log("登录失败");
             }
         }
-    }
+    });
 }
 
-function getsessioninfo() {
+function mygetsessioninfo() {
     var rsobj = {};
     var tempuid = sessionStorage.getItem("userid");
     if (tempuid != null) {
@@ -130,7 +135,8 @@ function getsessioninfo() {
         console.log("成功获取session信息");
         return rsobj;
     }
-    return null;
+    console.log("mygetsessioninfo：请先登陆");
+    return {};
 }
 
 function isManager() {

@@ -5,83 +5,103 @@
     "lists": [
         {
             "company": "张三锦",
-            "cid": "1"
+            "cid": "1",
+            "state":3
         },
         {
             "company": "王莎",
-            "cid": "2"
+            "cid": "2",
+            "state":3
         },
         {
             "company": "木锦里",
-            "cid": "3"
+            "cid": "3",
+            "state":3
         },
         {
             "company": "刘先锋",
-            "cid": "4"
+            "cid": "4",
+            "state":3
         },
         {
             "company": "辽余元",
-            "cid": "5"
+            "cid": "5",
+            "state":3
         },
         {
             "company": "孔明",
-            "cid": "6"
+            "cid": "6",
+            "state":3
         },
         {
             "company": "夏侯渊",
-            "cid": "7"
+            "cid": "7",
+            "state":3
         },
         {
             "company": "吴三桂",
-            "cid": "8"
+            "cid": "8",
+            "state":3
         },
         {
             "company": "周瑜",
-            "cid": "9"
+            "cid": "9",
+            "state":3
         },
         {
             "company": "吴三桂",
-            "cid": "10"
+            "cid": "10",
+            "state":3
         },
         {
             "company": "张三锦",
-            "cid": "11"
+            "cid": "11",
+            "state":3
         },
         {
             "company": "王莎",
-            "cid": "12"
+            "cid": "12",
+            "state":3
         },
         {
             "company": "木锦里",
-            "cid": "13"
+            "cid": "13",
+            "state":3
         },
         {
             "company": "刘先锋",
-            "cid": "14"
+            "cid": "14",
+            "state":3
         },
         {
             "company": "辽余元",
-            "cid": "15"
+            "cid": "15",
+            "state":3
         },
         {
             "company": "孔明",
-            "cid": "16"
+            "cid": "16",
+            "state":3
         },
         {
             "company": "夏侯渊",
-            "cid": "17"
+            "cid": "17",
+            "state":3
         },
         {
             "company": "吴三桂",
-            "cid": "18"
+            "cid": "18",
+            "state":3
         },
         {
             "company": "周瑜",
-            "cid": "19"
+            "cid": "19",
+            "state":3
         },
         {
             "company": "黄盖",
-            "cid": "20"
+            "cid": "20",
+            "state":3
         }
     ]
 }
