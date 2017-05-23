@@ -145,7 +145,7 @@
                     jsonobj["arr"].push(ainvestor);
                 }
             }
-            JSON.stringify
+            debugger;
             var jstr = JSON.stringify(jsonobj);
             console.log(jstr);
             return jstr;
@@ -221,6 +221,7 @@
                     dataType: "json",
                     success: function(data) {
                         if (data.ret == 0) {
+                            debugger;
                             window.location = "ee_progress.html?id="+thebillid;
                         }
                     },
@@ -229,6 +230,7 @@
                     }
 
                 });
+                
             });
             $("#addinvestorBtn").on("click", function() {
                 isAddMode = true;

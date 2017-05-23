@@ -1,0 +1,282 @@
+<!--Reference from-->
+<!--http://www.jq22.com/jquery-info13300-->
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="0">
+    <title>面签预约</title>
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.bootcss.com/bootstrap-validator/0.5.3/css/bootstrapValidator.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
+    <link href="https://cdn.bootcss.com/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/bootstrap-switch/3.3.4/css/bootstrap3/bootstrap-switch.min.css" rel="stylesheet">
+    <link href="css/highlight.css" rel="stylesheet" type="text/css">
+    <link href="css/main.css" rel="stylesheet" type="text/css">
+    <link href="css/my.css" rel="stylesheet" type="text/css">
+    <style type="text/css">
+        .my-form-h1 {}
+
+        .my-form-label {
+            font-size: 16px;
+            font-weight: normal;
+            color: #040404;
+        }
+    </style>
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
+    <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap-validator/0.5.3/js/bootstrapValidator.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
+    <script src="js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript" src="js/jquery.flexText.min.js"></script>
+    <script src="https://cdn.bootcss.com/json2/20160511/json2.min.js"></script>
+    <script src="https://cdn.bootcss.com/moment.js/2.18.0/moment.min.js"></script>
+    <script src="https://cdn.bootcss.com/moment.js/2.18.0/locale/zh-cn.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="js/highlight.js"></script>
+    <script src="https://unpkg.com/bootstrap-switch"></script>
+    <script src="js/main.js"></script>
+    <script type="text/javascript" src="js/my.js"></script>
+    <script type="text/javascript">
+        var investorAry = [];
+        var isAddMode = true;
+
+        function getmeetingdata() {
+            $.ajax("json/ee_meeting_request.json", {
+                type: "POST",
+                dataType: "json",
+                data: JSON.stringify({
+                    id: GetRequest()["id"]
+                }),
+                success: function(data) {
+                    pressData(data);
+                }
+            });
+        }
+
+        function pressData(data) {
+            $("#companyname").text(data.apply_name);
+            $("#actual_address").text(data.actual_address);
+            $("#manage_range").text(data.manage_range);
+            $("#register_money").text(data.register_money + "万元");
+            $("#register_kind").text(data.register_kind);
+            $("#appointment_time").val(data.appointment_time);
+
+            var theyear = Math.round(data.appointment_time.split("年")[0]);
+            var datastr = data.appointment_time.split("年")[1];
+            var themonth = Math.round(datastr.split("月")[0]) - 1;
+            datastr = datastr.split("月")[1];
+            var theday = Math.round(datastr.split("日")[0]);
+            var today = new Date(theyear, themonth, theday);
+            today.setFullYear(theyear);
+            today.setMonth(themonth);
+            today.setDate(theday);
+            $('#appointment_time_picker').datetimepicker({
+                locale: 'zh-cn',
+                defaultDate: today,
+                enabledDates: [today]
+            });
+            $("#appointment_address").val(data.appointment_address);
+        }
+        //
+        function uploadImgWithName(picname, theimg) {
+            var imgpath = "";
+            wx.chooseImage({
+                count: 1,
+                sizeType: ['original', 'compressed'], 
+                sourceType: ['album', 'camera'],
+                success: function(res) {
+                    var localIds = res.localIds;
+                    imgpath = localIds;
+                    $(theimg).attr("src",imgpath);
+                    console.log("本地图片id:"+imgpath);
+                    $.ajax({
+                        type: "POST",
+                        url: "json/uploadfiles.json",
+                        dataType: "json",
+                        enctype: 'multipart/form-data',
+                        data: {
+                            file: imgpath
+                        },
+                        success: function(ret) {
+                            if (ret == 0) {
+                                $(picname).val(ret.picid);
+                            }
+                        },
+                        fail:function(e){
+                            debugger;
+                            console.log("上传失败了");
+                        }
+                        
+                    });
+                }
+            });
+
+        }
+        $(document).ready(function() {
+
+            $("#thesubmit").on("click", function(events) {
+                $.ajax({
+                    type: "POST",
+                    url: "json/ee_u_meetting_send.json",
+                    dataType: "json",
+                    data: JSON.stringify({
+                        id: GetRequest()["id"],
+                        appointment_time: $("#appointment_time").val(),
+                        appointment_address: $("#appointment_address").val()
+                    }),
+                    success: function(data) {
+                        if (data.result == 0) {
+                            window.location = "ee_u_progress.html?id=" + GetRequest()["id"];
+                        }
+                    }
+                });
+            });
+
+            //是否代理记账
+            $('#weituo_state').on('switchChange.bootstrapSwitch', function(e, data) {
+                var $el = e,
+                    value = data;
+                if (value) {
+                    $("#aainfogroup").addClass("hidden");
+                } else {
+                    $("#aainfogroup").removeClass("hidden");
+                }
+
+                console.log(e, $el, value);
+            });
+            getmeetingdata();
+        })
+    </script>
+</head>
+
+<body class="my-body">
+
+    <div style="padding:0px;marging:0px;background-size: cover;overflow-y:visible;">
+        <img class="col-xs-4 col-xs-offset-4 img-responsive my-gap-top" src="images/dfa8c6ef0acedc844c59669f4f24fe1a.png">
+        <div class="section my-topsection">
+            <div class="container" style="vertical-align:mid;">
+                <div class="col-xs-12 text-center my-gap-bottom">
+                    <!--h3> 企业名称预先核准申请书</h3-->
+                </div>
+            </div>
+            <div class="container">
+                <div class="form-group">
+                    <label class="clearfix">登记企业名称</label>
+                    <label id="companyname" class="my-form-label text-center clearfix">&nbsp;
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label class="clearfix">实际经营地址</label>
+                    <div id="actual_address" class="my-form-label text-left clearfix">&nbsp;
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="clearfix">企业经营范围</label>
+                    <div id="manage_range" class="my-form-label text-left clearfix">&nbsp;
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>企业注册资本：</label>
+                    <label id="register_money" class="my-form-label text-left clearfix">&nbsp;
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>企业注册类型：</label>
+                    <label id="register_kind" class="my-form-label text-left clearfix">&nbsp;
+                    </label>
+                </div>
+                <form id="bookform">
+                    <div class="form-group">
+                        <label class="clearfix">面签预约时间</label>
+                        <div class="form-group">
+                            <div class='input-group date' id='appointment_time_picker'>
+                                <input id="appointment_time" type='text' class="form-control" name="appointment_time" />
+                                <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="clearfix">面签预约地点</label>
+                        <select id="appointment_address" name="appointment_address" class="selectpicker mycompany-select">
+                        <option title="小区总部" value="小区总部"><span style="font-size:12;color:#cccccc">园区小区总部，地址是：上海市XX区XX路233号</span></option>
+                        <option title="市区总部" value="市区总部"><span style="font-size:12;color:#cccccc">园区市区总部，地址是：上海市XX区XX路233号</span></option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="zip_code">区域邮政编码</label>
+                        <input id="zip_code" name="zip_code" class="form-control" type="number" maxlength="6">
+                    </div>
+                    <div class="form-group text-left">
+                        <label class="col-xs-7">我想委托代理记账</label>
+                        <div class="input-group col-xs-5 text-right">
+                            <div class="switch">
+                                <input id="weituo_state" name="weituo_state" type="checkbox" data-on-text="是" data-off-text="不" checked />
+                            </div>
+                        </div>
+                    </div>
+                    <div id="aainfogroup" class="hidden">
+                        <div class="form-group">
+                            <label for="qycw_name">财务姓名</label>
+                            <input id="qycw_name" name="qycw_name" class="form-control" type="text">
+                        </div>
+                        <div class="form-group">
+                            <label for="qycw_telephone">财务电话</label>
+                            <input id="qycw_telephone" name="qycw_telephone" class="form-control" type="tel">
+                        </div>
+                        <div class="form-group">
+                            <label for="qycw_mobile">财务手机</label>
+                            <input id="qycw_mobile" name="qycw_mobile" class="form-control" type="tel">
+                        </div>
+                        <div class="form-group">
+                            <label for="qycw_email">财务邮箱</label>
+                            <input id="qycw_email" name="qycw_email" class="form-control" type="email">
+                        </div>
+                        <div class="row">
+                            <a class="col-xs-4" href="javascript:uploadImgWithName('#qycw_pic1','#qycw_pic1_img')" style="border:0px solid #000">
+                                <img id="qycw_pic1_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
+                            </a>
+                            <a class="col-xs-4" href="javascript:uploadImgWithName('#qycw_pic2','#qycw_pic2_img')" style="border:0px solid #000">
+                                <img id="qycw_pic2_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
+                            </a>
+                        </div>
+                        <div class="row">
+                            <label class="col-xs-4" style="font-size:14px;font-weight:normal">正面</label>
+                            <label class="col-xs-4" style="font-size:14px;font-weight:normal">反面</label>
+                        </div>
+                        <input type="hidden" id="qycw_pic1">
+                        <input type="hidden" id="qycw_pic2">
+                    </div>
+                    <button id="thesubmit" class="btn btn-primary form-control" type="button">提交</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="addinvestorpanel">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only"></span>
+                    </button>
+                    <h4 id="mysetTitle">投资人</h4>
+
+                </div>
+                <div class="modal-body">
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

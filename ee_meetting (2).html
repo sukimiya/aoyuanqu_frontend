@@ -45,17 +45,14 @@
             $("#appointment_time").attr('min', today);
             var month = new Date(new Date().setMonth(today.getMonth() + 1));
             $("#appointment_time").attr('max', month);
-            var targatDate = new Date();
-            targatDate.setMonth(targatDate.getMonth()+6);
-            targatDate.getDate()- today.getDate();
-            var maxDateTo = targatDate.getTime()-today.getTime();
-            maxDateTo = maxDateTo/(1000*60*60*24);
+            var maxDateTo = 90;
             var darry = [];
             for(var i=0;i<maxDateTo;i++){
                 var adate = new Date();
                 adate.setDate(adate.getDate()+i);
                 darry.push(adate);
-                //console.log("add a date:"+adate.toDateString());
+                console.log("add a date:"+adate.toDateString());
+                
             }
             $('#appointment_time_picker').datetimepicker({
                 locale: 'zh-cn',
@@ -71,6 +68,7 @@
                         id:GetRequest()["id"],
                         appointment_time:$("#appointment_time").val(),
                         appointment_address:$("#appointment_address").val()
+                        
                     }),
                     success:function(data){
                         if(data.result==0){
