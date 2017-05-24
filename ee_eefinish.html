@@ -1,0 +1,130 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="0">
+    <title>执照发放</title>
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.bootcss.com/bootstrap-validator/0.5.3/css/bootstrapValidator.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet" type="text/css">
+    <link href="css/my.css" rel="stylesheet" type="text/css">
+    <style type="text/css">
+        .my-form-h1 {}
+
+        .my-form-label {
+            font-size: 16px;
+            font-weight: bold;
+            color: #e51c23;
+        }
+
+    </style>
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
+    <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap-validator/0.5.3/js/bootstrapValidator.min.js"></script>
+    <script type="text/javascript" src="js/jquery.flexText.min.js"></script>
+    <script src="https://cdn.bootcss.com/json2/20160511/json2.min.js"></script>
+    <script type="text/javascript" src="js/my.js"></script>
+    <script type="text/javascript">
+        var isunfinishList=true;
+        function switchlisttype() {
+            var setl1 = "";
+            var setl2 = "";
+            if (isunfinishList) {
+                setl1 = "#unfinishlabel";
+                setl2 = "#finishlabel";
+            } else {
+                setl1 = "#finishlabel";
+                setl2 = "#unfinishlabel";
+            }
+            $(setl1).removeClass("btn-primary");
+            $(setl1).removeClass("active");
+            $(setl1).addClass("btn-default");
+            $(setl2).removeClass("btn-default")
+            $(setl2).addClass("btn-primary");
+            $(setl2).addClass("active");
+            isunfinishList = !isunfinishList;
+            toLoadList(isunfinishList);
+        }
+
+        function toLoadList(isfinish) {
+            var ltype = 0;
+            if (isfinish) {
+                ltype = 1;
+                $("#expressGroup").removeClass("hide");
+            } else {
+                $("#expressGroup").addClass("hide");
+            }
+
+        }
+        //
+        function previewImgWithName(picname, theimg) {
+            var imgpath = $("#lisenceImg").attr("src");
+            previewImagebyWX(imgpath);
+        }
+        $(document).ready(function(){
+            $('textarea').flexText();
+            $("#submitbtn").on("clilck",function(){
+                var postobj=  {};
+                postobj["receive_name"] = $("#receive_name").val();
+                postobj["receive_phone"] = $("#receive_phone").val();
+                postobj["express_address"] = $("#express_address").text();
+                $.ajax({
+                    url:"ee_eefinish_post.json",
+                    dataType:"json",
+                    data:JSON.stringify(postobj),
+                    success:function(data){
+                        console.log("deliver infomation had been record.");
+                        window.location = "ee_eefinish2.html?id="+GetRequest()["id"];
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+
+<body class="my-body">
+    <div class="section my-topsection">
+        <div class="container text-center">
+            <img id="lisenceImg" class="col-xs-4 col-xs-offset-4 img-responsive my-gap-top" src="images/dfa8c6ef0acedc844c59669f4f24fe1a.png">
+            <h1>&nbsp;</h1>
+            <h1>&nbsp;</h1>
+            <a href="#">
+                <img id="lisencePic" width="200" height="300">
+            </a>
+            <hr>
+        </div>
+        <div class="container text-center">
+            <div id="listswitchGroup" class="btn-group" data-toggle="buttons" onclick="javascript:switchlisttype()">
+                <label id="unfinishlabel" class="btn btn-primary active">
+                    <input type="radio" name="options" value="1"><div style="width:100px;">快递</div></label>
+                <label id="finishlabel" class="btn btn-default">
+                    <input type="radio" name="options" value="2"><div style="width:100px;">自取</div></label>
+            </div>
+        </div>
+        <div id="expressGroup" class="container">
+            <form id="deliverform">
+                <div class="form-group my-form-group">
+                    <label for="receive_name">收件人</label>
+                    <input id="receive_name" name="receive_name" class="form-control" type="text" required style="font-size:18px;border-color: #5066b4;">
+                </div>
+                <div class="form-group my-form-group">
+                    <label for="receive_phone">联系电话</label>
+                    <input id="receive_phone" name="receive_phone" class="form-control" type="tel" required style="font-size:18px;border-color: #5066b4;">
+                </div>
+                <div class="form-group my-form-group warp">
+                    <label for="express_address">收件地址</label>
+                    <textarea id="express_address" name="express_address" class="form-control" required style="font-size:18px;border-color: #5066b4;"></textarea>
+                </div>
+                <input type="hidden" id="license_takekind">
+                <a id="submitbtn" class="btn btn-primary col-xs-12 my-gap-bottom">提交</a>
+            </form>
+        </div>
+    </div>
+
+</body>
+
+</html>
