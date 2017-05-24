@@ -26,19 +26,19 @@
             font-weight: normal;
             color: #040404;
         }
+
     </style>
     <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
     <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://cdn.bootcss.com/bootstrap-validator/0.5.3/js/bootstrapValidator.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
     <script src="js/jweixin-1.2.0.js"></script>
-    <script type="text/javascript" src="js/jquery.flexText.min.js"></script>
     <script src="https://cdn.bootcss.com/json2/20160511/json2.min.js"></script>
     <script src="https://cdn.bootcss.com/moment.js/2.18.0/moment.min.js"></script>
     <script src="https://cdn.bootcss.com/moment.js/2.18.0/locale/zh-cn.js"></script>
     <script src="https://cdn.bootcss.com/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
     <script src="js/highlight.js"></script>
-    <script src="https://unpkg.com/bootstrap-switch"></script>
+    <script src="js/bootstrap-switch.js"></script>
     <script src="js/main.js"></script>
     <script type="text/javascript" src="js/my.js"></script>
     <script type="text/javascript">
@@ -46,26 +46,52 @@
         var isAddMode = true;
 
         function getmeetingdata() {
-            $.ajax("json/ee_meeting_request.json", {
-                type: "POST",
-                dataType: "json",
-                data: JSON.stringify({
-                    id: GetRequest()["id"]
-                }),
+            var theid = GetRequest()["id"];
+            $.ajax({
+                type: "GET",
+                    url: "json/ee_meeting_request.json",
+                    dataType: "json",
+                    data: '{"id":'+theid+'}',
                 success: function(data) {
                     pressData(data);
                 }
             });
         }
 
+        function addAinvestorToList(data) {
+            var rsstr = '<a href="javascript:editInvestor(' +
+                data["order"] + ')" class="list-group-item my-list-item-42"><div class="col-xs-4">' +
+                data["qygd_name"] +
+                '</div><div class="col-xs-4">' +
+                data["qygd_jobtitle"] +
+                '</div><div class="col-xs-4">' + data["qygd_investment"] + "万元 "
+            calculate_qygd_investment(data["qygd_investment"]) +
+                '</div></a>';
+            $("#investorlists").append(rsstr);
+            investorAry.push(data);
+        }
+
+        function calculate_qygd_investment(investment) {
+            var totalInvestment = Number($("#register_money").val());
+            if (Number(investment)) {
+                var rsstr = Math.floor(investment / totalInvestment * 10000) / 100;
+                return rsstr + "%";
+            }
+            return "0%";
+        }
+
         function pressData(data) {
             $("#companyname").text(data.apply_name);
             $("#actual_address").text(data.actual_address);
             $("#manage_range").text(data.manage_range);
-            $("#register_money").text(data.register_money + "万元");
+            $("#register_money").val(data.register_money);
             $("#register_kind").text(data.register_kind);
             $("#appointment_time").val(data.appointment_time);
-
+            $("#tzfr_name").val(data.tzfr_name);
+            for (var i = 0; i < data.arr.length; i++) {
+                data.arr[i]["order"] = i;
+                addAinvestorToList(data.arr[i]);
+            }
             var theyear = Math.round(data.appointment_time.split("年")[0]);
             var datastr = data.appointment_time.split("年")[1];
             var themonth = Math.round(datastr.split("月")[0]) - 1;
@@ -83,17 +109,44 @@
             $("#appointment_address").val(data.appointment_address);
         }
         //
+        function previewImgWithName(picname, theimg) {
+            var imgpath = "";
+            var node = investorAry[curSelectedIndex]
+            wx.previewImage({
+                current: getRemotePic(node[picname]), // 当前显示图片的http链接
+                urls: [getRemotePic(node[picname])] // 需要预览的图片http链接列表
+            });
+        }
+        var curSelectedIndex = -1;
+
+        function editInvestor(index) {
+            if (investorAry.length > index) {
+                var investor = investorAry[index];
+                $("#qygd_name").val(investor["qygd_name"]);
+                $("#qygd_idnumber").val(investor["qygd_idnumber"]);
+                $("#qygd_investment").val(investor["qygd_investment"]);
+                $("#qygd_jobtitle").val(investor["qygd_jobtitle"]);
+                $("#qygd_pic1" + "_img").attr("src", getRemotePic(investor["qygd_pic1"]));
+                $("#qygd_pic2" + "_img").attr("src", getRemotePic(investor["qygd_pic2"]));
+                $("#qygd_pic3" + "_img").attr("src", getRemotePic(investor["qygd_pic3"]));
+                //这里需要服务器上图片显示的方法
+                isAddMode = false;
+                $("#addinvestorpanel").modal("toggle");
+            }
+            curSelectedIndex = index;
+        }
+
         function uploadImgWithName(picname, theimg) {
             var imgpath = "";
             wx.chooseImage({
                 count: 1,
-                sizeType: ['original', 'compressed'], 
+                sizeType: ['original', 'compressed'],
                 sourceType: ['album', 'camera'],
                 success: function(res) {
                     var localIds = res.localIds;
                     imgpath = localIds;
-                    $(theimg).attr("src",imgpath);
-                    console.log("本地图片id:"+imgpath);
+                    $(theimg).attr("src", imgpath);
+                    console.log("本地图片id:" + imgpath);
                     $.ajax({
                         type: "POST",
                         url: "json/uploadfiles.json",
@@ -105,33 +158,56 @@
                         success: function(ret) {
                             if (ret == 0) {
                                 $(picname).val(ret.picid);
+                                getRemotePic(ret.picid, $(theimg));
                             }
                         },
-                        fail:function(e){
-                            debugger;
+                        fail: function(e) {
                             console.log("上传失败了");
                         }
-                        
+
                     });
                 }
             });
 
         }
-        $(document).ready(function() {
 
+        function encodeDatas() {
+            var rsobj = {}
+            rsobj["id"] = GetRequest()["id"];
+            rsobj["appointment_state"] = 1;
+            rsobj["appointment_time"] = $("#appointment_time").val();
+            rsobj["appointment_address"] = $("#appointment_address").val();
+            rsobj["zip_code"] = $("#zip_code").val();
+            rsobj["weituo_state"] = $("#weituo_state").val();
+            rsobj["qyfr_name"] = $("#qyfr_name").val();
+            rsobj["qyfr_telephone"] = $("#qyfr_telephone").val();
+            rsobj["qyfr_mobile"] = $("#qyfr_mobile").val();
+            rsobj["qyfr_email"] = $("#qyfr_email").val();
+            rsobj["qycw_name"] = $("#qycw_name").val();
+            rsobj["qycw_telephone"] = $("#qycw_telephone").val();
+            rsobj["qycw_mobile"] = $("#qycw_mobile").val();
+            rsobj["qycw_email"] = $("#qycw_email").val();
+            rsobj["qycw_pic1"] = $("#qycw_pic1").val();
+            rsobj["qycw_pic2"] = $("#qycw_pic2").val();
+            rsobj["qyjs_name"] = $("#qyjs_name").val();
+            rsobj["qyjs_idnumber"] = $("#qyjs_idnumber").val();
+            rsobj["qyjs_pic1"] = $("#qyjs_pic1").val();
+            rsobj["qyjs_pic2"] = $("#qyjs_pic2").val();
+
+            return rsobj;
+        }
+        $(document).ready(function() {
             $("#thesubmit").on("click", function(events) {
+                var jdata = encodeDatas();
                 $.ajax({
                     type: "POST",
                     url: "json/ee_u_meetting_send.json",
                     dataType: "json",
-                    data: JSON.stringify({
-                        id: GetRequest()["id"],
-                        appointment_time: $("#appointment_time").val(),
-                        appointment_address: $("#appointment_address").val()
-                    }),
+                    data: JSON.stringify(jdata),
                     success: function(data) {
                         if (data.result == 0) {
-                            window.location = "ee_u_progress.html?id=" + GetRequest()["id"];
+                            console.log(data);
+                            //window.location = "ee_u_progress.html?id=" + GetRequest()["id"];
                         }
                     }
                 });
@@ -151,6 +227,7 @@
             });
             getmeetingdata();
         })
+
     </script>
 </head>
 
@@ -182,8 +259,7 @@
                 </div>
                 <div class="form-group">
                     <label>企业注册资本：</label>
-                    <label id="register_money" class="my-form-label text-left clearfix">&nbsp;
-                    </label>
+                    <input id="register_money" class="form-control" disabled>
                 </div>
                 <div class="form-group">
                     <label>企业注册类型：</label>
@@ -212,6 +288,22 @@
                     <div class="form-group">
                         <label for="zip_code">区域邮政编码</label>
                         <input id="zip_code" name="zip_code" class="form-control" type="number" maxlength="6">
+                    </div>
+                    <div class="form-group">
+                        <label for="qycw_name">企业法人姓名</label>
+                        <input id="qyfr_name" name="qycw_name" class="form-control" type="text">
+                    </div>
+                    <div class="form-group">
+                        <label for="qycw_telephone">企业法人电话</label>
+                        <input id="qyfr_telephone" name="qycw_telephone" class="form-control" type="tel">
+                    </div>
+                    <div class="form-group">
+                        <label for="qycw_mobile">企业法人手机</label>
+                        <input id="qyfr_mobile" name="qycw_mobile" class="form-control" type="tel">
+                    </div>
+                    <div class="form-group">
+                        <label for="qycw_email">企业法人邮箱</label>
+                        <input id="qyfr_email" name="qycw_email" class="form-control" type="email">
                     </div>
                     <div class="form-group text-left">
                         <label class="col-xs-7">我想委托代理记账</label>
@@ -253,6 +345,40 @@
                         <input type="hidden" id="qycw_pic1">
                         <input type="hidden" id="qycw_pic2">
                     </div>
+                    <hr>
+                    <hr>
+                    <label class="my-gap-bottom">投资人信息</label>
+                    <div class="row">
+                        <div class="col-xs-4" style="font-size:14px;">名称</div>
+                        <div class="col-xs-4" style="font-size:14px;">职务</div>
+                        <div class="col-xs-4" style="font-size:14px;">金额</div>
+
+                    </div>
+                    <div id="investorlists" class="list-group my-list" style="padding-left:0px;padding-right:0px;marging-left:0px;marging-right:0px;">
+                    </div>
+                    <hr class="my-gap-top">
+                    <div class="form-group">
+                        <label for="qyjs_name">企业监事姓名</label>
+                        <input id="qyjs_name" name="qyjs_name" type="text" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="qyjs_idnumber">监事证件号码</label>
+                        <input id="qyjs_idnumber" name="qyjs_idnumber" type="tel" required>
+                    </div>
+                    <div class="row">
+                        <a class="col-xs-4" href="javascript:uploadImgWithName('#qyjs_pic1','#qyjs_pic1_img')" style="border:0px solid #000">
+                            <img id="qyjs_pic1_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
+                        </a>
+                        <a class="col-xs-4" href="javascript:uploadImgWithName('#qyjs_pic2','#qyjs_pic2_img')" style="border:0px solid #000">
+                            <img id="qyjs_pic2_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
+                        </a>
+                    </div>
+                    <div class="row">
+                        <label class="col-xs-4" style="font-size:14px;font-weight:normal">正面</label>
+                        <label class="col-xs-4" style="font-size:14px;font-weight:normal">反面</label>
+                    </div>
+                    <input type="hidden" id="qyjs_pic1">
+                    <input type="hidden" id="qyjs_pic2">
                     <button id="thesubmit" class="btn btn-primary form-control" type="button">提交</button>
                 </form>
             </div>
@@ -270,7 +396,52 @@
 
                 </div>
                 <div class="modal-body">
+                    <form class="my-form" role="form">
+                        <div class="form-group my-form-group">
+                            <label for="qygd_name">名称或姓名</label>
+                            <input type="text" name="qygd_name" class="form-control my-input" id="qygd_name" disabled>
+                        </div>
+                        <div class="form-group my-form-group my-gap-bottom" style="font-size:18px;">
+                            <span>职务</span>
+                            <input type="text" disabled id="qygd_jobtitle" name="qygd_jobtitle" class="col-xs-5 form-control">
+                        </div>
+                        <div class="form-group my-form-group">
+                            <label for="qygd_idnumber">证件号</label>
+                            <input type="text" name="qygd_idnumber" class="form-control my-input" id="qygd_idnumber" disabled>
+                        </div>
 
+                        <div class="form-group my-form-group">
+                            <label for="qygd_investment">投资金额</label>
+                            <input id="qygd_investment" type="number" name="qygd_investment" class="form-control my-input" disabled>
+                            <span>万元</span>
+                        </div>
+                        <label>投资人身份证</label>
+                        <div class="container-fluid">
+                            <div class="row">
+                                <a class="col-xs-4" href="javascript:previewImgWithName('#qygd_pic1','#qygd_pic1_img')" style="border:0px solid #000">
+                                    <img id="qygd_pic1_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
+                                </a>
+                                <a class="col-xs-4" href="javascript:previewImgWithName('#qygd_pic2','#qygd_pic2_img')" style="border:0px solid #000">
+                                    <img id="qygd_pic2_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
+                                </a>
+                                <a class="col-xs-4" href="javascript:previewImgWithName('#qygd_pic3','#qygd_pic3_img')" style="border:0px solid #000">
+                                    <img id="qygd_pic3_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
+                                </a>
+                            </div>
+                            <div class="row">
+                                <label class="col-xs-4" style="font-size:14px;font-weight:normal">正面</label>
+                                <label class="col-xs-4" style="font-size:14px;font-weight:normal">反面</label>
+                                <label class="col-xs-4" style="font-size:14px;font-weight:normal">证件照</label>
+                            </div>
+                        </div>
+                        <input type="hidden" id="qygd_pic1">
+                        <input type="hidden" id="qygd_pic2">
+                        <input type="hidden" id="qygd_pic3">
+                        <div class="container">
+                            <a data-dismiss="modal" class="btn btn-success col-xs-12 my-gap-top" style="font-size:22px;padding:5px;">确定</a>
+                        </div>
+
+                    </form>
                 </div>
 
             </div>

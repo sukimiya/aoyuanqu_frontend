@@ -1,17 +1,24 @@
 function GetRequest() {
-    var url = location.search;
-    var theReq = new Object();
-    if (url.indexOf("?") != -1) {
-        var str = url.substr(1);
-        var strs = str.split("&");
-        for (var i = 0; i < strs.length; i++) {
-            theReq[strs[i].split("=")[0] = unescape(strs[i].split("=")[1])];
-        }
-    }
-    return theReq;
+    return QueryString.data;
     //添加数据$.session.set('key', 'value')删除数据$.session.remove('key');获取数据$.session.get('key');清除数据$.session.clear();
 }
-
+QueryString = {  
+    data: {},  
+    Initial: function() {  
+        var aPairs, aTmp;  
+        var queryString = new String(window.location.search);  
+        queryString = queryString.substr(1, queryString.length); //remove   "?"     
+        aPairs = queryString.split("&");  
+        for (var i = 0; i < aPairs.length; i++) {  
+            aTmp = aPairs[i].split("=");  
+            this.data[aTmp[0]] = aTmp[1];  
+        }  
+    },  
+    GetValue: function(key) {  
+        return this.data[key];  
+    }  
+}
+QueryString.Initial();
 function getRemotePic(picid, me = null) {
     var rsstr = "uploads/" + picid; //remoteaddress+"/"+picid
     if (me != null) {
