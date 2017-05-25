@@ -1,0 +1,879 @@
+{
+    "result": 0,
+    "lists": [
+        {
+            "indoor": "国内",
+            "group": "常用",
+            "Shipper": "顺丰",
+            "ShipperCode": "SF",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "常用",
+            "Shipper": "百世快递",
+            "ShipperCode": "HTKY",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "常用",
+            "Shipper": "中通",
+            "ShipperCode": "ZTO",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "常用",
+            "Shipper": "申通",
+            "ShipperCode": "STO",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "常用",
+            "Shipper": "圆通",
+            "ShipperCode": "YTO",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "常用",
+            "Shipper": "韵达",
+            "ShipperCode": "YD",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "常用",
+            "Shipper": "邮政平邮",
+            "ShipperCode": "YZPY",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "常用",
+            "Shipper": "EMS",
+            "ShipperCode": "EMS",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "常用",
+            "Shipper": "天天",
+            "ShipperCode": "HHTT",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "常用",
+            "Shipper": "京东",
+            "ShipperCode": "JD",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "常用",
+            "Shipper": "全峰",
+            "ShipperCode": "QFKD",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "常用",
+            "Shipper": "国通",
+            "ShipperCode": "GTO",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "常用",
+            "Shipper": "优速",
+            "ShipperCode": "UC",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "常用",
+            "Shipper": "德邦",
+            "ShipperCode": "DBL",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "常用",
+            "Shipper": "快捷",
+            "ShipperCode": "FAST",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "常用",
+            "Shipper": "亚马逊",
+            "ShipperCode": "AMAZON",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "常用",
+            "Shipper": "宅急送",
+            "ShipperCode": "ZJS",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "A",
+            "Shipper": "安捷快递",
+            "ShipperCode": "AJ",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "A",
+            "Shipper": "亚马逊物流",
+            "ShipperCode": "AMAZON",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "A",
+            "Shipper": "安能物流",
+            "ShipperCode": "ANE",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "A",
+            "Shipper": "安信达快递",
+            "ShipperCode": "AXD",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "A",
+            "Shipper": "澳邮专线",
+            "ShipperCode": "AYCA",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "B",
+            "Shipper": "北青小红帽",
+            "ShipperCode": "BQXHM",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "B",
+            "Shipper": "百福东方",
+            "ShipperCode": "BFDF",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "B",
+            "Shipper": "百世快运",
+            "ShipperCode": "BTWL",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "C",
+            "Shipper": "CCES快递",
+            "ShipperCode": "CCES",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "C",
+            "Shipper": "城市100",
+            "ShipperCode": "CITY100",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "C",
+            "Shipper": "城际快递",
+            "ShipperCode": "CJKD",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "C",
+            "Shipper": "CNPEX中邮快递",
+            "ShipperCode": "CNPEX",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "C",
+            "Shipper": "COE东方快递",
+            "ShipperCode": "COE",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "C",
+            "Shipper": "长沙创一",
+            "ShipperCode": "CSCY",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "C",
+            "Shipper": "成都善途速运",
+            "ShipperCode": "CDSTKY",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "C",
+            "Shipper": "联合运通",
+            "ShipperCode": "CTG",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "D",
+            "Shipper": "德邦",
+            "ShipperCode": "DBL",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "D",
+            "Shipper": "D速物流",
+            "ShipperCode": "DSWL",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "D",
+            "Shipper": "大田物流",
+            "ShipperCode": "DTWL",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "E",
+            "Shipper": "EMS",
+            "ShipperCode": "EMS",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "F",
+            "Shipper": "快捷速递",
+            "ShipperCode": "FAST",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "F",
+            "Shipper": "FEDEX联邦(国内件）",
+            "ShipperCode": "FEDEX",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "F",
+            "Shipper": "FEDEX联邦(国际件）",
+            "ShipperCode": "FEDEX_GJ",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "F",
+            "Shipper": "飞康达",
+            "ShipperCode": "FKD",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "G",
+            "Shipper": "广东邮政",
+            "ShipperCode": "GDEMS",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "G",
+            "Shipper": "共速达",
+            "ShipperCode": "GSD",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "G",
+            "Shipper": "国通快递",
+            "ShipperCode": "GTO",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "G",
+            "Shipper": "高铁速递",
+            "ShipperCode": "GTSD",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "H",
+            "Shipper": "汇丰物流",
+            "ShipperCode": "HFWL",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "H",
+            "Shipper": "天天快递",
+            "ShipperCode": "HHTT",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "H",
+            "Shipper": "恒路物流",
+            "ShipperCode": "HLWL",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "H",
+            "Shipper": "天地华宇",
+            "ShipperCode": "HOAU",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "H",
+            "Shipper": "鸿桥供应链",
+            "ShipperCode": "HOTSCM",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "H",
+            "Shipper": "海派通物流公司",
+            "ShipperCode": "HPTEX",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "H",
+            "Shipper": "华强物流",
+            "ShipperCode": "hq568",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "H",
+            "Shipper": "百世快递",
+            "ShipperCode": "HTKY",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "H",
+            "Shipper": "华夏龙物流",
+            "ShipperCode": "HXLWL",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "H",
+            "Shipper": "好来运快递",
+            "ShipperCode": "HYLSD",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "J",
+            "Shipper": "京东",
+            "ShipperCode": "JD",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "J",
+            "Shipper": "京广速递",
+            "ShipperCode": "JGSD",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "J",
+            "Shipper": "九曳供应链",
+            "ShipperCode": "JIUYE",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "J",
+            "Shipper": "佳吉快运",
+            "ShipperCode": "JJKY",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "J",
+            "Shipper": "嘉里物流",
+            "ShipperCode": "JLDT",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "J",
+            "Shipper": "捷特快递",
+            "ShipperCode": "JTKD",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "J",
+            "Shipper": "急先达",
+            "ShipperCode": "JXD",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "J",
+            "Shipper": "晋越快递",
+            "ShipperCode": "JYKD",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "J",
+            "Shipper": "加运美",
+            "ShipperCode": "JYM",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "J",
+            "Shipper": "佳怡物流",
+            "ShipperCode": "JYWL",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "K",
+            "Shipper": "跨越速运",
+            "ShipperCode": "KYSY",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "L",
+            "Shipper": "龙邦快递",
+            "ShipperCode": "LB",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "L",
+            "Shipper": "联昊通速递",
+            "ShipperCode": "LHT",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "M",
+            "Shipper": "民邦快递",
+            "ShipperCode": "MB",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "M",
+            "Shipper": "民航快递",
+            "ShipperCode": "MHKD",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "M",
+            "Shipper": "明亮物流",
+            "ShipperCode": "MLWL",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "N",
+            "Shipper": "南方",
+            "ShipperCode": "NF"
+            },
+        {
+            "indoor": "国内",
+            "group": "N",
+            "Shipper": "能达速递",
+            "ShipperCode": "NEDA",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "P",
+            "Shipper": "平安达腾飞快递",
+            "ShipperCode": "PADTF",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "P",
+            "Shipper": "泛捷快递",
+            "ShipperCode": "PANEX",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "P",
+            "Shipper": "品骏",
+            "ShipperCode": "PJ",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "P",
+            "Shipper": "PCA Express",
+            "ShipperCode": "PCA",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "Q",
+            "Shipper": "全晨快递",
+            "ShipperCode": "QCKD",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "Q",
+            "Shipper": "全峰快递",
+            "ShipperCode": "QFKD",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "Q",
+            "Shipper": "全日通快递",
+            "ShipperCode": "QRT",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "Q",
+            "Shipper": "全信通",
+            "ShipperCode": "QXT",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "R",
+            "Shipper": "瑞丰速递",
+            "ShipperCode": "RFEX",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "R",
+            "Shipper": "如风达",
+            "ShipperCode": "RFD",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "R",
+            "Shipper": "瑞丰速递",
+            "ShipperCode": "RFEX",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "S",
+            "Shipper": "赛澳递",
+            "ShipperCode": "SAD",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "S",
+            "Shipper": "圣安物流",
+            "ShipperCode": "SAWL",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "S",
+            "Shipper": "盛邦物流",
+            "ShipperCode": "SBWL",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "S",
+            "Shipper": "上大物流",
+            "ShipperCode": "SDWL",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "S",
+            "Shipper": "顺丰快递",
+            "ShipperCode": "SF",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "S",
+            "Shipper": "盛丰物流",
+            "ShipperCode": "SFWL",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "S",
+            "Shipper": "盛辉物流",
+            "ShipperCode": "SHWL",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "S",
+            "Shipper": "速通物流",
+            "ShipperCode": "ST",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "S",
+            "Shipper": "速腾快递",
+            "ShipperCode": "STWL",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "S",
+            "Shipper": "速必达物流",
+            "ShipperCode": "SUBIDA",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "S",
+            "Shipper": "速尔快递",
+            "ShipperCode": "SURE",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "T",
+            "Shipper": "天天",
+            "ShipperCode": "HHTT",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "U",
+            "Shipper": "全一快递",
+            "ShipperCode": "UAPEX",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "U",
+            "Shipper": "UEQ Express",
+            "ShipperCode": "UEQ",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "U",
+            "Shipper": "优速快递",
+            "ShipperCode": "UC",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "W",
+            "Shipper": "万家物流",
+            "ShipperCode": "WJWL",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "W",
+            "Shipper": "万象物流",
+            "ShipperCode": "WXWL",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "X",
+            "Shipper": "新邦物流",
+            "ShipperCode": "XBWL",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "X",
+            "Shipper": "信丰快递",
+            "ShipperCode": "XFEX",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "X",
+            "Shipper": "希优特",
+            "ShipperCode": "XYT",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "X",
+            "Shipper": "新杰物流",
+            "ShipperCode": "XJ",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "Y",
+            "Shipper": "源安达快递",
+            "ShipperCode": "YADEX",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "Y",
+            "Shipper": "远成物流",
+            "ShipperCode": "YCWL",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "Y",
+            "Shipper": "韵达快递",
+            "ShipperCode": "YD",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "Y",
+            "Shipper": "义达国际物流",
+            "ShipperCode": "YDH",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "Y",
+            "Shipper": "越丰物流",
+            "ShipperCode": "YFEX",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "Y",
+            "Shipper": "原飞航物流",
+            "ShipperCode": "YFHEX",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "Y",
+            "Shipper": "亚风快递",
+            "ShipperCode": "YFSD",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "Y",
+            "Shipper": "运通快递",
+            "ShipperCode": "YTKD",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "Y",
+            "Shipper": "圆通速递",
+            "ShipperCode": "YTO",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "Y",
+            "Shipper": "亿翔快递",
+            "ShipperCode": "YXKD",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "Y",
+            "Shipper": "运东西",
+            "ShipperCode": "YUNDX",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "Y",
+            "Shipper": "邮政平邮/小包",
+            "ShipperCode": "YZPY",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "Z",
+            "Shipper": "增益快递",
+            "ShipperCode": "ZENY",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "Z",
+            "Shipper": "汇强快递",
+            "ShipperCode": "ZHQKD",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "Z",
+            "Shipper": "宅急送",
+            "ShipperCode": "ZJS",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "Z",
+            "Shipper": "众通快递",
+            "ShipperCode": "ZTE",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "Z",
+            "Shipper": "中铁快运",
+            "ShipperCode": "ZTKY",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "Z",
+            "Shipper": "中通速递",
+            "ShipperCode": "ZTO",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "Z",
+            "Shipper": "中铁物流",
+            "ShipperCode": "ZTWL",
+            "track": "支持"
+            },
+        {
+            "indoor": "国内",
+            "group": "Z",
+            "Shipper": "中邮物流",
+            "ShipperCode": "ZYWL",
+            "track": "支持"
+            }
+    ]
+}

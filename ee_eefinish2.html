@@ -1,0 +1,204 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="0">
+    <title>执照发放</title>
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.bootcss.com/bootstrap-validator/0.5.3/css/bootstrapValidator.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
+    <link href="css/style.css" rel="stylesheet" type="text/css">
+    <link href="css/my.css" rel="stylesheet" type="text/css">
+    <style type="text/css">
+        .my-form-h1 {}
+        
+        .my-form-label {
+            font-size: 16px;
+            font-weight: bold;
+            color: #e51c23;
+        }
+
+    </style>
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
+    <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap-validator/0.5.3/js/bootstrapValidator.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
+    <script type="text/javascript" src="js/jquery.flexText.min.js"></script>
+    <script src="https://cdn.bootcss.com/json2/20160511/json2.min.js"></script>
+    <script type="text/javascript" src="js/my.js"></script>
+    <script type="text/javascript">
+        var isunfinishList = true;
+
+        function switchlisttype() {
+            var setl1 = "";
+            var setl2 = "";
+            if (isunfinishList) {
+                setl1 = "#unfinishlabel";
+                setl2 = "#finishlabel";
+            } else {
+                setl1 = "#finishlabel";
+                setl2 = "#unfinishlabel";
+            }
+            $(setl1).removeClass("btn-primary");
+            $(setl1).removeClass("active");
+            $(setl1).addClass("btn-default");
+            $(setl2).removeClass("btn-default")
+            $(setl2).addClass("btn-primary");
+            $(setl2).addClass("active");
+            isunfinishList = !isunfinishList;
+            toLoadList(isunfinishList);
+        }
+
+        function toLoadList(isfinish) {
+            var ltype = 0;
+            if (isfinish) {
+                ltype = 1;
+                $("#expressGroup").removeClass("hide");
+            } else {
+                $("#expressGroup").addClass("hide");
+            }
+
+        }
+        //
+        function previewImgWithName(picname, theimg) {
+            var imgpath = $("#lisenceImg").attr("src");
+            previewImagebyWX(imgpath);
+        }
+
+        function getmeetingdata() {
+            var theid = GetRequest()["id"];
+            $.ajax({
+                type: "GET",
+                url: "json/ee_meeting_request.json",
+                dataType: "json",
+                data: '{"id":' + theid + '}',
+                success: function(data) {
+                    pressData(data);
+                }
+            });
+        }
+
+        function pressData(data) {
+            $("#company_name").text(data.company_name);
+            $("#receive_name").text(data.receive_name);
+            $("#manage_range").text(data.manage_range);
+            $("#register_money").val(data.register_money);
+            $("#register_kind").text(data.register_kind);
+            $("#appointment_time").val(data.appointment_time);
+            $("#tzfr_name").val(data.tzfr_name);
+            for (var i = 0; i < data.arr.length; i++) {
+                data.arr[i]["order"] = i;
+                addAinvestorToList(data.arr[i]);
+            }
+            var theyear = Math.round(data.appointment_time.split("年")[0]);
+            var datastr = data.appointment_time.split("年")[1];
+            var themonth = Math.round(datastr.split("月")[0]) - 1;
+            datastr = datastr.split("月")[1];
+            var theday = Math.round(datastr.split("日")[0]);
+            var today = new Date(theyear, themonth, theday);
+            today.setFullYear(theyear);
+            today.setMonth(themonth);
+            today.setDate(theday);
+            $('#appointment_time_picker').datetimepicker({
+                locale: 'zh-cn',
+                defaultDate: today,
+                enabledDates: [today]
+            });
+            $("#appointment_address").val(data.appointment_address);
+        }
+        $(document).ready(function() {
+            $('textarea').flexText();
+            $("#submitBtn").on("clilck", function() {
+                var postobj = {
+                    "id": GetRequest()["id"],
+                    "express_code": $("#express_code").val(),
+                    "express_shipper": $("#express_shipper").val()
+                };
+                $.ajax({
+                    url: "json/ee_u_finish2_post.json",
+                    dataType: "json",
+                    data: JSON.stringify(postobj),
+                    success: function(data) {
+                        console.log("deliver infomation had been record.");
+                        window.location = "ee_u_progress.html";
+                    }
+                });
+            });
+            $.ajax({
+                url: "json/expressinfo.json",
+                dataTyle: "json",
+                type: "GET",
+                success: function(data) {
+                    var jobj = JSON.parse(data);
+                    for (var i = 0; i < jobj.lists.length; i++) {
+                        var node = jobj.lists[i];
+                        var nodestr = "<option value='" + node["ShipperCode"] + "'>" + node["Shipper"] + "</option>";
+                        $("#shipper").append(nodestr);
+                    }
+                    $("#shipper").selectpicker('refresh');
+                }
+            });
+            $.ajax({
+                url: "json/ee_u_finish2_get.json",
+                dataTyle: "json",
+                type: "GET",
+                success: function(data) {
+                    var getobj = JSON.parse(data);
+                    debugger;
+                    $("#receive_name").text(getobj["receive_name"]);
+                    $("#receive_phone").text(getobj["receive_phone"]);
+                    $("#express_address").text(getobj["express_address"]);
+                }
+            });
+        });
+
+    </script>
+</head>
+
+<body class="my-body">
+    <img class="col-xs-4 col-xs-offset-4 img-responsive my-gap-top" src="images/dfa8c6ef0acedc844c59669f4f24fe1a.png">
+    <div class="section my-topsection">
+        <div class="container" style="vertical-align:mid;">
+            <div class="col-xs-12 text-center my-gap-bottom">
+                <!--h3> 企业名称预先核准申请书</h3-->
+                <h3 id="company_name">&nbsp;</h3>
+            </div>
+        </div>
+        <div class="container">
+
+
+            <form>
+                <div class="form-group">
+                    <label>收件人:</label>
+                    <div class="form-control" id="receive_name" />
+                </div>
+                <div class="form-group">
+                    <label>联系电话:</label>
+                    <div class="form-control" id="receive_phone" />
+                </div>
+                <div class="form-group">
+                    <label>快递地址:</label>
+                    <div class="form-control" id="express_address" />
+                </div>
+                <hr>
+                <div class="form-group">
+                    <label>选择快递公司</label>
+                    <select id="shipper" name="shipper" class="selectpicker mycompany-select">
+                        </select>
+                </div>
+                <div class="form-group">
+                    <label>快递单号:</label>
+                    <div class="form-control" id="express_code" />
+                </div>
+                <a id="submitBtn" class="btn btn-primary col-xs-12">提交</a>
+            </form>
+        </div>
+    </div>
+
+</body>
+
+</html>

@@ -2,23 +2,24 @@ function GetRequest() {
     return QueryString.data;
     //添加数据$.session.set('key', 'value')删除数据$.session.remove('key');获取数据$.session.get('key');清除数据$.session.clear();
 }
-QueryString = {  
-    data: {},  
-    Initial: function() {  
-        var aPairs, aTmp;  
-        var queryString = new String(window.location.search);  
+QueryString = {
+    data: {},
+    Initial: function () {
+        var aPairs, aTmp;
+        var queryString = new String(window.location.search);
         queryString = queryString.substr(1, queryString.length); //remove   "?"     
-        aPairs = queryString.split("&");  
-        for (var i = 0; i < aPairs.length; i++) {  
-            aTmp = aPairs[i].split("=");  
-            this.data[aTmp[0]] = aTmp[1];  
-        }  
-    },  
-    GetValue: function(key) {  
-        return this.data[key];  
-    }  
+        aPairs = queryString.split("&");
+        for (var i = 0; i < aPairs.length; i++) {
+            aTmp = aPairs[i].split("=");
+            this.data[aTmp[0]] = aTmp[1];
+        }
+    },
+    GetValue: function (key) {
+        return this.data[key];
+    }
 }
 QueryString.Initial();
+
 function getRemotePic(picid, me = null) {
     var rsstr = "uploads/" + picid; //remoteaddress+"/"+picid
     if (me != null) {
@@ -92,7 +93,7 @@ function OssUpload(param, file, fileName, callBack) {
 
 function logins(logincallbackFn) {
     $.ajax({
-        type:"POST",
+        type: "POST",
         url: "json/u_login.json",
         dataType: "json",
         success: function (data, textStatus, request) {
