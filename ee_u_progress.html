@@ -10,46 +10,6 @@
     <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="css/my.css" rel="stylesheet" type="text/css">
-    <style type="text/css">
-        .triangle {
-            height: 0px;
-            width: 0px;
-            border-width: 8px;
-            border-style: solid;
-            border-color: transparent #FAFAFA transparent transparent;
-            margin-top: 16px;
-            margin-bottom: 16px;
-            float: left;
-        }
-
-        .bobble-box {
-            background-color: #FAFAFA;
-            border-radius: 5px;
-            height: 48px;
-            padding: 14px;
-            display: block;
-        }
-
-        .cricle-num {
-            color: #5A5A5A;
-            font-weight: bold;
-            border-radius: 16px;
-            height: 32px;
-            width: 32px;
-            border: 2px solid #5078B4;
-            padding: 4px;
-            margin-top: 8px;
-            background-color: white;
-            float: left;
-        }
-
-        .bobble-item-bg {
-            padding: 15px;
-            background-repeat: repeat-y;
-            background-image: url('images/311.png');
-        }
-
-    </style>
 </head>
 
 <body>
@@ -104,22 +64,22 @@
     <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/my.js"></script>
     <script type="text/javascript">
-        function onloginHandler(ret){
+        function onloginHandler(ret) {
             var uinfo = mygetsessioninfo();
-            if(uinfo == null){
+            if (uinfo == null) {
                 return;
             }
-            if(uinfo["pri_ee_u_1"]){
-                $("#item1").attr("href","javascript:gotoNameApply()");
-                $("#item2").attr("href","javascript:gotoApplyNotify()");
+            if (uinfo["pri_ee_u_1"]) {
+                $("#item1").attr("href", "javascript:gotoNameApply()");
+                $("#item2").attr("href", "javascript:gotoApplyNotify()");
             }
-            if(uinfo["pri_ee_u_2"]){
-                $("#item1").attr("href","javascript:gotoMeetting()");
-                $("#item2").attr("href","javascript:gotoCA()");
+            if (uinfo["pri_ee_u_2"]) {
+                $("#item1").attr("href", "javascript:gotoMeetting()");
+                $("#item2").attr("href", "javascript:gotoCA()");
             }
-            if(uinfo["pri_ee_u_3"]){
-                $("#item1").attr("href","javascript:gotoCheckTax()");
-                $("#item2").attr("href","javascript:gotoEEFinish()");
+            if (uinfo["pri_ee_u_3"]) {
+                $("#item1").attr("href", "javascript:gotoCheckTax()");
+                $("#item2").attr("href", "javascript:gotoEEFinish()");
             }
         }
 
@@ -149,21 +109,21 @@
         $(document).ready(function() {
             var uinfo = mygetsessioninfo();
             debugger;
-            if(uinfo == null){
+            if (uinfo == null) {
                 logins(onloginHandler);
                 return;
             }
-            if(uinfo["pri_ee_u_1"]){
-                $("#item1").attr("href","javascript:gotoNameApply()");
-                $("#item2").attr("href","javascript:gotoApplyNotify()");
+            if (uinfo["pri_ee_u_1"]) {
+                $("#item1").attr("href", "javascript:gotoNameApply()");
+                $("#item2").attr("href", "javascript:gotoApplyNotify()");
             }
-            if(uinfo["pri_ee_u_2"]){
-                $("#item1").attr("href","javascript:gotoMeetting()");
-                $("#item2").attr("href","javascript:gotoCA()");
+            if (uinfo["pri_ee_u_2"]) {
+                $("#item1").attr("href", "javascript:gotoMeetting()");
+                $("#item2").attr("href", "javascript:gotoCA()");
             }
-            if(uinfo["pri_ee_u_3"]){
-                $("#item1").attr("href","javascript:gotoCheckTax()");
-                $("#item2").attr("href","javascript:gotoEEFinish()");
+            if (uinfo["pri_ee_u_3"]) {
+                $("#item1").attr("href", "javascript:gotoCheckTax()");
+                $("#item2").attr("href", "javascript:gotoEEFinish()");
             }
         });
 

@@ -35,6 +35,39 @@ function previewImagebyWX(theimg) {
         urls: [theimg] // 需要预览的图片http链接列表
     });
 }
+
+function uploadImgWithName(picname, theimg) {
+    var imgpath = "";
+    wx.chooseImage({
+        count: 1,
+        sizeType: ['original', 'compressed'],
+        sourceType: ['album', 'camera'],
+        success: function (res) {
+            var localIds = res.localIds;
+            imgpath = localIds;
+            $(theimg).attr("src", imgpath);
+            console.log("本地图片id:" + imgpath);
+            $.ajax({
+                type: "POST",
+                url: "json/uploadfiles.json",
+                dataType: "json",
+                enctype: 'multipart/form-data',
+                data: {
+                    file: imgpath
+                },
+                success: function (ret) {
+                    if (ret == 0) {
+                        $(picname).val(ret.picid);
+                    }
+                },
+                fail: function (e) {
+                    debugger;
+                    console.log("上传失败了");
+                }
+            });
+        }
+    });
+}
 //Disable Form
 function setFromDisabled(formname, toDisabled) {
     var aform = $("form");

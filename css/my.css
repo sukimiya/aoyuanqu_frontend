@@ -101,8 +101,6 @@
 }
 
 
-
-
 /*------------------------my.html----------------------*/
 
 .my-navbar-left-btn {
@@ -213,10 +211,12 @@
     border-left-width: 0px;
     border-right-width: 0px;
 }
-.my-list-item a{
+
+.my-list-item a {
     text-align: left;
-    text-overflow:ellipsis;
+    text-overflow: ellipsis;
 }
+
 .my-list-item i {
     padding-left: 10px;
     padding-right: 20px;
@@ -327,6 +327,14 @@
     margin: 0px;
 }
 
+.my-form-h1 {}
+
+.my-form-label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #e51c23;
+}
+
 
 /*------------------------mycompanyprofile.html----------------------*/
 
@@ -359,4 +367,43 @@
 
 .mycompany-top-content a {
     color: #ffffff;
+}
+
+//---------------------ee_u_progress-----------
+.triangle {
+    height: 0px;
+    width: 0px;
+    border-width: 8px;
+    border-style: solid;
+    border-color: transparent #FAFAFA transparent transparent;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    float: left;
+}
+
+.bobble-box {
+    background-color: #FAFAFA;
+    border-radius: 5px;
+    height: 48px;
+    padding: 14px;
+    display: block;
+}
+
+.cricle-num {
+    color: #5A5A5A;
+    font-weight: bold;
+    border-radius: 16px;
+    height: 32px;
+    width: 32px;
+    border: 2px solid #5078B4;
+    padding: 4px;
+    margin-top: 8px;
+    background-color: white;
+    float: left;
+}
+
+.bobble-item-bg {
+    padding: 15px;
+    background-repeat: repeat-y;
+    background-image: url('images/311.png');
 }
