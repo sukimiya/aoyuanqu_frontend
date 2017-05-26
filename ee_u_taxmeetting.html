@@ -8,7 +8,7 @@
     <meta http-equiv="pragma" content="no-cache">
     <meta http-equiv="cache-control" content="no-cache">
     <meta http-equiv="expires" content="0">
-    <title>面签预约</title>
+    <title>税种核定</title>
     <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="https://cdn.bootcss.com/bootstrap-validator/0.5.3/css/bootstrapValidator.min.css" rel="stylesheet">
@@ -16,16 +16,6 @@
     <link href="https://cdn.bootcss.com/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet" type="text/css">
     <link href="css/my.css" rel="stylesheet" type="text/css">
-    <style type="text/css">
-        .my-form-h1 {}
-
-        .my-form-label {
-            font-size: 16px;
-            font-weight: bold;
-            color: #e51c23;
-        }
-
-    </style>
     <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
     <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://cdn.bootcss.com/bootstrap-validator/0.5.3/js/bootstrapValidator.min.js"></script>
@@ -40,42 +30,70 @@
     <script type="text/javascript">
         var investorAry = [];
         var isAddMode = true;
-        $(document).ready(function() {
-            var today = new Date();
-            $("#appointment_time").attr('min', today);
-            var month = new Date(new Date().setMonth(today.getMonth() + 1));
-            $("#appointment_time").attr('max', month);
-            var maxDateTo = 90;
-            var darry = [];
-            for(var i=0;i<maxDateTo;i++){
-                var adate = new Date();
-                adate.setDate(adate.getDate()+i);
-                darry.push(adate);
-                console.log("add a date:"+adate.toDateString());
-                
+
+        function initial(data) {
+            if (data.company_name)
+                $("#companyname").text(data.company_name);
+            if (data.szhd_state == 1) {
+                var today = new Date();
+                $("#appointment_time").attr('min', today);
+                var month = new Date(new Date().setMonth(today.getMonth() + 1));
+                $("#appointment_time").attr('max', month);
+                var targatDate = new Date();
+                targatDate.setMonth(targatDate.getMonth() + 6);
+                targatDate.getDate() - today.getDate();
+                var maxDateTo = targatDate.getTime() - today.getTime();
+                maxDateTo = maxDateTo / (1000 * 60 * 60 * 24);
+                var darry = [];
+                for (var i = 0; i < maxDateTo; i++) {
+                    var adate = new Date();
+                    adate.setDate(adate.getDate() + i);
+                    darry.push(adate);
+                    //console.log("add a date:"+adate.toDateString());
+                }
+                $('#appointment_time_picker').datetimepicker({
+                    locale: 'zh-cn',
+                    defaultDate: today,
+                    enabledDates: darry
+                });
+            } else {
+                $("#szhd_time").val(data.szhd_time);
+                $("#szhd_address").val(data.szhd_address);
+                if (data.szhd_license == null || data.szhd_license) {
+                    $("#szhd_license_img").removeClass("hide");
+                    $("#uploadbtn").removeClass("hide");
+                }
             }
-            $('#appointment_time_picker').datetimepicker({
-                locale: 'zh-cn',
-                defaultDate: today,
-                enabledDates: darry
-            });
-            $("#thesubmit").on("click",function(events){
+        }
+        $(document).ready(function() {
+
+            $("#thesubmit").on("click", function(events) {
                 $.ajax({
-                    type:"POST",
-                    url:"json/ee_u_meetting_send.json",
-                    dataType:"json",
-                    data:JSON.stringify({
-                        id:GetRequest()["id"],
-                        appointment_time:$("#appointment_time").val(),
-                        appointment_address:$("#appointment_address").val()
-                        
+                    type: "POST",
+                    url: "json/ee_u_taxmeetting_post.json",
+                    dataType: "json",
+                    data: JSON.stringify({
+                        id: GetRequest()["id"],
+                        appointment_time: $("#szhd_time").val(),
+                        appointment_address: $("#szhd_address").val()
                     }),
-                    success:function(data){
-                        if(data.result==0){
-                            window.location = "ee_u_progress.html?id="+GetRequest()["id"];
+                    success: function(data) {
+                        if (data.result == 0) {
+                            window.location = "ee_u_progress.html";
                         }
                     }
                 });
+            });
+            $.ajax({
+                type: "POST",
+                url: "json/ee_u_taxmeetting_get.json",
+                dataType: "json",
+                data: JSON.stringify({
+                    id: GetRequest()["id"]
+                }),
+                success: function(data) {
+                    initial(JSON.parse(data));
+                }
             });
         })
 
@@ -98,26 +116,6 @@
                     <label id="companyname" class="my-form-label text-center clearfix">&nbsp;
                     </label>
                 </div>
-                <div class="form-group">
-                    <label class="clearfix">实际经营地址</label>
-                    <div id="actual_address" class="my-form-label text-left clearfix">&nbsp;
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="clearfix">实际经营地址</label>
-                    <div id="actual_address" class="my-form-label text-left clearfix">&nbsp;
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>企业注册资本：</label>
-                    <label id="register_money" class="my-form-label text-left clearfix">&nbsp;
-                    </label>
-                </div>
-                <div class="form-group">
-                    <label>企业注册类型：</label>
-                    <label id="register_kind" class="my-form-label text-left clearfix">&nbsp;
-                    </label>
-                </div>
                 <form id="bookform">
                     <div class="form-group">
                         <label class="clearfix">面签预约时间</label>
@@ -137,26 +135,15 @@
                         <option title="市区总部" value="市区总部"><span style="font-size:12;color:#cccccc">园区市区总部，地址是：上海市XX区XX路233号</span></option>
                         </select>
                     </div>
+                    <div class="text-center">
+                        <hr>
+                        <img id="szhd_license_img" class="img-responsive my-gap-top my-gat-bottom hide" src="images/picframe.svg">
+                        <a href="javascript:uploadImgWithName('#szhd_license','#szhd_license_img')" id="uploadbtn" class="btn btn-success my-gap-top">上传图片</a>
+                    </div>
+                    <input type="hidden" id="szhd_license">
+                    <hr>
                     <button id="thesubmit" class="btn btn-primary form-control" type="button">提交</button>
                 </form>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" id="addinvestorpanel">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span aria-hidden="true">&times;</span>
-                        <span class="sr-only"></span>
-                    </button>
-                    <h4 id="mysetTitle">投资人</h4>
-
-                </div>
-                <div class="modal-body">
-
-                </div>
-
             </div>
         </div>
     </div>

@@ -1,0 +1,153 @@
+<!--Reference from-->
+<!--http://www.jq22.com/jquery-info13300-->
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="0">
+    <title>税种核定</title>
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.bootcss.com/bootstrap-validator/0.5.3/css/bootstrapValidator.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
+    <link href="https://cdn.bootcss.com/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet" type="text/css">
+    <link href="css/my.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
+    <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap-validator/0.5.3/js/bootstrapValidator.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
+    <script src="js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript" src="js/jquery.flexText.min.js"></script>
+    <script src="https://cdn.bootcss.com/json2/20160511/json2.min.js"></script>
+    <script src="https://cdn.bootcss.com/moment.js/2.18.0/moment.min.js"></script>
+    <script src="https://cdn.bootcss.com/moment.js/2.18.0/locale/zh-cn.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript" src="js/my.js"></script>
+    <script type="text/javascript">
+        var investorAry = [];
+        var isAddMode = true;
+
+        function initial(data) {
+            if (data.company_name)
+                $("#companyname").text(data.company_name);
+            if (data.szhd_state == 1) {
+                var theyear = Math.round(data.szhd_time.split("年")[0]);
+                var datastr = data.szhd_time.split("年")[1];
+                var themonth = Math.round(datastr.split("月")[0]) - 1;
+                datastr = datastr.split("月")[1];
+                var theday = Math.round(datastr.split("日")[0]);
+                var today = new Date(theyear, themonth, theday);
+                $("#szhd_time").attr('min', today);
+                var month = new Date(new Date().setMonth(today.getMonth() + 1));
+                $("#szhd_time").attr('max', month);
+                var targatDate = new Date();
+                targatDate.setMonth(targatDate.getMonth() + 6);
+                targatDate.getDate() - today.getDate();
+                var maxDateTo = targatDate.getTime() - today.getTime();
+                maxDateTo = maxDateTo / (1000 * 60 * 60 * 24);
+                var darry = [];
+                for (var i = 0; i < maxDateTo; i++) {
+                    var adate = new Date();
+                    adate.setDate(adate.getDate() + i);
+                    darry.push(adate);
+                    //console.log("add a date:"+adate.toDateString());
+                }
+                $('#szhd_time_picker').datetimepicker({
+                    locale: 'zh-cn',
+                    defaultDate: today,
+                    enabledDates: darry
+                });
+            } else {
+                $("#szhd_time").val(data.szhd_time);
+                $("#szhd_address").val(data.szhd_address);
+                if (data.szhd_license == null || data.szhd_license) {
+                    $("#szhd_license_img").removeClass("hide");
+                }
+            }
+        }
+        $(document).ready(function() {
+
+            $("#thesubmit").on("click", function(events) {
+                $.ajax({
+                    type: "POST",
+                    url: "json/ee_u_taxmeetting_post.json",
+                    dataType: "json",
+                    data: JSON.stringify({
+                        id: GetRequest()["id"],
+                        szhd_time: $("#szhd_time").val(),
+                        appointment_address: $("#szhd_address").val()
+                    }),
+                    success: function(data) {
+                        if (data.result == 0) {
+                            window.location = "ee_u_progress.html";
+                        }
+                    }
+                });
+            });
+            $.ajax({
+                type: "POST",
+                url: "json/ee_u_taxmeetting_get.json",
+                dataType: "json",
+                data: JSON.stringify({
+                    id: GetRequest()["id"]
+                }),
+                success: function(data) {
+                    initial(JSON.parse(data));
+                }
+            });
+        })
+
+    </script>
+</head>
+
+<body class="my-body">
+
+    <div style="padding:0px;marging:0px;background-size: cover;overflow-y:visible;">
+        <img class="col-xs-4 col-xs-offset-4 img-responsive my-gap-top" src="images/dfa8c6ef0acedc844c59669f4f24fe1a.png">
+        <div class="section my-topsection">
+            <div class="container" style="vertical-align:mid;">
+                <div class="col-xs-12 text-center my-gap-bottom">
+                    <!--h3> 企业名称预先核准申请书</h3-->
+                </div>
+            </div>
+            <div class="container">
+                <div class="form-group">
+                    <label class="clearfix">登记企业名称</label>
+                    <label id="companyname" class="my-form-label text-center clearfix">&nbsp;
+                    </label>
+                </div>
+                <form id="bookform">
+                    <div class="form-group">
+                        <label class="clearfix">面签预约时间</label>
+                        <div class="form-group">
+                            <div class='input-group date' id='szhd_time_picker'>
+                                <input id="szhd_time" type='text' class="form-control" name="szhd_time" />
+                                <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="clearfix">面签预约地点</label>
+                        <select id="appointment_address" name="appointment_address" class="selectpicker mycompany-select">
+                        <option title="小区总部" value="小区总部"><span style="font-size:12;color:#cccccc">园区小区总部，地址是：上海市XX区XX路233号</span></option>
+                        <option title="市区总部" value="市区总部"><span style="font-size:12;color:#cccccc">园区市区总部，地址是：上海市XX区XX路233号</span></option>
+                        </select>
+                    </div>
+                    <div class="text-center">
+                        <hr>
+                        <img id="szhd_license_img" class="img-responsive my-gap-top my-gat-bottom hide" src="images/picframe.svg">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
