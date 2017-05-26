@@ -63,6 +63,40 @@
             }
 
         }
+
+        function uploadImgWithName(picname, theimg) {
+            var imgpath = "";
+            wx.chooseImage({
+                count: 1,
+                sizeType: ['original', 'compressed'],
+                sourceType: ['album', 'camera'],
+                success: function(res) {
+                    var localIds = res.localIds;
+                    imgpath = localIds;
+                    $(theimg).attr("src", imgpath);
+                    console.log("本地图片id:" + imgpath);
+                    $.ajax({
+                        type: "POST",
+                        url: "json/uploadfiles.json",
+                        dataType: "json",
+                        enctype: 'multipart/form-data',
+                        data: {
+                            file: imgpath
+                        },
+                        success: function(ret) {
+                            if (ret == 0) {
+                                $(picname).val(ret.picid);
+                            }
+                        },
+                        fail: function(e) {
+                            debugger;
+                            console.log("上传失败了");
+                        }
+
+                    });
+                }
+            });
+        }
         //
         function previewImgWithName(picname, theimg) {
             var imgpath = $("#lisenceImg").attr("src");
@@ -110,24 +144,8 @@
             });
             $("#appointment_address").val(data.appointment_address);
         }
-        $(document).ready(function() {
-            $('textarea').flexText();
-            $("#submitBtn").on("clilck", function() {
-                var postobj = {
-                    "id": GetRequest()["id"],
-                    "express_code": $("#express_code").val(),
-                    "express_shipper": $("#express_shipper").val()
-                };
-                $.ajax({
-                    url: "json/ee_u_finish2_post.json",
-                    dataType: "json",
-                    data: JSON.stringify(postobj),
-                    success: function(data) {
-                        console.log("deliver infomation had been record.");
-                        window.location = "ee_u_progress.html";
-                    }
-                });
-            });
+
+        function getShippers() {
             $.ajax({
                 url: "json/expressinfo.json",
                 dataTyle: "json",
@@ -142,6 +160,27 @@
                     $("#shipper").selectpicker('refresh');
                 }
             });
+        }
+        $(document).ready(function() {
+            $('textarea').flexText();
+            $("#submitBtn").on("clilck", function() {
+                var postobj = {
+                    "id": GetRequest()["id"],
+                    "lisence_pic1": $("#lisence_pic1").val(),
+                    "express_code": $("#express_code").val(),
+                    "express_shipper": $("#express_shipper").val()
+                };
+                $.ajax({
+                    url: "json/ee_u_finish2_post.json",
+                    dataType: "json",
+                    data: JSON.stringify(postobj),
+                    success: function(data) {
+                        console.log("deliver infomation had been record.");
+                        window.location = "ee_u_progress.html";
+                    }
+                });
+            });
+            getShippers();
             $.ajax({
                 url: "json/ee_u_finish2_get.json",
                 dataTyle: "json",
@@ -149,9 +188,20 @@
                 success: function(data) {
                     var getobj = JSON.parse(data);
                     debugger;
-                    $("#receive_name").text(getobj["receive_name"]);
-                    $("#receive_phone").text(getobj["receive_phone"]);
-                    $("#express_address").text(getobj["express_address"]);
+                    if (getobj.license_state == 1) {
+                        $("#company_name").text(getobj["company_name"]);
+                        $("#receive_name").text(getobj["receive_name"]);
+                        $("#receive_phone").text(getobj["receive_phone"]);
+                        $("#express_address").text(getobj["express_address"]);
+                        $("#my-state-1").removeClass("hide");
+                    } else {
+                        $("#my-state-1").addClass("hide");
+                    }
+                    if (getobj.license_state == 2) {
+                        $("#my-state-1").addClass("hide");
+                        $("#uploadbtn").addClass("hide");
+                        getRemotePic(getobj.license_pic1, $("#lisenceImg"));
+                    }
                 }
             });
         });
@@ -165,37 +215,44 @@
         <div class="container" style="vertical-align:mid;">
             <div class="col-xs-12 text-center my-gap-bottom">
                 <!--h3> 企业名称预先核准申请书</h3-->
+                <h1>&nbsp;</h1>
+                <img id="lisenceImg" class="img-responsive my-gap-top" src="images/picframe.svg">
+                <a href="javascript:uploadImgWithName('#lisence_pic1','#lisenceImg')" id="uploadbtn" class="btn btn-success my-gap-top">上传图片</a>
                 <h3 id="company_name">&nbsp;</h3>
             </div>
         </div>
         <div class="container">
 
+            <div id="my-state-1">
 
-            <form>
-                <div class="form-group">
-                    <label>收件人:</label>
-                    <div class="form-control" id="receive_name" />
-                </div>
-                <div class="form-group">
-                    <label>联系电话:</label>
-                    <div class="form-control" id="receive_phone" />
-                </div>
-                <div class="form-group">
-                    <label>快递地址:</label>
-                    <div class="form-control" id="express_address" />
-                </div>
                 <hr>
-                <div class="form-group">
-                    <label>选择快递公司</label>
-                    <select id="shipper" name="shipper" class="selectpicker mycompany-select">
+                <form>
+                    <input id="lisence_pic1" type="hidden">
+                    <div class="form-group">
+                        <label>收件人:</label>
+                        <div class="form-control" id="receive_name" />
+                    </div>
+                    <div class="form-group">
+                        <label>联系电话:</label>
+                        <div class="form-control" id="receive_phone" />
+                    </div>
+                    <div class="form-group">
+                        <label>快递地址:</label>
+                        <div class="form-control" id="express_address" />
+                    </div>
+                    <hr>
+                    <div class="form-group">
+                        <label>选择快递公司</label>
+                        <select id="shipper" name="shipper" class="selectpicker mycompany-select">
                         </select>
-                </div>
-                <div class="form-group">
-                    <label>快递单号:</label>
-                    <div class="form-control" id="express_code" />
-                </div>
-                <a id="submitBtn" class="btn btn-primary col-xs-12">提交</a>
-            </form>
+                    </div>
+                    <div class="form-group">
+                        <label>快递单号:</label>
+                        <input class="form-control" id="express_code" required/>
+                    </div>
+                    <a id="submitBtn" class="btn btn-primary col-xs-12">提交</a>
+                </form>
+            </div>
         </div>
     </div>
 

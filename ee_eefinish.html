@@ -14,7 +14,7 @@
     <link href="css/my.css" rel="stylesheet" type="text/css">
     <style type="text/css">
         .my-form-h1 {}
-
+        
         .my-form-label {
             font-size: 16px;
             font-weight: bold;
@@ -29,7 +29,8 @@
     <script src="https://cdn.bootcss.com/json2/20160511/json2.min.js"></script>
     <script type="text/javascript" src="js/my.js"></script>
     <script type="text/javascript">
-        var isunfinishList=true;
+        var isunfinishList = true;
+
         function switchlisttype() {
             var setl1 = "";
             var setl2 = "";
@@ -65,24 +66,46 @@
             var imgpath = $("#lisenceImg").attr("src");
             previewImagebyWX(imgpath);
         }
-        $(document).ready(function(){
+        $(document).ready(function() {
             $('textarea').flexText();
-            $("#submitbtn").on("clilck",function(){
-                var postobj=  {};
+            $("#submitbtn").on("clilck", function() {
+                var postobj = {};
                 postobj["receive_name"] = $("#receive_name").val();
                 postobj["receive_phone"] = $("#receive_phone").val();
                 postobj["express_address"] = $("#express_address").text();
                 $.ajax({
-                    url:"ee_eefinish_post.json",
-                    dataType:"json",
-                    data:JSON.stringify(postobj),
-                    success:function(data){
+                    url: "ee_eefinish_post.json",
+                    dataType: "json",
+                    data: JSON.stringify(postobj),
+                    success: function(data) {
                         console.log("deliver infomation had been record.");
-                        window.location = "ee_eefinish2.html?id="+GetRequest()["id"];
+                        window.location = "ee_eefinish2.html?id=" + GetRequest()["id"];
                     }
                 });
             });
+            $.ajax({
+                url: "json/ee_eefinish_get.json",
+                dataType: "json",
+                data: "{}"，
+                success: function(data) {
+                    var jdata = JSON.parse(data);
+                    if (jdata.license_state == 2) {
+                        //2 已经投递
+                        $("#my-state-1").addClass("hide");
+                    } else if (jdata.license_state == 0) {
+                        //0 未发
+
+                    } else {
+                        //1 已经填写快递信息
+                        $("#my-state-1").addClass("hide");
+                        if (jdata.license_takekind == 2) {
+                            //等待查询显示快递信息
+                        }
+                    }
+                }
+            });
         });
+
     </script>
 </head>
 
@@ -97,31 +120,33 @@
             </a>
             <hr>
         </div>
-        <div class="container text-center">
-            <div id="listswitchGroup" class="btn-group" data-toggle="buttons" onclick="javascript:switchlisttype()">
-                <label id="unfinishlabel" class="btn btn-primary active">
+        <div id="my-state-1">
+            <div class="container text-center">
+                <div id="listswitchGroup" class="btn-group" data-toggle="buttons" onclick="javascript:switchlisttype()">
+                    <label id="unfinishlabel" class="btn btn-primary active">
                     <input type="radio" name="options" value="1"><div style="width:100px;">快递</div></label>
-                <label id="finishlabel" class="btn btn-default">
+                    <label id="finishlabel" class="btn btn-default">
                     <input type="radio" name="options" value="2"><div style="width:100px;">自取</div></label>
+                </div>
             </div>
-        </div>
-        <div id="expressGroup" class="container">
-            <form id="deliverform">
-                <div class="form-group my-form-group">
-                    <label for="receive_name">收件人</label>
-                    <input id="receive_name" name="receive_name" class="form-control" type="text" required style="font-size:18px;border-color: #5066b4;">
-                </div>
-                <div class="form-group my-form-group">
-                    <label for="receive_phone">联系电话</label>
-                    <input id="receive_phone" name="receive_phone" class="form-control" type="tel" required style="font-size:18px;border-color: #5066b4;">
-                </div>
-                <div class="form-group my-form-group warp">
-                    <label for="express_address">收件地址</label>
-                    <textarea id="express_address" name="express_address" class="form-control" required style="font-size:18px;border-color: #5066b4;"></textarea>
-                </div>
-                <input type="hidden" id="license_takekind">
-                <a id="submitbtn" class="btn btn-primary col-xs-12 my-gap-bottom">提交</a>
-            </form>
+            <div id="expressGroup" class="container">
+                <form id="deliverform">
+                    <div class="form-group my-form-group">
+                        <label for="receive_name">收件人</label>
+                        <input id="receive_name" name="receive_name" class="form-control" type="text" required style="font-size:18px;border-color: #5066b4;">
+                    </div>
+                    <div class="form-group my-form-group">
+                        <label for="receive_phone">联系电话</label>
+                        <input id="receive_phone" name="receive_phone" class="form-control" type="tel" required style="font-size:18px;border-color: #5066b4;">
+                    </div>
+                    <div class="form-group my-form-group warp">
+                        <label for="express_address">收件地址</label>
+                        <textarea id="express_address" name="express_address" class="form-control" required style="font-size:18px;border-color: #5066b4;"></textarea>
+                    </div>
+                    <input type="hidden" id="license_takekind">
+                    <a id="submitbtn" class="btn btn-primary col-xs-12 my-gap-bottom">提交</a>
+                </form>
+            </div>
         </div>
     </div>
 
