@@ -24,20 +24,21 @@
     <script type="text/javascript" src="js/my.js"></script>
     <script type="text/javascript">
         var investorAry = [];
+        var curSelect = null;
         var isAddMode = true;
-
+        var isFormValidator = false;
 
         function uploadImgWithName(picname, theimg) {
             var imgpath = "";
             wx.chooseImage({
                 count: 1,
-                sizeType: ['original', 'compressed'], 
+                sizeType: ['original', 'compressed'],
                 sourceType: ['album', 'camera'],
                 success: function(res) {
                     var localIds = res.localIds;
                     imgpath = localIds;
-                    $(theimg).attr("src",imgpath);
-                    console.log("本地图片id:"+imgpath);
+                    $(theimg).attr("src", imgpath);
+                    console.log("本地图片id:" + imgpath);
                     $.ajax({
                         type: "POST",
                         url: "json/uploadfiles.json",
@@ -51,18 +52,18 @@
                                 $(picname).val(ret.picid);
                             }
                         },
-                        fail:function(e){
+                        fail: function(e) {
                             debugger;
                             console.log("上传失败了");
                         }
-                        
+
                     });
                 }
             });
 
         }
 
-        function addAinvestorToList(data) {
+        function addAinvestorToList(data, adddata = true) {
             var rsstr = '<a href="javascript:editInvestor(' + data["order"] + ')" class="list-group-item my-list-item"><div class="col-xs-3"><span style="font-size:14px;">' +
                 data["qygd_name"] +
                 '</span></div><div class="col-xs-5"><span style="font-size:14px;">' +
@@ -71,14 +72,15 @@
                 calculate_qygd_investment(data["qygd_investment"]) +
                 '</span></div></a>';
             $("#investorlists").append(rsstr);
-            investorAry.push(data);
+            if (adddata)
+                investorAry.push(data);
         }
 
         function calculate_qygd_investment(investment) {
             var totalInvestment = Number($("#register_money").val());
-            if(Number(investment)){
-                var rsstr = Math.floor(investment/totalInvestment * 10000)/100;
-                return rsstr + "%" ;
+            if (Number(investment)) {
+                var rsstr = Math.floor(investment / totalInvestment * 10000) / 100;
+                return rsstr + "%";
             }
             return "0%";
         }
@@ -86,14 +88,14 @@
         function editInvestor(index) {
             debugger;
             if (investorAry.length > index) {
-                var investor = investorAry[index];
+                var investor = curSelect = investorAry[index];
                 $("#qygd_name").val(investor["qygd_name"]);
                 $("#qygd_idnumber").val(investor["qygd_idnumber"]);
                 $("#qygd_investment").val(investor["qygd_investment"]);
                 $("#qygd_jobtitle").val(investor["qygd_jobtitle"]);
-                $("#qygd_pic1" + "_img").attr("src",getRemotePic(investor["qygd_pic1"]));
-                $("#qygd_pic2" + "_img").attr("src",getRemotePic(investor["qygd_pic2"]));
-                $("#qygd_pic3" + "_img").attr("src",getRemotePic(investor["qygd_pic3"]));
+                $("#qygd_pic1" + "_img").attr("src", getRemotePic(investor["qygd_pic1"]));
+                $("#qygd_pic2" + "_img").attr("src", getRemotePic(investor["qygd_pic2"]));
+                $("#qygd_pic3" + "_img").attr("src", getRemotePic(investor["qygd_pic3"]));
                 //这里需要服务器上图片显示的方法
                 isAddMode = false;
                 $("#addinvestorpanel").modal("toggle");
@@ -111,11 +113,29 @@
                 newdata["qygd_pic1"] = $("#qygd_pic1").val();
                 newdata["qygd_pic2"] = $("#qygd_pic2").val();
                 newdata["qygd_pic3"] = $("#qygd_pic3").val();
+                curSelect = null;
                 addAinvestorToList(newdata);
+            } else {
+                if (curSelect) {
+                    curSelect["qygd_name"] = $("#qygd_name").val();
+                    curSelect["qygd_idnumber"] = $("#qygd_idnumber").val();
+                    curSelect["qygd_investment"] = $("#qygd_investment").val();
+                    curSelect["qygd_jobtitle"] = $("#qygd_jobtitle").val();
+                    curSelect["qygd_pic1"] = $("#qygd_pic1").val();
+                    curSelect["qygd_pic2"] = $("#qygd_pic2").val();
+                    curSelect["qygd_pic3"] = $("#qygd_pic3").val();
+                    //
+                    var htmlstr = "";
+                    $("#investorlists").html(htmlstr);
+                    for (var i = 0; i < investorAry.length; i++) {
+                        addAinvestorToList(investorAry[i], false);
+                    }
+                }
             }
             $("#addinvestorpanel").modal("hide");
         }
-        var thebillid=0;
+        var thebillid = 0;
+
         function getApplyFromJSON() {
             var jsonobj = {};
             thebillid = Date.parse(new Date());
@@ -152,7 +172,8 @@
         }
         $(document).ready(function() {
             $('textarea').flexText();
-            $('form').bootstrapValidator({
+
+            $('#naform').bootstrapValidator({
                 feedbackIcons: {
                     valid: 'glyphicon glyphicon-ok',
                     invalid: 'glyphicon glyphicon-remove',
@@ -170,15 +191,15 @@
                                 url: 'json/ee_nameapply_verfiy.json', //验证地址
                                 message: '企业名称已使用', //提示消息
                                 delay: 2000, //每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
-                                type: 'POST' //请求方式
+                                type: 'GET', //请求方式
                                 /**自定义提交数据，默认值提交当前input value
                                  * 
                                  */
-                                /*data: function(validator) {
+                                data: function(validator) {
                                     return {
-                                        validateCode: $('[name="validateCode"]').val()
+                                        apply_name: $('#apply_name').val()
                                     };
-                                }*/
+                                }
                             }
                         }
                     },
@@ -189,30 +210,113 @@
                                 message: '输入验证码',
                             },
                             threshold: 6,
-                            remote: { //ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}  
-                                url: 'json/ee_nameapply_verfiy.json', //验证地址
-                                message: '企业名称已使用', //提示消息
-                                delay: 2000, //每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
-                                type: 'POST' //请求方式
-                                /**自定义提交数据，默认值提交当前input value
-                                 * 
-                                 */
-                                /*data: function(validator) {
+                            remote: {
+                                url: 'json/ee_nameapply_verfiy.json',
+                                message: '企业名称已使用',
+                                delay: 2000,
+                                type: 'GET',
+                                data: function(validator) {
                                     return {
-                                        validateCode: $('[name="validateCode"]').val()
+                                        apply_name2: $('#apply_name2').val()
                                     };
-                                }*/
+                                }
+                            }
+                        }
+                    },
+                    apply_name3: {
+                        validators: {
+                            message: '验证企业名称失败',
+                            notEmpty: {
+                                message: '输入验证码',
+                            },
+                            threshold: 6,
+                            remote: {
+                                url: 'json/ee_nameapply_verfiy.json',
+                                message: '企业名称已使用',
+                                delay: 2000,
+                                type: 'GET',
+                                data: function(validator) {
+                                    return {
+                                        apply_name3: $('#apply_name3').val()
+                                    };
+                                }
+                            }
+                        }
+                    },
+                    apply_name4: {
+                        validators: {
+                            message: '验证企业名称失败',
+                            notEmpty: {
+                                message: '输入验证码',
+                            },
+                            threshold: 6,
+                            remote: {
+                                url: 'json/ee_nameapply_verfiy.json',
+                                message: '企业名称已使用',
+                                delay: 2000,
+                                type: 'GET',
+                                data: function(validator) {
+                                    return {
+                                        apply_name4: $('#apply_name4').val()
+                                    };
+                                }
+                            }
+                        }
+                    },
+                    register_money: {
+                        validators: {
+                            message: '请输入正确的金额',
+                            notEmpty: {
+                                message: '投资金额必须填写',
+                            }
+                        }
+                    },
+                    register_name: {
+                        validators: {
+                            message: '请正确填写企业联系人',
+                            notEmpty: {
+                                message: '企业联系人必须填写',
+                            }
+                        }
+                    },
+                    register_phone: {
+                        validators: {
+                            message: '请正确填写企业联系人电话',
+                            notEmpty: {
+                                message: '企业联系人电话必须填写',
                             }
                         }
                     }
-
                 }
             }).on('success.form.bv', function(e) {
                 e.preventDefault();
                 alert("验证通过");
+                isFormValidator = true;
             });
             $("#submitBtn").on("click", function() {
                 var $this = $(this);
+                var fnform = $('#naform').bootstrapValidator();
+                debugger;
+                if (!isFormValidator) {
+                    alert("请完整填写表格并保证正确");
+                    return;
+                }
+                if (investorAry.length <= 0) {
+                    alert("请填写法人和投资人信息");
+                    return;
+                } else {
+                    for (var i = 0; i < investorAry.length; i++) {
+                        var node = investorAry[i];
+                        if (node["qygd_jobtitle"] == "法人") {
+                            break;
+                        }
+                    }
+                    if (i == investorAry.length) {
+                        alert("请填写法人信息");
+                        return;
+                    }
+                }
+
                 $this.button('loading');
                 $.ajax({
                     type: "POST",
@@ -222,7 +326,7 @@
                     success: function(data) {
                         if (data.ret == 0) {
                             debugger;
-                            window.location = "ee_progress.html?id="+thebillid;
+                            window.location = "ee_progress.html?id=" + thebillid;
                         }
                     },
                     error: function(xhr, type) {
@@ -230,7 +334,7 @@
                     }
 
                 });
-                
+
             });
             $("#addinvestorBtn").on("click", function() {
                 isAddMode = true;
@@ -238,9 +342,9 @@
                 $("#qygd_idnumber").val("");
                 $("#qygd_investment").val("");
                 $("#qygd_jobtitle").val("法人");
-                $("#qygd_pic1" + "_img").attr("src","images/picframe.svg");
-                $("#qygd_pic2" + "_img").attr("src","images/picframe.svg");
-                $("#qygd_pic3" + "_img").attr("src","images/picframe.svg");
+                $("#qygd_pic1" + "_img").attr("src", "images/picframe.svg");
+                $("#qygd_pic2" + "_img").attr("src", "images/picframe.svg");
+                $("#qygd_pic3" + "_img").attr("src", "images/picframe.svg");
                 //setFromDisabled("naform", true);
                 $("#addinvestorpanel").modal("toggle");
             });
@@ -263,26 +367,32 @@
                 <form id="naform" class="my-form" role="form" data-toggle="validator">
                     <div class="form-group my-form-group">
                         <label for="apply_name">预查企业名称</label>
-                        <input type="text" name="apply_name" class="form-control my-input" id="apply_name" required>
+                        <input type="text" name="apply_name" class="form-control my-input" id="apply_name">
                     </div>
                     <div class="form-group my-form-group">
                         <label for="apply_name2">备选企业字号</label>
-                        <input type="text" name="apply_name2" class="form-control my-input" id="apply_name2" required>
-                        <input type="text" name="apply_name3" class="form-control my-input my-gap-top" id="apply_name3" required>
-                        <input type="text" name="apply_name4" class="form-control my-input my-gap-top" id="apply_name4" required>
+                        <input type="text" name="apply_name2" class="form-control my-input" id="apply_name2">
+                    </div>
+                    <div class="form-group my-form-group">
+                        <input type="text" name="apply_name3" class="form-control my-input" id="apply_name3">
+                    </div>
+                    <div class="form-group my-form-group">
+                        <input type="text" name="apply_name4" class="form-control my-input" id="apply_name4">
                     </div>
                     <div class="form-group my-form-group wrap">
                         <label for="actual_address">实际经营地址</label>
-                        <textarea id="actual_address" name="actual_address" class="form-control" required style="font-size:18px;border-color: #5066b4;"></textarea>
+                        <textarea id="actual_address" name="actual_address" class="form-control" style="font-size:18px;border-color: #5066b4;"></textarea>
                     </div>
                     <div class="form-group my-form-group wrap">
                         <label for="manage_range">经营范围</label>
-                        <textarea id="manage_range" name="manage_range" class="form-control" required style="font-size:18px;border-color: #5066b4;"></textarea>
+                        <textarea id="manage_range" name="manage_range" class="form-control" style="font-size:18px;border-color: #5066b4;"></textarea>
                     </div>
-                    <label for="register_money">注册资本</label>
-                    <div class="form-group my-form-group">
-                        <input type="number" id="register_money" name="register_money" class="form-control my-input">
-                        <span>万元</span>
+                    <div class="form-group">
+                        <label for="register_money">注册资本</label>
+                        <div class="input-group my-form-group">
+                            <input type="number" id="register_money" name="register_money" class="form-control my-input">
+                            <span class="input-group-addon">万元</span>
+                        </div>
                     </div>
                     <div class="form-group my-form-group">
                         <label for="register_kink">注册公司类型</label>
@@ -300,7 +410,7 @@
                     <hr>
                     <label class="my-gap-bottom">投资人信息</label>
 
-                    <div class="row">
+                    <div class="row" style="font-size:14px;">
                         <div class="col-xs-3">名称</div>
                         <div class="col-xs-5">证件号码</div>
                         <div class="col-xs-3">投资比例</div>
@@ -311,22 +421,22 @@
                                 <spanstyle="color:#ff000000"><i class='fa fa-minus-square'></i></span>
                             </a-->
                     </div>
-                    <div class="form-group clearfix">
+                    <div class="clearfix">
                         <a id="addinvestorBtn" class="btn btn-success col-xs-6 col-xs-offset-3 my-gap-bottom">添加</a>
                     </div>
                     <hr class="my-gap-top">
                     <div class="form-group">
                         <label for="register_name">注册经办人姓名</label>
-                        <input type="text" name="register_name" class="form-control my-input" id="register_name" required>
+                        <input type="text" name="register_name" class="form-control my-input" id="register_name">
                     </div>
                     <div class="form-group">
                         <label for="register_phone">注册经办人电话</label>
-                        <input type="text" name="register_phone" class="form-control my-input" id="register_phone" required>
+                        <input type="text" name="register_phone" class="form-control my-input" id="register_phone">
                     </div>
                     <hr>
                     <div class="form-group my-form-group wrap">
                         <label for="apply_remark">备注</label>
-                        <textarea id="apply_remark" name="apply_remark" class="form-control" required style="font-size:18px;border-color: #5066b4;"></textarea>
+                        <textarea id="apply_remark" name="apply_remark" class="form-control" style="font-size:18px;border-color: #5066b4;"></textarea>
                     </div>
                     <hr>
                     <div class="row text-center">
@@ -359,7 +469,7 @@
                     <form class="my-form" role="form">
                         <div class="form-group my-form-group">
                             <label for="qygd_name">名称或姓名</label>
-                            <input type="text" name="qygd_name" class="form-control my-input" id="qygd_name" required>
+                            <input type="text" name="qygd_name" class="form-control my-input" id="qygd_name">
                         </div>
                         <div class="form-group my-form-group my-gap-bottom" style="font-size:18px;">
                             <span>职务</span>
@@ -370,7 +480,7 @@
                         </div>
                         <div class="form-group my-form-group">
                             <label for="qygd_idnumber">证件号</label>
-                            <input type="text" name="qygd_idnumber" class="form-control my-input" id="qygd_idnumber" required>
+                            <input type="text" name="qygd_idnumber" class="form-control my-input" id="qygd_idnumber">
                         </div>
 
                         <div class="form-group my-form-group">
@@ -382,15 +492,15 @@
                         <div class="container-fluid">
                             <div class="row">
                                 <a class="col-xs-4" href="javascript:uploadImgWithName('#qygd_pic1','#qygd_pic1_img')" style="border:0px solid #000">
-                                <img id="qygd_pic1_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
+                                    <img id="qygd_pic1_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
                                 </a>
-                                <a class="col-xs-4"  href="javascript:uploadImgWithName('#qygd_pic2','#qygd_pic2_img')" style="border:0px solid #000">
-                                <img id="qygd_pic2_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
+                                <a class="col-xs-4" href="javascript:uploadImgWithName('#qygd_pic2','#qygd_pic2_img')" style="border:0px solid #000">
+                                    <img id="qygd_pic2_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
                                 </a>
                                 <a class="col-xs-4" href="javascript:uploadImgWithName('#qygd_pic3','#qygd_pic3_img')" style="border:0px solid #000">
-                                <img id="qygd_pic3_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
+                                    <img id="qygd_pic3_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
                                 </a>
-                              </div>
+                            </div>
                             <div class="row">
                                 <label class="col-xs-4" style="font-size:14px;font-weight:normal">正面</label>
                                 <label class="col-xs-4" style="font-size:14px;font-weight:normal">反面</label>
