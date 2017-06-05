@@ -352,11 +352,11 @@
                 $this.button('loading');
                 $.ajax({
                     type: "POST",
-                    url: "json/ee_nameapply.json",
+                    url: "http://119.29.153.19:8082/page/insertYCM.do",
                     data: getApplyFromJSON(),
                     dataType: "json",
                     success: function(data) {
-                        if (data.ret == 0) {
+                        if (data.result == 2) {
                             debugger;
                             window.location = "ee_progress.html?id=" + thebillid;
                         }
