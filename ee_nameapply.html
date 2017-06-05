@@ -311,9 +311,60 @@
                 debugger;
                 e.preventDefault();
                 alert("验证通过");
+                var thesubmitbtn = $("#submitBtn");
+                var myvalid = myvalidator.isValid;
+                debugger;
+                if (!isFormValidator) {
+                    debugger;
+                    if ($("#apply_name")["0"].validity.valid &&
+                        $("#apply_name2")["0"].validity.valid &&
+                        $("#apply_name3")["0"].validity.valid &&
+                        $("#apply_name4")["0"].validity.valid &&
+                        $("#register_money")["0"].validity.valid &&
+                        $("#register_name")["0"].validity.valid &&
+                        $("#register_phone")["0"].validity.valid
+                    ) {
+                        isFormValidator = true;
+                    } else {
+                        alert("请完整填写表格并保证正确");
+                        return;
+                    }
+                }
+                if (investorAry.length <= 0) {
+                    alert("请填写法人和投资人信息");
+                    return;
+                } else {
+                    for (var i = 0; i < investorAry.length; i++) {
+                        var node = investorAry[i];
+                        if (node["qygd_jobtitle"] == "法人") {
+                            break;
+                        }
+                    }
+                    if (i == investorAry.length) {
+                        alert("请填写法人信息");
+                        return;
+                    }
+                }
+                thesubmitbtn.button('loading');
+                $.ajax({
+                    type: "POST",
+                    url: "http://119.29.153.19:8082/page/insertYCM.do",
+                    data: getApplyFromJSON(),
+                    dataType: "json",
+                    success: function(data) {
+                        if (data.result == 2) {
+                            debugger;
+                            window.location = "ee_progress.html?id=" + thebillid;
+                        }
+                    },
+                    error: function(xhr, type) {
+                        alert("提交时发生错误!");
+                    }
+
+                });
                 isFormValidator = true;
             });
-            $("#submitBtn").on("click", function() {
+            /*$("#submitBtn").on("click", function() {
                 var $this = $(this);
                 var myvalid = myvalidator.isValid;
                 debugger;
@@ -367,7 +418,7 @@
 
                 });
 
-            });
+            });*/
             $("#addinvestorBtn").on("click", function() {
                 isAddMode = true;
                 $("#qygd_name").val("");
@@ -482,7 +533,7 @@
                             </p>
                         </div>
                     </div>
-                    <a id="submitBtn" class="btn btn-primary col-xs-12 my-gap-bottom" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>提交申请中">申请</a>
+                    <button id="submitBtn" class="btn btn-primary col-xs-12 my-gap-bottom" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>提交申请中">申请</button>
                 </form>
 
             </div>

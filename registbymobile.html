@@ -35,24 +35,6 @@
                             message: '验证失败',
                             notEmpty: {
                                 message: '输入验证码',
-                            },
-                            threshold: 6,
-                            remote: { //ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}  
-                                url: 'verfymobile.json', //验证地址
-                                message: '验证码错误', //提示消息
-                                delay: 2000, //每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
-                                type: 'POST' //请求方式
-                                    /**自定义提交数据，默认值提交当前input value
-                                     * 
-                                     */
-                                    /*data: function(validator) {
-                                        return {
-                                            validateCode: $('[name="validateCode"]').val()
-                                        };
-                                    }*/
-                                success:function(eas){
-                                    alert(验证成功);
-                                }
                             }
                         }
                     },
@@ -80,7 +62,7 @@
                 $.ajax({　　
                     type: "POST", //用POST方式传输
                     　　dataType: "text", //数据格式:JSON
-                    　　url: 'registbymobile.json', //目标地址
+                    　　url: 'http://opentest.aoyuanqu.cn/page/UserInsert.do', //目标地址
                     data: "mobile=" + fv_mobileNumber + "&timestamp=" + fv_timestamp,
                     　　error: function(XMLHttpRequest, textStatus, errorThrown) {
                         //
@@ -128,7 +110,8 @@
                 $.ajax({　　
                     type: "POST", //用POST方式传输
                     　　dataType: "text", //数据格式:JSON
-                    　　url: 'verfymobile.json', //目标地址
+                        data:"moblie="+$("#inputmobile").val(),
+                    　　url: 'http://opentest.aoyuanqu.cn/page/verfymobile.do', //目标地址
                     　　 //data: "dealType=" + dealType + "&uid=" + uid + "&code=" + code,
                     　　error: function(XMLHttpRequest, textStatus, errorThrown) {},
                     　　success: function(msg) {
