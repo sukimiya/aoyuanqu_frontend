@@ -62,7 +62,7 @@
                 $.ajax({　　
                     type: "POST", //用POST方式传输
                     　　dataType: "text", //数据格式:JSON
-                    　　url: 'http://opentest.aoyuanqu.cn/page/UserInsert.do', //目标地址
+                    　　url: 'http://opentest.aoyuanqu.cn/UserInsert.do', //目标地址
                     data: "mobile=" + fv_mobileNumber + "&timestamp=" + fv_timestamp,
                     　　error: function(XMLHttpRequest, textStatus, errorThrown) {
                         //
@@ -111,7 +111,7 @@
                     type: "POST", //用POST方式传输
                     　　dataType: "text", //数据格式:JSON
                         data:"moblie="+$("#inputmobile").val(),
-                    　　url: 'http://opentest.aoyuanqu.cn/page/verfymobile.do', //目标地址
+                    　　url: 'http://opentest.aoyuanqu.cn/verfymobile.do', //目标地址
                     　　 //data: "dealType=" + dealType + "&uid=" + uid + "&code=" + code,
                     　　error: function(XMLHttpRequest, textStatus, errorThrown) {},
                     　　success: function(msg) {
