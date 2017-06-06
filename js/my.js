@@ -178,6 +178,7 @@ var myweixin = (function () {
     var mylocation = encodeURIComponent(mythis.redictlocation);
     mythis.initial = function () {
         console.log("微信配置初始化中");
+        debugger;
         var mywxcode = localStorage.getItem("code");
         if (mywxcode) {
             var myurlcode = GetRequest()["code"];
