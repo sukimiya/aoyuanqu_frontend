@@ -228,15 +228,9 @@ var myweixin = (function () {
         })
     }
     mythis.requestCode = function(){
-        $.ajax({
-            type: "GET",
-            dataType: "json",
-            url: authurl+"authorize",
-            data: "appid=" + appid+"&redirect_uri="+mythis.redictlocation+"&response_type=code&scope=snsapi_base&state=0#wechat_redirect",
-            success: function (result) {
-                debugger;
-                mythis.requestToken(result.code);
-            }
+        $.getJSON(authurl+"authorize","appid=" + appid+"&redirect_uri="+mythis.redictlocation+"&response_type=code&scope=snsapi_base&state=0#wechat_redirect",function(data,statetxt,req){
+            debugger;
+                mythis.requestToken(data.code);
         });
     }
     mythis.login = function () {
