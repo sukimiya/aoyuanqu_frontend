@@ -184,7 +184,7 @@ var myweixin = (function () {
             mythis.requestCode();
         }
     };
-    https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx7a6967db884b7058&redirect_uri=https%3A%2F%2Fwww.aoyuanqu.cn%2Fphp%2Findex.html&response_type=code&scope=snsapi_base&state=123#wechat_redirect 
+    //https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx7a6967db884b7058&redirect_uri=http%3A%2F%2Fwww.aoyuanqu.cn%2Findex.html&response_type=code&scope=snsapi_base&state=123#wechat_redirect 
     //Reference from https://mp.weixin.qq.com/wiki?id=mp1443447963&highline=%E8%8E%B7%E5%8F%96%7C%26%E7%94%A8%E6%88%B7%7C%26openid
     mythis.config = function (wxticket) {
         var wxjsapi_ticket = wxticket;
