@@ -175,6 +175,7 @@ var myweixin = (function () {
     mythis.requestRoot = "http://119.29.153.19:8082/";
     mythis.apilist = ["previewImage", "chooseImage"];
     mythis.redictlocation = window.location.href.split("#")[0];
+    var mylocation = encodeURIComponent(mythis.redictlocation);
     mythis.initial = function () {
         console.log("微信配置初始化中");
         var myurlcode = GetRequest()["code"];
@@ -184,14 +185,11 @@ var myweixin = (function () {
             mythis.requestCode();
         }
     };
-    https://open.weixin.qq.com/connect/oauth2authorize?appid=wx7a6967db884b7058&redirect_uri=http%3a%2f%2fwww.aoyuanqu.cn%2fwxapp%2faoyuanqu_frontend%2f&response_type=code&scope=snsapi_base&state=0
-    //https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx7a6967db884b7058&redirect_uri=http%3A%2F%2Fwww.aoyuanqu.cn%2Findex.html&response_type=code&scope=snsapi_base&state=123#wechat_redirect 
-    //Reference from https://mp.weixin.qq.com/wiki?id=mp1443447963&highline=%E8%8E%B7%E5%8F%96%7C%26%E7%94%A8%E6%88%B7%7C%26openid
     mythis.config = function (wxticket) {
         var wxjsapi_ticket = wxticket;
         var mytimestamp = Date.parse(new Date());
         var mynonceStr = String(mytimestamp);
-        var mylocation = encodeURI(mythis.redictlocation);
+        debugger;
         var mysignature = mynonceStr + wxjsapi_ticket + mytimestamp + mylocation;
         var signatureSHA1 = sha1.hash(mysignature);
         debugger;
@@ -229,7 +227,7 @@ var myweixin = (function () {
         })
     }
     mythis.requestCode = function () {
-        window.location = authurl+"authorize?appid=wx7a6967db884b7058&redirect_uri=http%3a%2f%2fwww.aoyuanqu.cn%2fwxapp%2faoyuanqu_frontend%2f&response_type=code&scope=snsapi_base&state=0";
+        window.location = authurl + "authorize"+"?"+"appid=" + appid + "&redirect_uri=" + mylocation + "&response_type=code&scope=snsapi_base&state=0#wechat_redirect";
         /*$.getJSON(authurl + "authorize", "appid=" + appid + "&redirect_uri=" + mylocation + "&response_type=code&scope=snsapi_base&state=0#wechat_redirect", function (data, statetxt, req) {
             debugger;
             mythis.requestToken(data.code);
