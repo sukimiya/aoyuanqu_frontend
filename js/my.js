@@ -167,7 +167,7 @@ function getRemotePic(picid, me = null) {
 }
 //-----------------------------微信---------------------------
 var myweixin = (function () {
-    var authurl = "https://open.weixin.qq.com/connect/oauth2";
+    var authurl = "https://open.weixin.qq.com/connect/oauth2/";
     var appid = "wx7a6967db884b7058";
     var mythis = {};
     mythis.yxName = "廊下经济园区";
@@ -178,12 +178,13 @@ var myweixin = (function () {
     mythis.initial = function () {
         console.log("微信配置初始化中");
         var myurlcode = GetRequest()["code"];
-        if(myurlcode!=null&&myurlcode!=undefined){
+        if (myurlcode != null && myurlcode != undefined) {
             mythis.requestToken(myurlcode);
-        }else{
+        } else {
             mythis.requestCode();
         }
     };
+    https://open.weixin.qq.com/connect/oauth2authorize?appid=wx7a6967db884b7058&redirect_uri=http%3a%2f%2fwww.aoyuanqu.cn%2fwxapp%2faoyuanqu_frontend%2f&response_type=code&scope=snsapi_base&state=0
     //https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx7a6967db884b7058&redirect_uri=http%3A%2F%2Fwww.aoyuanqu.cn%2Findex.html&response_type=code&scope=snsapi_base&state=123#wechat_redirect 
     //Reference from https://mp.weixin.qq.com/wiki?id=mp1443447963&highline=%E8%8E%B7%E5%8F%96%7C%26%E7%94%A8%E6%88%B7%7C%26openid
     mythis.config = function (wxticket) {
@@ -203,7 +204,7 @@ var myweixin = (function () {
             jsApiList: mythis.apilist // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
         });
     };
-    mythis.requestToken = function ( wxcode) {
+    mythis.requestToken = function (wxcode) {
         $.ajax({
             type: "GET",
             dataType: "json",
@@ -216,28 +217,30 @@ var myweixin = (function () {
             }
         });
     };
-    mythis.requestTicket = function(wxtoken){
+    mythis.requestTicket = function (wxtoken) {
         $.ajax({
             type: "GET",
             dataType: "json",
             url: authurl + "getticket",
-            data: "access_token=" + wxtoken+"&type=jsapi",
+            data: "access_token=" + wxtoken + "&type=jsapi",
             success: function (result) {
                 mythis.config(result.ticket);
             }
         })
     }
-    mythis.requestCode = function(){
-        $.getJSON(authurl+"authorize","appid=" + appid+"&redirect_uri="+mythis.redictlocation+"&response_type=code&scope=snsapi_base&state=0#wechat_redirect",function(data,statetxt,req){
+    mythis.requestCode = function () {
+        window.location = authurl+"authorize?appid=wx7a6967db884b7058&redirect_uri=http%3a%2f%2fwww.aoyuanqu.cn%2fwxapp%2faoyuanqu_frontend%2f&response_type=code&scope=snsapi_base&state=0";
+        /*$.getJSON(authurl + "authorize", "appid=" + appid + "&redirect_uri=" + mylocation + "&response_type=code&scope=snsapi_base&state=0#wechat_redirect", function (data, statetxt, req) {
             debugger;
-                mythis.requestToken(data.code);
-        });
+            mythis.requestToken(data.code);
+        });*/
     }
     mythis.login = function () {
-        
+
     }
     return mythis;
 }());
+
 function previewImagebyWX(theimg) {
     wx.previewImage({
         current: theimg, // 当前显示图片的http链接
