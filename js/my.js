@@ -167,50 +167,78 @@ function getRemotePic(picid, me = null) {
 }
 //-----------------------------微信---------------------------
 var myweixin = (function () {
+    var authurl = "https://open.weixin.qq.com/connect/oauth2";
+    var appid = "wx7a6967db884b7058";
     var mythis = {};
     mythis.yxName = "廊下经济园区";
+    mythis.openid = "";
     mythis.requestRoot = "http://119.29.153.19:8082/";
     mythis.apilist = ["previewImage", "chooseImage"];
+    mythis.redictlocation = window.location.href.split("#")[0];
     mythis.initial = function () {
         console.log("微信配置初始化中");
-        $.ajax({
-            type: "GET",
-            dataType: "json",
-            url: mythis.requestRoot + "getJSApiTicket",
-            data: "yxName=" + mythis.yxName,
-            success: function (result) {
-                mythis.config(result);
-            }
-        })
+        var myurlcode = GetRequest()["code"];
+        if(myurlcode!=null&&myurlcode!=undefined){
+            mythis.requestToken(myurlcode);
+        }else{
+            mythis.requestCode();
+        }
     };
+    https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx7a6967db884b7058&redirect_uri=https%3A%2F%2Fwww.aoyuanqu.cn%2Fphp%2Findex.html&response_type=code&scope=snsapi_base&state=123#wechat_redirect 
     //Reference from https://mp.weixin.qq.com/wiki?id=mp1443447963&highline=%E8%8E%B7%E5%8F%96%7C%26%E7%94%A8%E6%88%B7%7C%26openid
-    mythis.config = function (wxdata) {
-        var wxjsapi_ticket = wxdata.ticket;
+    mythis.config = function (wxticket) {
+        var wxjsapi_ticket = wxticket;
         var mytimestamp = Date.parse(new Date());
         var mynonceStr = String(mytimestamp);
-        var mylocation = window.location.href.split("#")[0];
+        var mylocation = encodeURI(mythis.redictlocation);
         var mysignature = mynonceStr + wxjsapi_ticket + mytimestamp + mylocation;
+        var signatureSHA1 = sha1.hash(mysignature);
+        debugger;
         wx.config({
             debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
             appId: wxdata.appid, // 必填，公众号的唯一标识
             timestamp: mytimestamp, // 必填，生成签名的时间戳
             nonceStr: mynonceStr, // 必填，生成签名的随机串
-            signature: sha1.hash(mysignature), // 必填，签名，见附录1
+            signature: signatureSHA1, // 必填，签名，见附录1
             jsApiList: mythis.apilist // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
         });
     };
-    mythis.requestToken = function () {
+    mythis.requestToken = function ( wxcode) {
         $.ajax({
             type: "GET",
             dataType: "json",
-            url: this.requestRoot + "getAccessToken",
-            data: "yxName=" + mythis.yxName,
+            url: mythis.requestRoot + "getAccessToken",
+            data: "code=" + wxcode,
             success: function (result) {
                 debugger;
-                mythis.config(result);
+                mythis.openid = result.openid;
+                mythis.requestTicket(result.token);
             }
         });
     };
+    mythis.requestTicket = function(wxtoken){
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: authurl + "getticket",
+            data: "access_token=" + wxtoken+"&type=jsapi",
+            success: function (result) {
+                mythis.config(result.ticket);
+            }
+        })
+    }
+    mythis.requestCode = function(){
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: authurl+"authorize",
+            data: "appid=" + appid+"&redirect_uri="+mythis.redictlocation+"&response_type=code&scope=snsapi_base&state=0#wechat_redirect",
+            success: function (result) {
+                debugger;
+                mythis.requestToken(result.code);
+            }
+        });
+    }
     mythis.login = function () {
         
     }
