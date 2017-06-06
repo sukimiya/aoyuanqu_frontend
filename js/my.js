@@ -178,12 +178,19 @@ var myweixin = (function () {
     var mylocation = encodeURIComponent(mythis.redictlocation);
     mythis.initial = function () {
         console.log("微信配置初始化中");
-        var myurlcode = GetRequest()["code"];
-        if (myurlcode != null && myurlcode != undefined) {
-            mythis.requestToken(myurlcode);
-        } else {
-            mythis.requestCode();
+        var mywxcode = localStorage.getItem("code");
+        if (mywxcode) {
+            var myurlcode = GetRequest()["code"];
+            if (myurlcode != null && myurlcode != undefined) {
+                localStorage.setItem("wxcode", myurlcode);
+                mythis.requestToken(myurlcode);
+            } else {
+                mythis.requestCode();
+            }
+        }else{
+            mythis.requestToken(mywxcode);
         }
+
     };
     mythis.config = function (wxticket) {
         var wxjsapi_ticket = wxticket;
@@ -227,7 +234,7 @@ var myweixin = (function () {
         })
     }
     mythis.requestCode = function () {
-        window.location = authurl + "authorize"+"?"+"appid=" + appid + "&redirect_uri=" + mylocation + "&response_type=code&scope=snsapi_base&state=0#wechat_redirect";
+        window.location = authurl + "authorize" + "?" + "appid=" + appid + "&redirect_uri=" + mylocation + "&response_type=code&scope=snsapi_base&state=0#wechat_redirect";
         /*$.getJSON(authurl + "authorize", "appid=" + appid + "&redirect_uri=" + mylocation + "&response_type=code&scope=snsapi_base&state=0#wechat_redirect", function (data, statetxt, req) {
             debugger;
             mythis.requestToken(data.code);
