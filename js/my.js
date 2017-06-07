@@ -274,12 +274,7 @@ var myweixin = (function () {
                         'hideOptionMenu',
                         'showOptionMenu',
                         'closeWindow',
-                        'scanQRCode',
-                        'chooseWXPay',
-                        'openProductSpecificView',
-                        'addCard',
-                        'chooseCard',
-                        'openCard']
+                        'scanQRCode']
         });
         if (mythis.onInitial) mythis.onInitial();
     };
