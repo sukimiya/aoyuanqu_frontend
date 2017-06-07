@@ -254,17 +254,12 @@ var myweixin = (function () {
                 mythis.requestTicket();
 
         } else {
-            var mywxcode = localStorage.getItem("wxcode");
-            if (!mywxcode) {
-                var myurlcode = GetRequest()["code"];
-                if (myurlcode != null && myurlcode != undefined) {
-                    localStorage.setItem("wxcode", myurlcode);
-                    mythis.requestOpenid(mywxcode);
-                } else {
-                    mythis.requestCode();
-                }
-            } else {
+            var myurlcode = GetRequest()["code"];
+            if (myurlcode != null && myurlcode != undefined) {
+                localStorage.setItem("wxcode", myurlcode);
                 mythis.requestOpenid(mywxcode);
+            } else {
+                mythis.requestCode();
             }
         }
     }
