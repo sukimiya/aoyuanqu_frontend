@@ -254,7 +254,7 @@ var myweixin = (function () {
                 mythis.requestTicket();
 
         } else {
-            if (GetRequest()["code"] != null && GetRequest()["code"] != undefined0)
+            if (GetRequest()["code"] != null && GetRequest()["code"] != undefined)
                 wxcode = GetRequest()["code"];
 
             if (wxcode != null && wxcode != undefined) {
