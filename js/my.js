@@ -258,7 +258,7 @@ var myweixin = (function () {
                 wxcode = GetRequest()["code"];
 
             if (wxcode != null && wxcode != undefined) {
-                restapis.request("getOppen_id", null, "code=" + wxcode, function (result) {
+                myapi.request("getOppen_id", null, "code=" + wxcode, function (result) {
                         debugger;
                         mythis.openid = result.openid;
                         localStorage.setItem("wxopenid", result.openid);
