@@ -258,12 +258,7 @@ var myweixin = (function () {
                 wxcode = GetRequest()["code"];
 
             if (wxcode != null && wxcode != undefined) {
-                $.ajax({
-                    type: "GET",
-                    dataType: "json",
-                    url: mythis.requestRoot + "getOpenid",
-                    data: "code=" + wxcode,
-                    success: function (result) {
+                restapis.request("getOppen_id", null, "code=" + wxcode, function (result) {
                         debugger;
                         mythis.openid = result.openid;
                         localStorage.setItem("wxopenid", result.openid);
@@ -271,8 +266,11 @@ var myweixin = (function () {
                         localStorage.setItem("wxrefreshtoken", result.refresh_token);
                         localStorage.setItem("wxtokenexpires", (new Date().getTime()) + result.expires_in);
                         mythis.requestTicket();
+                    },
+                    function (req, e, data) {
+                        errorHandler.onWXError(req, e, data);
                     }
-                });
+                );
             } else {
                 mythis.requestCode();
             }
