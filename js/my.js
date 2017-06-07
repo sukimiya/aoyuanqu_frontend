@@ -343,9 +343,11 @@ var myweixin = (function () {
                     else {
                         if (toConfig) {
                             mywx.onConfig = function () {
-                                uploadImgWithName(picname, theimg);
+                                if (successCallback) successCallback();
                             }
                             mywx.requestTicket();
+                        }else{
+                            if (errorCallback) errorCallback();
                         }
                     }
                 }
@@ -353,11 +355,13 @@ var myweixin = (function () {
         }
         else {
             if (toConfig) {
-                mywx.onConfig = function () {
-                    uploadImgWithName(picname, theimg);
-                }
-                mywx.requestTicket();
-            }
+                            mywx.onConfig = function () {
+                                if (successCallback) successCallback();
+                            }
+                            mywx.requestTicket();
+                        }else{
+                            if (errorCallback) errorCallback();
+                        }
         }
     }
     mythis.login = function () {}
