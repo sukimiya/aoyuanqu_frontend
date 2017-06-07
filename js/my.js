@@ -221,7 +221,7 @@ var myweixin = (function () {
     mythis.yxName = "廊下经济园区";
     mythis.openid = "";
     mythis.requestRoot = "http://119.29.153.19:8082/";
-    mythis.apilist = ["previewImage", "chooseImage"];
+    mythis.apilist = ["wx.previewImage", "wx.chooseImage"];
     mythis.redictlocation = window.location.href.split("#")[0];
     var mylocation = encodeURIComponent(mythis.redictlocation);
     wx.error(function (res) {
@@ -246,7 +246,40 @@ var myweixin = (function () {
             timestamp: mytimestamp, // 必填，生成签名的时间戳
             nonceStr: mynonceStr, // 必填，生成签名的随机串
             signature: signatureSHA1, // 必填，签名，见附录1
-            jsApiList: mythis.apilist // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+            jsApiList: ['checkJsApi',
+                        'onMenuShareTimeline',
+                        'onMenuShareAppMessage',
+                        'onMenuShareQQ',
+                        'onMenuShareWeibo',
+                        'hideMenuItems',
+                        'showMenuItems',
+                        'hideAllNonBaseMenuItem',
+                        'showAllNonBaseMenuItem',
+                        'translateVoice',
+                        'startRecord',
+                        'stopRecord',
+                        'onRecordEnd',
+                        'playVoice',
+                        'pauseVoice',
+                        'stopVoice',
+                        'uploadVoice',
+                        'downloadVoice',
+                        'chooseImage',
+                        'previewImage',
+                        'uploadImage',
+                        'downloadImage',
+                        'getNetworkType',
+                        'openLocation',
+                        'getLocation',
+                        'hideOptionMenu',
+                        'showOptionMenu',
+                        'closeWindow',
+                        'scanQRCode',
+                        'chooseWXPay',
+                        'openProductSpecificView',
+                        'addCard',
+                        'chooseCard',
+                        'openCard']
         });
         if (mythis.onInitial) mythis.onInitial();
     };
@@ -367,14 +400,14 @@ function uploadImgWithName(picname, theimg) {
             // 以键值对的形式返回，可用的api值true，不可用为false
             // 如：{"checkResult":{"chooseImage":true},"errMsg":"checkJsApi:ok"}
             debugger;
-            if (res) {
+            if (res.errMsg == "checkJsApi:ok") {
                 wx.chooseImage({
-                    count: 1,
-                    sizeType: ['original', 'compressed'],
-                    sourceType: ['album', 'camera'],
+                    count: 1, // 默认9
+                    sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+                    sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
                     success: function (res) {
                         var localIds = res.localIds;
-                        imgpath = localIds;
+                        imgpath = localIds[0];
                         $(theimg).attr("src", imgpath);
                         console.log("本地图片id:" + imgpath);
                         $.ajax({
@@ -390,7 +423,7 @@ function uploadImgWithName(picname, theimg) {
                                     $(picname).val(ret.picid);
                                 }
                             },
-                            fail: function (e) {
+                            error: function (e) {
                                 debugger;
                                 console.log("上传失败了");
                             }
