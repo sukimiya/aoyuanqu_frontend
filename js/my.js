@@ -254,6 +254,9 @@ var myweixin = (function () {
                 mythis.requestTicket();
 
         } else {
+            if (GetRequest()["code"] != null && GetRequest()["code"] != undefined0)
+                wxcode = GetRequest()["code"];
+
             if (wxcode != null && wxcode != undefined) {
                 $.ajax({
                     type: "GET",
@@ -263,10 +266,10 @@ var myweixin = (function () {
                     success: function (result) {
                         debugger;
                         mythis.openid = result.openid;
-                        localStorage.setItem("wxopenid",result.openid);
-                        localStorage.setItem("wxtoken",result.access_token);
-                        localStorage.setItem("wxrefreshtoken",result.refresh_token);
-                        localStorage.setItem("wxtokenexpires",(new Date().getTime())+result.expires_in);
+                        localStorage.setItem("wxopenid", result.openid);
+                        localStorage.setItem("wxtoken", result.access_token);
+                        localStorage.setItem("wxrefreshtoken", result.refresh_token);
+                        localStorage.setItem("wxtokenexpires", (new Date().getTime()) + result.expires_in);
                         mythis.requestTicket();
                     }
                 });
