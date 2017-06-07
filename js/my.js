@@ -328,7 +328,7 @@ var myweixin = (function () {
         }*/
         var myapi = restapis;
         if (localStorage.getItem("wxticket") != null && localStorage.getItem("wxticket") != undefined) {
-            mythis.config(result.ticket);
+            mythis.config(localStorage.getItem("wxticket"));
         } else {
             myapi.request("getJSApiTicket", null, "yxName=" + mythis.yxName, function (result) {
                 if (result.errcode == 0) {
