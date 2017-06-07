@@ -167,7 +167,7 @@ function getRemotePic(picid, me = null) {
 }
 //--------------------restful apis-----------------------
 var restapis = (function(){
-    var requestRoot; = "http://119.29.153.19:8082/";
+    var requestRoot = "http://119.29.153.19:8082/";
     var appid = "wx7a6967db884b7058";
     var mythis = {};
     mythis.yxName = "廊下经济园区";
