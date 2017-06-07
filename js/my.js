@@ -208,7 +208,7 @@ var myweixin = (function () {
         console.log("微信配置初始化中");
         debugger;
         var mywxcode = localStorage.getItem("code");
-        if (mywxcode) {
+        if (mywxcode!=null) {
             var myurlcode = GetRequest()["code"];
             if (myurlcode != null && myurlcode != undefined) {
                 localStorage.setItem("wxcode", myurlcode);
