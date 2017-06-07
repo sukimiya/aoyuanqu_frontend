@@ -370,7 +370,8 @@ function uploadImgWithName(picname, theimg) {
             // 以键值对的形式返回，可用的api值true，不可用为false
             // 如：{"checkResult":{"chooseImage":true},"errMsg":"checkJsApi:ok"}
             debugger;
-            if (res.errMsg == "checkJsApi:ok") {
+            
+            if (res.errMsg == "checkJsApi:ok"&&res.checkResult.hasOwnProperty("chooseImage")&&res.checkResult["chooseImage"]) {
                 wx.chooseImage({
                     count: 1, // 默认9
                     sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
@@ -402,7 +403,8 @@ function uploadImgWithName(picname, theimg) {
                     }
                 });
             } else {
-                mywx.onInitial = function () {
+                mywx.onTicketGet = function () {
+                    debugger;
                     wx.chooseImage({
                         count: 1,
                         sizeType: ['original', 'compressed'],
