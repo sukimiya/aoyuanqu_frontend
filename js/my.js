@@ -9,8 +9,8 @@ var sha1;
     var POW_2_32 = Math.pow(2, 32);
 
     function hex(n) {
-        var s = "",
-            v;
+        var s = ""
+            , v;
         for (var i = 7; i >= 0; --i) {
             v = (n >>> (i << 2)) & 15;
             s += v.toString(16);
@@ -30,8 +30,8 @@ var sha1;
             return (this.bytes[index] * POW_2_24) + ((this.bytes[index + 1] << 16) | (this.bytes[index + 2] << 8) | this.bytes[index + 3]);
         };
         Uint32ArrayBigEndian.prototype.set = function (index, value) {
-            var high = Math.floor(value / POW_2_24),
-                rest = value - (high * POW_2_24);
+            var high = Math.floor(value / POW_2_24)
+                , rest = value - (high * POW_2_24);
             index <<= 2;
             this.bytes[index] = high;
             this.bytes[index + 1] = rest >> 16;
@@ -50,8 +50,8 @@ var sha1;
             var code = c.charCodeAt(0);
             return String.fromCharCode(224 | code >> 12, 128 | code >> 6 & 63, 128 | code & 63);
         });
-        var n = s.length,
-            array = new Uint8Array(n);
+        var n = s.length
+            , array = new Uint8Array(n);
         for (var i = 0; i < n; ++i) {
             array[i] = s.charCodeAt(i);
         }
@@ -62,24 +62,25 @@ var sha1;
         var source;
         if (bufferOrString instanceof ArrayBuffer) {
             source = bufferOrString;
-        } else {
+        }
+        else {
             source = string2ArrayBuffer(String(bufferOrString));
         }
-        var h0 = 1732584193,
-            h1 = 4023233417,
-            h2 = 2562383102,
-            h3 = 271733878,
-            h4 = 3285377520,
-            i, sbytes = source.byteLength,
-            sbits = sbytes << 3,
-            minbits = sbits + 65,
-            bits = Math.ceil(minbits / 512) << 9,
-            bytes = bits >>> 3,
-            slen = bytes >>> 2,
-            s = new Uint32ArrayBigEndian(slen),
-            s8 = s.bytes,
-            j, w = new Uint32Array(80),
-            sourceArray = new Uint8Array(source);
+        var h0 = 1732584193
+            , h1 = 4023233417
+            , h2 = 2562383102
+            , h3 = 271733878
+            , h4 = 3285377520
+            , i, sbytes = source.byteLength
+            , sbits = sbytes << 3
+            , minbits = sbits + 65
+            , bits = Math.ceil(minbits / 512) << 9
+            , bytes = bits >>> 3
+            , slen = bytes >>> 2
+            , s = new Uint32ArrayBigEndian(slen)
+            , s8 = s.bytes
+            , j, w = new Uint32Array(80)
+            , sourceArray = new Uint8Array(source);
         for (i = 0; i < sbytes; ++i) {
             s8[i] = sourceArray[i];
         }
@@ -93,25 +94,28 @@ var sha1;
             for (; j < 80; ++j) {
                 w[j] = lrot(w[j - 3] ^ w[j - 8] ^ w[j - 14] ^ w[j - 16], 1);
             }
-            var a = h0,
-                b = h1,
-                c = h2,
-                d = h3,
-                e = h4,
-                f, k, temp;
+            var a = h0
+                , b = h1
+                , c = h2
+                , d = h3
+                , e = h4
+                , f, k, temp;
             for (j = 0; j < 80; ++j) {
                 if (j < 20) {
                     f = (b & c) | ((~b) & d);
                     k = 1518500249;
-                } else {
+                }
+                else {
                     if (j < 40) {
                         f = b ^ c ^ d;
                         k = 1859775393;
-                    } else {
+                    }
+                    else {
                         if (j < 60) {
                             f = (b & c) ^ (b & d) ^ (c & d);
                             k = 2400959708;
-                        } else {
+                        }
+                        else {
                             f = b ^ c ^ d;
                             k = 3395469782;
                         }
@@ -140,8 +144,8 @@ function GetRequest() {
     //添加数据$.session.set('key', 'value')删除数据$.session.remove('key');获取数据$.session.get('key');清除数据$.session.clear();
 }
 QueryString = {
-    data: {},
-    Initial: function () {
+    data: {}
+    , Initial: function () {
         var aPairs, aTmp;
         var queryString = new String(window.location.search);
         queryString = queryString.substr(1, queryString.length); //remove   "?"     
@@ -150,8 +154,8 @@ QueryString = {
             aTmp = aPairs[i].split("=");
             this.data[aTmp[0]] = aTmp[1];
         }
-    },
-    GetValue: function (key) {
+    }
+    , GetValue: function (key) {
         return this.data[key];
     }
 }
@@ -201,12 +205,12 @@ var restapis = (function () {
                 theurl += mothed
             }
             $.ajax({
-                type: post,
-                dataType: dataType,
-                url: theurl,
-                data: data,
-                success: onSeccess,
-                error: onError
+                type: post
+                , dataType: dataType
+                , url: theurl
+                , data: data
+                , success: onSeccess
+                , error: onError
             });
         }
         return mythis;
@@ -259,7 +263,8 @@ var myweixin = (function () {
         var openid = localStorage.getItem("wxopenid");
         if (openid != null && openid != undefined) {
             console.log("wxopenid:" + openid);
-        } else {
+        }
+        else {
             if (GetRequest()["code"] != null && GetRequest()["code"] != undefined) wxcode = GetRequest()["code"];
             if (wxcode != null && wxcode != undefined) {
                 var myapi = restapis;
@@ -275,7 +280,8 @@ var myweixin = (function () {
                 }, function (req, e, data) {
                     (errorHandler).onWXError(req, e, data);
                 });
-            } else {
+            }
+            else {
                 mythis.requestCode();
             }
         }
@@ -293,45 +299,18 @@ var myweixin = (function () {
         });
     };
     mythis.requestTicket = function (mytoken = null) {
-        /*if (mytoken == null)
-            mytoken = localStorage.getItem("wxtoken");
-        if (mytoken != null && mytoken != undefined) {
-            if (localStorage.getItem("wxticket") != null & localStorage.getItem("wxticket") != undefined) {
-                if (mythis.onTicketGet) mythis.onTicketGet();
-                mythis.config(localStorage.getItem("wxticket"));
-            } else {
-                $.ajax({
-                    type: "GET",
-                    dataType: "json",
-                    url: "https://api.weixin.qq.com/cgi-bin/ticket/getticket",
-                    data: "access_token=" + mytoken + "&type=jsapi",
-                    success: function (data) {
-                        if (data.errcode == 0) {
-                            localStorage.setItem("wxticket", data.ticket);
-                            localStorage.setItem("wxticketexpires", (new Date().getTime()) + data.expires_in);
-                            mythis.config(data.ticket);
-                        } else {
-                            (errorHandler).onWXError(null, null, data);
-                        }
-                    },
-                    error: function (req, e, data) {
-                        (errorHandler).onWXError(req, e, data);
-                    }
-                });
-            }
-        } else {
-            mythis.requestOpenid();
-        }*/
         var myapi = restapis;
         if (localStorage.getItem("wxticket") != null && localStorage.getItem("wxticket") != undefined) {
             mythis.config(localStorage.getItem("wxticket"));
-        } else {
+        }
+        else {
             myapi.request("getJSApiTicket", null, "yxName=" + mythis.yxName, function (result) {
                 if (result.errcode == 0) {
                     localStorage.setItem("wxticket", result.ticket);
                     localStorage.setItem("wxticketexpires", (new Date().getTime()) + result.expires_in);
                     mythis.config(result.ticket);
-                } else {
+                }
+                else {
                     (errorHandler).onWXError(null, null, result);
                 }
             }, function (req, e, data) {
@@ -341,6 +320,45 @@ var myweixin = (function () {
     }
     mythis.requestCode = function () {
         window.location = authurl + "authorize" + "?" + "appid=" + appid + "&redirect_uri=" + mylocation + "&response_type=code&scope=snsapi_base&state=0#wechat_redirect";
+    }
+    mythis.checkapi = function (theapis, successCallback, errorCallback, toConfig = true) {
+        var mywx = myweixin;
+        if (mywx.isConfiged) {
+            wx.checkJsApi({
+                jsApiList: theapis, // 需要检测的JS接口列表，所有JS接口列表见附录2,
+                success: function (res) {
+                    if (res.errMsg == "checkJsApi:ok") {
+                        for (var i = 0; i < theapis.length; i++) {
+                            if (res.checkResult.hasOwnProperty(theapis[i]) && res.checkResult[theapis[i]]) {
+                                //check ok
+                            }
+                            else {
+                                console.log("check fail with:" + theapis[i]);
+                                if (errorCallback) errorCallback();
+                                return;
+                            }
+                        }
+                        if (successCallback) successCallback();
+                    }
+                    else {
+                        if (toConfig) {
+                            mywx.onConfig = function () {
+                                uploadImgWithName(picname, theimg);
+                            }
+                            mywx.requestTicket();
+                        }
+                    }
+                }
+            });
+        }
+        else {
+            if (toConfig) {
+                mywx.onConfig = function () {
+                    uploadImgWithName(picname, theimg);
+                }
+                mywx.requestTicket();
+            }
+        }
     }
     mythis.login = function () {}
     mythis.onInitial = null;
@@ -352,9 +370,16 @@ var myweixin = (function () {
 }());
 
 function previewImagebyWX(theimg) {
-    wx.previewImage({
-        current: theimg, // 当前显示图片的http链接
-        urls: [theimg] // 需要预览的图片http链接列表
+    var mywx = myweixin;
+    mywx.checkapi(['chooseImage'], function () {
+        wx.previewImage({
+            current: theimg, // 当前显示图片的http链接
+            urls: [theimg] // 需要预览的图片http链接列表
+        });
+    }, function () {
+        setTimeout(function () {
+            previewImagebyWX(theimg);
+        }, 200);
     });
 }
 
@@ -362,58 +387,41 @@ function uploadImgWithName(picname, theimg) {
     var imgpath = "";
     debugger;
     var mywx = myweixin;
-    if (mywx.isConfiged) {
-        wx.checkJsApi({
-            jsApiList: ['chooseImage'], // 需要检测的JS接口列表，所有JS接口列表见附录2,
+    mywx.checkapi(['chooseImage'], function () {
+        wx.chooseImage({
+            count: 1, // 默认9
+            sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+            sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
             success: function (res) {
-                // 以键值对的形式返回，可用的api值true，不可用为false
-                // 如：{"checkResult":{"chooseImage":true},"errMsg":"checkJsApi:ok"}
-                debugger;
-                if (res.errMsg == "checkJsApi:ok" && res.checkResult.hasOwnProperty("chooseImage") && res.checkResult["chooseImage"]) {
-                    wx.chooseImage({
-                        count: 1, // 默认9
-                        sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
-                        sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
-                        success: function (res) {
-                            var localIds = res.localIds;
-                            imgpath = localIds[0];
-                            $(theimg).attr("src", imgpath);
-                            console.log("本地图片id:" + imgpath);
-                            $.ajax({
-                                type: "POST",
-                                url: "json/uploadfiles.json",
-                                dataType: "json",
-                                enctype: 'multipart/form-data',
-                                data: {
-                                    file: imgpath
-                                },
-                                success: function (ret) {
-                                    if (ret == 0) {
-                                        $(picname).val(ret.picid);
-                                    }
-                                },
-                                error: function (e) {
-                                    debugger;
-                                    console.log("上传失败了");
-                                }
-                            });
-                        }
-                    });
-                } else {
-                    mywx.onConfig = function () {
-                        uploadImgWithName(picname, theimg);
+                var localIds = res.localIds;
+                imgpath = localIds[0];
+                $(theimg).attr("src", imgpath);
+                console.log("本地图片id:" + imgpath);
+                $.ajax({
+                    type: "POST"
+                    , url: "json/uploadfiles.json"
+                    , dataType: "json"
+                    , enctype: 'multipart/form-data'
+                    , data: {
+                        file: imgpath
                     }
-                    mywx.requestTicket();
-                }
+                    , success: function (ret) {
+                        if (ret == 0) {
+                            $(picname).val(ret.picid);
+                        }
+                    }
+                    , error: function (e) {
+                        debugger;
+                        console.log("上传失败了");
+                    }
+                });
             }
         });
-    } else {
-        mywx.onConfig = function () {
+    }, function () {
+        setTimeout(function () {
             uploadImgWithName(picname, theimg);
-        }
-        mywx.requestTicket();
-    }
-
+        }, 200);
+    });
 }
 //Disable Form
 function setFromDisabled(formname, toDisabled) {
@@ -447,19 +455,20 @@ function OssUpload(param, file, fileName, callBack) {
     request.append('file', file);
     request.append('submit', "Upload to OSS");
     $.ajax({
-        url: param.contentHostName,
-        data: request,
-        processData: false,
-        cache: false,
-        async: false,
-        contentType: false, //关键是要设置contentType 为false，不然发出的请求头 没有boundary
+        url: param.contentHostName
+        , data: request
+        , processData: false
+        , cache: false
+        , async: false
+        , contentType: false, //关键是要设置contentType 为false，不然发出的请求头 没有boundary
         //该参数是让jQuery去判断contentType
-        type: "POST",
-        success: function (data, textStatus, request) {
+        type: "POST"
+        , success: function (data, textStatus, request) {
             if (textStatus === "nocontent") {
                 callBack(fileFullName);
                 alert("success!");
-            } else {
+            }
+            else {
                 alert(textStatus);
             }
         }
@@ -468,10 +477,10 @@ function OssUpload(param, file, fileName, callBack) {
 //------------------------------------------session
 function logins(logincallbackFn) {
     $.ajax({
-        type: "POST",
-        url: "json/u_login.json",
-        dataType: "json",
-        success: function (data, textStatus, request) {
+        type: "POST"
+        , url: "json/u_login.json"
+        , dataType: "json"
+        , success: function (data, textStatus, request) {
             debugger;
             if (data.result == 0) {
                 var rsobj = {};
@@ -489,7 +498,8 @@ function logins(logincallbackFn) {
                 }
                 if (logincallbackFn) logincallbackFn(true);
                 console.log("登录成功");
-            } else {
+            }
+            else {
                 if (logincallbackFn) logincallbackFn(false);
                 console.log("登录失败");
             }
