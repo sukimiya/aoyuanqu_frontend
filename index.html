@@ -12,18 +12,32 @@
     <script src="https://cdn.bootcss.com/json2/20160511/json2.min.js"></script>
     <script type="text/javascript" src="js/my.js"></script>
     <script type="text/javascript">
-        $(document).ready(function(){
+        $(document).ready(function() {
             var mywx = myweixin;
-            mywx.onInitial = function(){
-                
+            wx.ready(function() {
+                console.log("weixin ready");
+
+                wx.checkJsApi({
+                    jsApiList: ['chooseImage'], // 需要检测的JS接口列表，所有JS接口列表见附录2,
+                    success: function(res) {
+                        // 以键值对的形式返回，可用的api值true，不可用为false
+                        // 如：{"checkResult":{"chooseImage":true},"errMsg":"checkJsApi:ok"}
+                        debugger;
+                    }
+                });
+            });
+
+            mywx.onInitial = function() {
+
             }
             mywx.initial();
         })
+
     </script>
 </head>
 
 <body>
-    
+
 </body>
 
 </html>
