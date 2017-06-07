@@ -293,7 +293,7 @@ var myweixin = (function () {
             mythis.openid = result.openid;
             localStorage.setItem("wxtoken", result.accessToken);
             localStorage.setItem("wxtokenexpires", (new Date().getTime()) + result.expiresIn);
-            mythis.requestTicket(result.accessToken);
+            window.location=window.location.href.split("?")[0];
         }, function (req, e, data) {
             (errorHandler).onWXError(req, e, data);
         });
@@ -436,7 +436,7 @@ function uploadImgWithName(picname, theimg) {
                         }
                     });
                 }
-                mywx.initial();
+                mywx.requestTicket();
             }
 
         }
