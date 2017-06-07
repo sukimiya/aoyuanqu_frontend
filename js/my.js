@@ -223,7 +223,6 @@ var myweixin = (function () {
     mythis.apilist = ["previewImage", "chooseImage"];
     mythis.redictlocation = window.location.href.split("#")[0];
     var mylocation = encodeURIComponent(mythis.redictlocation);
-    var myapi = restapis;
     mythis.initial = function () {
         console.log("微信配置初始化中");
         debugger;
@@ -258,6 +257,7 @@ var myweixin = (function () {
                 wxcode = GetRequest()["code"];
 
             if (wxcode != null && wxcode != undefined) {
+                var myapi = restapis;
                 myapi.request("getOppen_id", null, "code=" + wxcode, function (result) {
                         debugger;
                         mythis.openid = result.openid;
@@ -277,16 +277,13 @@ var myweixin = (function () {
         }
     }
     mythis.requestToken = function () {
-        $.ajax({
-            type: "GET",
-            dataType: "json",
-            url: mythis.requestRoot + "getAccessToken",
-            data: "yxName=" + mythis.yxName,
-            success: function (result) {
-                debugger;
-                mythis.openid = result.openid;
-                mythis.requestTicket(result.token);
-            }
+        var myapi = restapis;
+        myapi.request("getAccessToken", null, "yxName=" + mythis.yxName, function (result) {
+            debugger;
+            mythis.openid = result.openid;
+            mythis.requestTicket(result.token);
+        }, function (req, e, data) {
+            errorHandler.onWXError(req, e, data);
         });
     };
     mythis.requestTicket = function () {
@@ -320,10 +317,6 @@ var myweixin = (function () {
     }
     mythis.requestCode = function () {
         window.location = authurl + "authorize" + "?" + "appid=" + appid + "&redirect_uri=" + mylocation + "&response_type=code&scope=snsapi_base&state=0#wechat_redirect";
-        /*$.getJSON(authurl + "authorize", "appid=" + appid + "&redirect_uri=" + mylocation + "&response_type=code&scope=snsapi_base&state=0#wechat_redirect", function (data, statetxt, req) {
-            debugger;
-            mythis.requestToken(data.code);
-        });*/
     }
     mythis.login = function () {
 
