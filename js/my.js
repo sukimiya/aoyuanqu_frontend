@@ -165,8 +165,24 @@ function getRemotePic(picid, me = null) {
     }
     return rsstr;
 }
+//------------------------------------------------------
+var errorHandler = (function () {
+    var mythis = {};
+    mythis.onAuthError = function (e = null) {
+        //权限问题处理
+    };
+    mythis.onWXError = function (e = null) {
+        //微信问题处理
+    };
+    mythis.onConnectError = function (e = null) {
+        //连接问题处理
+    };
+    mythis.onDataError = function (e = null) {
+        //数据问题处理
+    };
+}());
 //--------------------restful apis-----------------------
-var restapis = (function(){
+var restapis = (function () {
     var requestRoot = "http://119.29.153.19:8082/";
     var appid = "wx7a6967db884b7058";
     var mythis = {};
@@ -174,12 +190,15 @@ var restapis = (function(){
     mythis.openid = "";
     mythis.requestRoot = "http://119.29.153.19:8082/";
     mythis.redictlocation = window.location.href.split("#")[0];
-    mythis.request = function(mothed,module,data,onSeccess,onError,post="GET",dataType="json"){
+    /**
+     *function(mothed,module,data,onSeccess,onError,post="GET",dataType="json")
+     */
+    mythis.request = function (mothed, module, data, onSeccess, onError, post = "GET", dataType = "json") {
         var theurl = requestRoot;
-        if(module){
-            theurl += module+"/";
+        if (module) {
+            theurl += module + "/";
         }
-        if(mothed){
+        if (mothed) {
             theurl += mothed
         }
         $.ajax({
@@ -188,7 +207,7 @@ var restapis = (function(){
             url: theurl,
             data: data,
             success: onSeccess,
-            fail:onError
+            error: onError
         });
     }
 }())
@@ -204,22 +223,11 @@ var myweixin = (function () {
     mythis.apilist = ["previewImage", "chooseImage"];
     mythis.redictlocation = window.location.href.split("#")[0];
     var mylocation = encodeURIComponent(mythis.redictlocation);
+    var myapi = restapis;
     mythis.initial = function () {
         console.log("微信配置初始化中");
         debugger;
-        var mywxcode = localStorage.getItem("code");
-        if (!mywxcode) {
-            var myurlcode = GetRequest()["code"];
-            if (myurlcode != null && myurlcode != undefined) {
-                localStorage.setItem("wxcode", myurlcode);
-                mythis.requestCode(myurlcode);
-            } else {
-                mythis.requestCode();
-            }
-        }else{
-            mythis.requestOpenid(mywxcode);
-        }
-        
+        mythis.requestOpenid();
     };
     mythis.config = function (wxticket) {
         var wxjsapi_ticket = wxticket;
@@ -238,18 +246,27 @@ var myweixin = (function () {
             jsApiList: mythis.apilist // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
         });
     };
-    mythis.requestOpenid = function(wxcode) {
-        $.ajax({
-            type: "GET",
-            dataType: "json",
-            url: mythis.requestRoot + "getOpenid",
-            data: "code=" + wxcode,
-            success: function (result) {
-                debugger;
-                mythis.openid = result.openid;
-                mythis.requestTicket(result.token);
+    mythis.requestOpenid = function (wxcode) {
+        var openid = localStorage.getItem("wxopenid");
+        if (openid != null && openid != undefined) {
+            var myticket = localStorage.getItem("wxticket");
+            if (!myticket)
+                mythis.requestTicket();
+
+        } else {
+            var mywxcode = localStorage.getItem("wxcode");
+            if (!mywxcode) {
+                var myurlcode = GetRequest()["code"];
+                if (myurlcode != null && myurlcode != undefined) {
+                    localStorage.setItem("wxcode", myurlcode);
+                    mythis.requestOpenid(mywxcode);
+                } else {
+                    mythis.requestCode();
+                }
+            } else {
+                mythis.requestOpenid(mywxcode);
             }
-        });
+        }
     }
     mythis.requestToken = function () {
         $.ajax({
@@ -265,16 +282,33 @@ var myweixin = (function () {
         });
     };
     mythis.requestTicket = function () {
-        $.ajax({
-            type: "GET",
-            dataType: "json",
-            url: mythis.requestRoot + "getJSApiTicket",
-            data: "yxName=" + mythis.yxName,
-            success: function (result) {
-                debugger;
-                mythis.config(result.token);
+        var mytoken = localStorage.getItem("wxtoken");
+        if (mytoken != null && mytoken != undefined) {
+            if (localStorage.setItem("wxticket", data.ticket) != null & localStorage.setItem("wxticket", data.ticket) != undefined) {
+                mythis.config(localStorage.setItem("wxticket", data.ticket));
+            } else {
+                $.ajax({
+                    type: "GET",
+                    dataType: "json",
+                    url: "https://api.weixin.qq.com/cgi-bin/ticket/getticket",
+                    data: "access_token=" + mytoken + "&type=jsapi",
+                    success: function (data) {
+                        if (data.errcode == 0) {
+                            localStorage.setItem("wxticket", data.ticket);
+                            localStorage.setItem("wxticketexpires", (new Date().getTime()) + data.expires_in);
+                            mythis.config(data.ticket);
+                        } else {
+                            errorHandler.onWXError(null, null, data);
+                        }
+                    }
+                    error: function (req, e, data) {
+                        errorHandler.onWXError(req, e, data);
+                    }
+                });
             }
-        });
+        } else {
+            mythis.requestOpenid();
+        }
     }
     mythis.requestCode = function () {
         window.location = authurl + "authorize" + "?" + "appid=" + appid + "&redirect_uri=" + mylocation + "&response_type=code&scope=snsapi_base&state=0#wechat_redirect";
@@ -320,7 +354,7 @@ function uploadImgWithName(picname, theimg) {
                         $(picname).val(ret.picid);
                     }
                 },
-                fail: function (e) {
+                error: function (req, e, data) {
                     debugger;
                     console.log("上传失败了");
                 }
