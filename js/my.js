@@ -284,8 +284,9 @@ var myweixin = (function () {
         myapi.request("getAccessToken", null, "yxName=" + mythis.yxName, function (result) {
             debugger;
             mythis.openid = result.openid;
-            localStorage.setItem("wxtoken", result.token);
-            mythis.requestTicket(result.token);
+            localStorage.setItem("wxtoken", result.accessToken);
+            localStorage.setItem("wxtokenexpires", (new Date().getTime())+result.expiresIn);
+            mythis.requestTicket(result.accessToken);
         }, function (req, e, data) {
             (errorHandler).onWXError(req, e, data);
         });
