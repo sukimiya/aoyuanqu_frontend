@@ -165,6 +165,34 @@ function getRemotePic(picid, me = null) {
     }
     return rsstr;
 }
+//--------------------restful apis-----------------------
+var restapis = (function(){
+    var requestRoot; = "http://119.29.153.19:8082/";
+    var appid = "wx7a6967db884b7058";
+    var mythis = {};
+    mythis.yxName = "廊下经济园区";
+    mythis.openid = "";
+    mythis.requestRoot = "http://119.29.153.19:8082/";
+    mythis.redictlocation = window.location.href.split("#")[0];
+    mythis.request = function(mothed,module,data,onSeccess,onError,post="GET",dataType="json"){
+        var theurl = requestRoot;
+        if(module){
+            theurl += module+"/";
+        }
+        if(mothed){
+            theurl += mothed
+        }
+        $.ajax({
+            type: post,
+            dataType: dataType,
+            url: theurl,
+            data: data,
+            success: onSeccess,
+            fail:onError
+        });
+    }
+}())
+
 //-----------------------------微信---------------------------
 var myweixin = (function () {
     var authurl = "https://open.weixin.qq.com/connect/oauth2/";
@@ -184,14 +212,14 @@ var myweixin = (function () {
             var myurlcode = GetRequest()["code"];
             if (myurlcode != null && myurlcode != undefined) {
                 localStorage.setItem("wxcode", myurlcode);
-                mythis.requestToken(myurlcode);
+                mythis.requestCode(myurlcode);
             } else {
                 mythis.requestCode();
             }
         }else{
-            mythis.requestToken(mywxcode);
+            mythis.requestOpenid(mywxcode);
         }
-
+        
     };
     mythis.config = function (wxticket) {
         var wxjsapi_ticket = wxticket;
@@ -210,11 +238,11 @@ var myweixin = (function () {
             jsApiList: mythis.apilist // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
         });
     };
-    mythis.requestToken = function (wxcode) {
+    mythis.requestOpenid = function(wxcode) {
         $.ajax({
             type: "GET",
             dataType: "json",
-            url: mythis.requestRoot + "getAccessToken",
+            url: mythis.requestRoot + "getOpenid",
             data: "code=" + wxcode,
             success: function (result) {
                 debugger;
@@ -222,17 +250,31 @@ var myweixin = (function () {
                 mythis.requestTicket(result.token);
             }
         });
-    };
-    mythis.requestTicket = function (wxtoken) {
+    }
+    mythis.requestToken = function () {
         $.ajax({
             type: "GET",
             dataType: "json",
-            url: authurl + "getticket",
-            data: "access_token=" + wxtoken + "&type=jsapi",
+            url: mythis.requestRoot + "getAccessToken",
+            data: "yxName=" + mythis.yxName,
             success: function (result) {
-                mythis.config(result.ticket);
+                debugger;
+                mythis.openid = result.openid;
+                mythis.requestTicket(result.token);
             }
-        })
+        });
+    };
+    mythis.requestTicket = function () {
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: mythis.requestRoot + "getJSApiTicket",
+            data: "yxName=" + mythis.yxName,
+            success: function (result) {
+                debugger;
+                mythis.config(result.token);
+            }
+        });
     }
     mythis.requestCode = function () {
         window.location = authurl + "authorize" + "?" + "appid=" + appid + "&redirect_uri=" + mylocation + "&response_type=code&scope=snsapi_base&state=0#wechat_redirect";
