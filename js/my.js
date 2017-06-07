@@ -290,8 +290,8 @@ var myweixin = (function () {
     mythis.requestTicket = function () {
         var mytoken = localStorage.getItem("wxtoken");
         if (mytoken != null && mytoken != undefined) {
-            if (localStorage.setItem("wxticket", data.ticket) != null & localStorage.setItem("wxticket", data.ticket) != undefined) {
-                mythis.config(localStorage.setItem("wxticket", data.ticket));
+            if (localStorage.getItem("wxticket") != null & localStorage.getItem("wxticket") != undefined) {
+                mythis.config(localStorage.getItem("wxticket"));
             } else {
                 $.ajax({
                     type: "GET",
