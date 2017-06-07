@@ -295,7 +295,7 @@ var myweixin = (function () {
                         } else {
                             errorHandler.onWXError(null, null, data);
                         }
-                    }
+                    },
                     error: function (req, e, data) {
                         errorHandler.onWXError(req, e, data);
                     }
