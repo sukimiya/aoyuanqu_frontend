@@ -234,11 +234,11 @@ var myweixin = (function () {
     };
     mythis.config = function (wxticket) {
         var wxjsapi_ticket = wxticket;
-        var mytimestamp = (Date.parse(new Date()))/1000;
-        var mynonceStr = sha1.hash(String(mytimestamp)).substring(0,16);
+        var mytimestamp = (Date.parse(new Date())) / 1000;
+        var mynonceStr = sha1.hash(String(mytimestamp)).substring(0, 16);
         debugger;
         var mysignature = mynonceStr + wxjsapi_ticket + mytimestamp + window.location.href.split("#")[0];
-        console.log(mynonceStr+"::"+wxjsapi_ticket+"::"+mytimestamp+"::"+window.location.href.split("#")[0]);
+        console.log(mynonceStr + "::" + wxjsapi_ticket + "::" + mytimestamp + "::" + window.location.href.split("#")[0]);
         var signatureSHA1 = sha1.hash(mysignature);
         debugger;
         wx.config({
@@ -258,7 +258,7 @@ var myweixin = (function () {
     mythis.requestOpenid = function (wxcode) {
         var openid = localStorage.getItem("wxopenid");
         if (openid != null && openid != undefined) {
-            console.log("wxopenid:"+openid);
+            console.log("wxopenid:" + openid);
         } else {
             if (GetRequest()["code"] != null && GetRequest()["code"] != undefined)
                 wxcode = GetRequest()["code"];
@@ -291,7 +291,7 @@ var myweixin = (function () {
             mythis.openid = result.openid;
             localStorage.setItem("wxtoken", result.accessToken);
             localStorage.setItem("wxtokenexpires", (new Date().getTime()) + result.expiresIn);
-            window.location=window.location.href.split("?")[0];
+            window.location = window.location.href.split("?")[0];
         }, function (req, e, data) {
             (errorHandler).onWXError(req, e, data);
         });
@@ -327,17 +327,21 @@ var myweixin = (function () {
             mythis.requestOpenid();
         }*/
         var myapi = restapis;
-        myapi.request("getJSApiTicket", null, "yxName=" + mythis.yxName, function (result) {
-            if (result.errcode == 0) {
-                localStorage.setItem("wxticket", result.ticket);
-                localStorage.setItem("wxticketexpires", (new Date().getTime()) + result.expires_in);
-                mythis.config(result.ticket);
-            } else {
-                (errorHandler).onWXError(null, null, result);
-            }
-        }, function (req, e, data) {
-            (errorHandler).onWXError(req, e, data);
-        });
+        if (localStorage.getItem("wxticket") != null && localStorage.getItem("wxticket") != undefined) {
+            mythis.config(result.ticket);
+        } else {
+            myapi.request("getJSApiTicket", null, "yxName=" + mythis.yxName, function (result) {
+                if (result.errcode == 0) {
+                    localStorage.setItem("wxticket", result.ticket);
+                    localStorage.setItem("wxticketexpires", (new Date().getTime()) + result.expires_in);
+                    mythis.config(result.ticket);
+                } else {
+                    (errorHandler).onWXError(null, null, result);
+                }
+            }, function (req, e, data) {
+                (errorHandler).onWXError(req, e, data);
+            });
+        }
     }
     mythis.requestCode = function () {
         window.location = authurl + "authorize" + "?" + "appid=" + appid + "&redirect_uri=" + mylocation + "&response_type=code&scope=snsapi_base&state=0#wechat_redirect";
@@ -370,8 +374,8 @@ function uploadImgWithName(picname, theimg) {
             // 以键值对的形式返回，可用的api值true，不可用为false
             // 如：{"checkResult":{"chooseImage":true},"errMsg":"checkJsApi:ok"}
             debugger;
-            
-            if (res.errMsg == "checkJsApi:ok"&&res.checkResult.hasOwnProperty("chooseImage")&&res.checkResult["chooseImage"]) {
+
+            if (res.errMsg == "checkJsApi:ok" && res.checkResult.hasOwnProperty("chooseImage") && res.checkResult["chooseImage"]) {
                 wx.chooseImage({
                     count: 1, // 默认9
                     sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
