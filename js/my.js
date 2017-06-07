@@ -258,9 +258,7 @@ var myweixin = (function () {
     mythis.requestOpenid = function (wxcode) {
         var openid = localStorage.getItem("wxopenid");
         if (openid != null && openid != undefined) {
-            var myticket = localStorage.getItem("wxticket");
-            if (!myticket)
-                mythis.requestToken();
+            console.log("wxopenid:"+openid);
         } else {
             if (GetRequest()["code"] != null && GetRequest()["code"] != undefined)
                 wxcode = GetRequest()["code"];
