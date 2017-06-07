@@ -210,6 +210,7 @@ var restapis = (function () {
             error: onError
         });
     }
+    return mythis;
 }())
 
 //-----------------------------微信---------------------------
