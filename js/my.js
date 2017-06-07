@@ -224,6 +224,9 @@ var myweixin = (function () {
     mythis.apilist = ["previewImage", "chooseImage"];
     mythis.redictlocation = window.location.href.split("#")[0];
     var mylocation = encodeURIComponent(mythis.redictlocation);
+    wx.error(function (res) {
+        if (mythis.onError) mythis.onError(res)
+    });
     mythis.initial = function () {
         console.log("微信配置初始化中");
         debugger;
@@ -253,7 +256,6 @@ var myweixin = (function () {
             var myticket = localStorage.getItem("wxticket");
             if (!myticket)
                 mythis.requestToken();
-
         } else {
             if (GetRequest()["code"] != null && GetRequest()["code"] != undefined)
                 wxcode = GetRequest()["code"];
@@ -285,7 +287,7 @@ var myweixin = (function () {
             debugger;
             mythis.openid = result.openid;
             localStorage.setItem("wxtoken", result.accessToken);
-            localStorage.setItem("wxtokenexpires", (new Date().getTime())+result.expiresIn);
+            localStorage.setItem("wxtokenexpires", (new Date().getTime()) + result.expiresIn);
             mythis.requestTicket(result.accessToken);
         }, function (req, e, data) {
             (errorHandler).onWXError(req, e, data);
@@ -343,6 +345,7 @@ var myweixin = (function () {
     mythis.onInitial = null;
     mythis.onTicketGet = null;
     mythis.onOpenid = null;
+    mythis.onError = null;
     return mythis;
 }());
 
@@ -355,35 +358,86 @@ function previewImagebyWX(theimg) {
 
 function uploadImgWithName(picname, theimg) {
     var imgpath = "";
-    wx.chooseImage({
-        count: 1,
-        sizeType: ['original', 'compressed'],
-        sourceType: ['album', 'camera'],
+    debugger;
+    var mywx = myweixin;
+
+    wx.checkJsApi({
+        jsApiList: ['chooseImage'], // 需要检测的JS接口列表，所有JS接口列表见附录2,
         success: function (res) {
-            var localIds = res.localIds;
-            imgpath = localIds;
-            $(theimg).attr("src", imgpath);
-            console.log("本地图片id:" + imgpath);
-            $.ajax({
-                type: "POST",
-                url: "json/uploadfiles.json",
-                dataType: "json",
-                enctype: 'multipart/form-data',
-                data: {
-                    file: imgpath
-                },
-                success: function (ret) {
-                    if (ret == 0) {
-                        $(picname).val(ret.picid);
+            // 以键值对的形式返回，可用的api值true，不可用为false
+            // 如：{"checkResult":{"chooseImage":true},"errMsg":"checkJsApi:ok"}
+            debugger;
+            if (res) {
+                wx.chooseImage({
+                    count: 1,
+                    sizeType: ['original', 'compressed'],
+                    sourceType: ['album', 'camera'],
+                    success: function (res) {
+                        var localIds = res.localIds;
+                        imgpath = localIds;
+                        $(theimg).attr("src", imgpath);
+                        console.log("本地图片id:" + imgpath);
+                        $.ajax({
+                            type: "POST",
+                            url: "json/uploadfiles.json",
+                            dataType: "json",
+                            enctype: 'multipart/form-data',
+                            data: {
+                                file: imgpath
+                            },
+                            success: function (ret) {
+                                if (ret == 0) {
+                                    $(picname).val(ret.picid);
+                                }
+                            },
+                            fail: function (e) {
+                                debugger;
+                                console.log("上传失败了");
+                            }
+
+                        });
                     }
-                },
-                error: function (req, e, data) {
-                    debugger;
-                    console.log("上传失败了");
+                });
+            } else {
+                mywx.onInitial = function () {
+                    wx.chooseImage({
+                        count: 1,
+                        sizeType: ['original', 'compressed'],
+                        sourceType: ['album', 'camera'],
+                        success: function (res) {
+                            var localIds = res.localIds;
+                            imgpath = localIds;
+                            $(theimg).attr("src", imgpath);
+                            console.log("本地图片id:" + imgpath);
+                            $.ajax({
+                                type: "POST",
+                                url: "json/uploadfiles.json",
+                                dataType: "json",
+                                enctype: 'multipart/form-data',
+                                data: {
+                                    file: imgpath
+                                },
+                                success: function (ret) {
+                                    if (ret == 0) {
+                                        $(picname).val(ret.picid);
+                                    }
+                                },
+                                fail: function (e) {
+                                    debugger;
+                                    console.log("上传失败了");
+                                }
+
+                            });
+                        }
+                    });
                 }
-            });
+                mywx.initial();
+            }
+
         }
     });
+
+
 }
 //Disable Form
 function setFromDisabled(formname, toDisabled) {

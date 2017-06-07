@@ -22,7 +22,7 @@
     <script type="text/javascript" src="js/jquery.flexText.min.js"></script>
     <script src="https://cdn.bootcss.com/json2/20160511/json2.min.js"></script>
     <script type="text/javascript" src="js/my.js"></script>
-    
+
 </head>
 
 <body class="my-body">
@@ -114,7 +114,8 @@
                     <div class="row text-center">
                         <span style="color:red;"><h3>重要提示</h3></span>
                         <div class="clearfix" style="text-align:left;font-size:14px;border-color: #5066b4;padding:15px;">
-                            <p>(1)由于上海地区企业数量众多，为了帮助客户快速通过工商预查名，建议公司名称尽量采用“生僻”字号！<br> (2)经营范围字符130字为上限（其中包括标点符号
+                            <p>(1)由于上海地区企业数量众多，为了帮助客户快速通过工商预查名，建议公司名称尽量采用“生僻”字号！
+                                <br> (2)经营范围字符130字为上限（其中包括标点符号
                                 <br> (3)请在有效期内完善“工商注册面签”信息
                                 <br> (4)如有任何问题请致电岗位服务电话021-57320084
                             </p>
@@ -197,42 +198,8 @@
         var curSelect = null;
         var isAddMode = true;
         var isFormValidator = false;
+
         
-        function uploadImgWithName(picname, theimg) {
-            var imgpath = "";
-            debugger;
-            wx.chooseImage({
-                count: 1,
-                sizeType: ['original', 'compressed'],
-                sourceType: ['album', 'camera'],
-                success: function(res) {
-                    var localIds = res.localIds;
-                    imgpath = localIds;
-                    $(theimg).attr("src", imgpath);
-                    console.log("本地图片id:" + imgpath);
-                    $.ajax({
-                        type: "POST",
-                        url: "json/uploadfiles.json",
-                        dataType: "json",
-                        enctype: 'multipart/form-data',
-                        data: {
-                            file: imgpath
-                        },
-                        success: function(ret) {
-                            if (ret == 0) {
-                                $(picname).val(ret.picid);
-                            }
-                        },
-                        fail: function(e) {
-                            debugger;
-                            console.log("上传失败了");
-                        }
-
-                    });
-                }
-            });
-
-        }
 
         function addAinvestorToList(data, adddata = true) {
             var rsstr = '<a href="javascript:editInvestor(' + data["order"] + ')" class="list-group-item my-list-item"><div class="col-xs-3"><span style="font-size:14px;">' +
@@ -342,7 +309,7 @@
             return jstr;
         }
         var myvalidator = null;
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('textarea').flexText();
 
             myvalidator = $('#naform').bootstrapValidator({
@@ -367,7 +334,7 @@
                                 /**自定义提交数据，默认值提交当前input value
                                  * 
                                  */
-                                data: function(validator) {
+                                data: function (validator) {
                                     return {
                                         apply_name: $('#apply_name').val()
                                     };
@@ -387,7 +354,7 @@
                                 message: '企业名称已使用',
                                 delay: 2000,
                                 type: 'GET',
-                                data: function(validator) {
+                                data: function (validator) {
                                     return {
                                         apply_name2: $('#apply_name2').val()
                                     };
@@ -407,7 +374,7 @@
                                 message: '企业名称已使用',
                                 delay: 2000,
                                 type: 'GET',
-                                data: function(validator) {
+                                data: function (validator) {
                                     return {
                                         apply_name3: $('#apply_name3').val()
                                     };
@@ -427,7 +394,7 @@
                                 message: '企业名称已使用',
                                 delay: 2000,
                                 type: 'GET',
-                                data: function(validator) {
+                                data: function (validator) {
                                     return {
                                         apply_name4: $('#apply_name4').val()
                                     };
@@ -478,7 +445,7 @@
                 }
             })
 
-            myvalidator.on('success.form.bv', function(e) {
+            myvalidator.on('success.form.bv', function (e) {
                 debugger;
                 e.preventDefault();
                 alert("验证通过");
@@ -522,13 +489,13 @@
                     url: "http://opentest.aoyuanqu.cn/insertYCM.do",
                     data: getApplyFromJSON(),
                     dataType: "json",
-                    success: function(data) {
+                    success: function (data) {
                         if (data.result == 2) {
                             debugger;
                             window.location = "ee_progress.html?id=" + thebillid;
                         }
                     },
-                    error: function(xhr, type) {
+                    error: function (xhr, type) {
                         alert("提交时发生错误!");
                     }
 
@@ -590,7 +557,7 @@
                 });
 
             });*/
-            $("#addinvestorBtn").on("click", function() {
+            $("#addinvestorBtn").on("click", function () {
                 isAddMode = true;
                 $("#qygd_name").val("");
                 $("#qygd_idnumber").val("");
@@ -603,10 +570,11 @@
                 $("#addinvestorpanel").modal("toggle");
             });
             //
-            var mywx = myweixin;
+            mywx.onInitial = function() {
+                console.log("mywx.onInitial");
+            }
             mywx.initial();
         });
-
     </script>
 </body>
 
