@@ -245,13 +245,14 @@ var myweixin = (function () {
             signature: signatureSHA1, // 必填，签名，见附录1
             jsApiList: mythis.apilist // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
         });
+        if (mythis.onInitial) mythis.onInitial();
     };
     mythis.requestOpenid = function (wxcode) {
         var openid = localStorage.getItem("wxopenid");
         if (openid != null && openid != undefined) {
             var myticket = localStorage.getItem("wxticket");
             if (!myticket)
-                mythis.requestTicket();
+                mythis.requestToken();
 
         } else {
             if (GetRequest()["code"] != null && GetRequest()["code"] != undefined)
@@ -263,13 +264,14 @@ var myweixin = (function () {
                         debugger;
                         mythis.openid = result.openid;
                         localStorage.setItem("wxopenid", result.openid);
-                        localStorage.setItem("wxtoken", result.access_token);
-                        localStorage.setItem("wxrefreshtoken", result.refresh_token);
-                        localStorage.setItem("wxtokenexpires", (new Date().getTime()) + result.expires_in);
-                        mythis.requestTicket();
+                        localStorage.setItem("wxwebtoken", result.access_token);
+                        localStorage.setItem("wxwebrefreshtoken", result.refresh_token);
+                        localStorage.setItem("wxwebtokenexpires", (new Date().getTime()) + result.expires_in);
+                        if (mythis.onOpenid) mythis.onOpenid();
+                        mythis.requestToken();
                     },
                     function (req, e, data) {
-                        errorHandler.onWXError(req, e, data);
+                        (errorHandler).onWXError(req, e, data);
                     }
                 );
             } else {
@@ -282,15 +284,18 @@ var myweixin = (function () {
         myapi.request("getAccessToken", null, "yxName=" + mythis.yxName, function (result) {
             debugger;
             mythis.openid = result.openid;
+            localStorage.setItem("wxtoken", result.token);
             mythis.requestTicket(result.token);
         }, function (req, e, data) {
-            errorHandler.onWXError(req, e, data);
+            (errorHandler).onWXError(req, e, data);
         });
     };
-    mythis.requestTicket = function () {
-        var mytoken = localStorage.getItem("wxtoken");
+    mythis.requestTicket = function (mytoken = null) {
+        /*if (mytoken == null)
+            mytoken = localStorage.getItem("wxtoken");
         if (mytoken != null && mytoken != undefined) {
             if (localStorage.getItem("wxticket") != null & localStorage.getItem("wxticket") != undefined) {
+                if (mythis.onTicketGet) mythis.onTicketGet();
                 mythis.config(localStorage.getItem("wxticket"));
             } else {
                 $.ajax({
@@ -304,17 +309,29 @@ var myweixin = (function () {
                             localStorage.setItem("wxticketexpires", (new Date().getTime()) + data.expires_in);
                             mythis.config(data.ticket);
                         } else {
-                            errorHandler.onWXError(null, null, data);
+                            (errorHandler).onWXError(null, null, data);
                         }
                     },
                     error: function (req, e, data) {
-                        errorHandler.onWXError(req, e, data);
+                        (errorHandler).onWXError(req, e, data);
                     }
                 });
             }
         } else {
             mythis.requestOpenid();
-        }
+        }*/
+        var myapi = restapis;
+        myapi.request("getJSApiTicket", null, "yxName" + mythis.yxName, function (result) {
+            if (result.errcode == 0) {
+                localStorage.setItem("wxticket", result.ticket);
+                localStorage.setItem("wxticketexpires", (new Date().getTime()) + result.expires_in);
+                mythis.config(result.ticket);
+            } else {
+                (errorHandler).onWXError(null, null, result);
+            }
+        }, function (req, e, data) {
+            (errorHandler).onWXError(req, e, data);
+        });
     }
     mythis.requestCode = function () {
         window.location = authurl + "authorize" + "?" + "appid=" + appid + "&redirect_uri=" + mylocation + "&response_type=code&scope=snsapi_base&state=0#wechat_redirect";
@@ -322,6 +339,9 @@ var myweixin = (function () {
     mythis.login = function () {
 
     }
+    mythis.onInitial = null;
+    mythis.onTicketGet = null;
+    mythis.onOpenid = null;
     return mythis;
 }());
 
