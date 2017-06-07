@@ -237,8 +237,8 @@ var myweixin = (function () {
         var mytimestamp = Date.parse(new Date());
         var mynonceStr = sha1.hash(String(mytimestamp)).substring(0,16);
         debugger;
-        var mysignature = mynonceStr + wxjsapi_ticket + mytimestamp + mylocation;
-        console.log(mynonceStr+"::"+wxjsapi_ticket+"::"+mytimestamp+"::"+mylocation);
+        var mysignature = mynonceStr + wxjsapi_ticket + mytimestamp + window.location.href.split("#")[0];
+        console.log(mynonceStr+"::"+wxjsapi_ticket+"::"+mytimestamp+"::"+window.location.href.split("#")[0]);
         var signatureSHA1 = sha1.hash(mysignature);
         debugger;
         wx.config({
