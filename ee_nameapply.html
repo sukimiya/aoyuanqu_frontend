@@ -276,7 +276,9 @@
 
         function getApplyFromJSON() {
             var jsonobj = {};
+            var mywx = myweixin;
             thebillid = Date.parse(new Date());
+            jsonobj["wx_openid"] = mywx.openid;
             jsonobj["id"] = thebillid;
             jsonobj["apply_name"] = $("#apply_name").val();
             jsonobj["apply_name2"] = $("#apply_name2").val();

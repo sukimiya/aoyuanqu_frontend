@@ -11,16 +11,20 @@
     <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://cdn.bootcss.com/bootstrap-validator/0.5.3/js/bootstrapValidator.min.js"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script src="https://cdn.bootcss.com/json2/20160511/json2.min.js"></script>
     <script type="text/javascript" src="js/my.js"></script>
     <link href="css/my.css" rel="stylesheet" type="text/css">
     <script type="text/javascript">
-        var redirectionLocation = "http://wxapp.aoyuanqu.com";
+        var redirectionLocation = "http://wxapp.aoyuanqu.com/wxapp/aoyuanqu_frontend/index.html";
         var validateCode_static = null;
         //----------------Reference from http://www.cnblogs.com/xcsn/archive/2013/04/22/3035240.html--------
         var InterValObj; //timer变量，控制时间
         var count = 60; //间隔函数，1秒执行
         var curCount; //当前剩余秒数
         $(document).ready(function() {
+            var myapi = restapis;
+            var mywx = myweixin;
             $('form').bootstrapValidator({
                 feedbackIcons: {
                     valid: 'glyphicon glyphicon-ok',
@@ -45,7 +49,7 @@
                             },
                             stringLength: {
                                 min: 8,
-                                max: 30,
+                                max: 11,
                                 message: '手机长度必须在8到11之间'
                             }
                         }
@@ -58,7 +62,14 @@
                 $this.button('loading');
 
                 var fv_timestamp = Date.parse(new Date());
-                var fv_mobileNumber = $("#InputMoblie")
+                var fv_mobileNumber = $("#inputmobile").val();
+                myapi.request("UserUpdate", null, "mobile=" + fv_mobileNumber + "&oppen_id=" + mywx.openid, function(result) {
+                    if (result.result == 0) {
+                        window.location = redirectionLocation;
+                    }
+                }, function(e) {
+                    alert("网络错误，请稍后再试");
+                });
                 $.ajax({　　
                     type: "POST", //用POST方式传输
                     　　dataType: "text", //数据格式:JSON
@@ -81,6 +92,18 @@
                 }, 30000); //30秒超时
 
 
+            });
+            $("#inputmobile").on("change", function() {
+                if ($("#inputmobile").val().length == 11)
+                    myapi.request("verfymobile", null, "mobile=" + $("#inputmobile").val(), function(result) {
+                        if (result == 0) {
+
+                        } else {
+                            $("#changpwdform").data("bootstrapValidator").updateStatus("inputmobile", "NOT_VALIDATED", "手机号码已注册");
+                        }
+                    }, function(e) {
+                        $("#changpwdform").data("bootstrapValidator").updateStatus("inputmobile", "NOT_VALIDATED", "手机号码验证错误,请稍后再试");
+                    });
             });
             $("#InputValidateCode").on("change", function() {
                 if (validateCode_static != null && $("InputValidateCode").val() == validateCode_static) {
@@ -107,24 +130,19 @@
                     }
                 }, 1000);
                 //
-                $.ajax({　　
-                    type: "POST", //用POST方式传输
-                    　　dataType: "text", //数据格式:JSON
-                        data:"moblie="+$("#inputmobile").val(),
-                    　　url: 'http://opentest.aoyuanqu.cn/verfymobile.do', //目标地址
-                    　　 //data: "dealType=" + dealType + "&uid=" + uid + "&code=" + code,
-                    　　error: function(XMLHttpRequest, textStatus, errorThrown) {},
-                    　　success: function(msg) {
-                        var jsonObj = $.parseJSON(msg);
-                        if (jsonObj.valid) {
-                            validateCode_static = jsonObj.validateCode;
-                        } else {
-                            alert("发送验证码错误");
-                            debugger;
-                        }
+                myapi.request("checkMessage", null, "moblie=" + $("#inputmobile").val(), function(result) {
+                    if (result.valid) {
+                        validateCode_static = result.validateCode;
+                    } else {
+                        alert("发送验证码错误");
+                        debugger;
                     }
+                }, function() {
+                    alert("网络错误，请稍后再试");
                 });
             });
+            var mywx = myweixin;
+            mywx.initial();
         }); //ready
 
     </script>
