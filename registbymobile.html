@@ -70,22 +70,6 @@
                 }, function(e) {
                     alert("网络错误，请稍后再试");
                 });
-                $.ajax({　　
-                    type: "POST", //用POST方式传输
-                    　　dataType: "text", //数据格式:JSON
-                    　　url: 'http://opentest.aoyuanqu.cn/UserInsert.do', //目标地址
-                    data: "mobile=" + fv_mobileNumber + "&timestamp=" + fv_timestamp,
-                    　　error: function(XMLHttpRequest, textStatus, errorThrown) {
-                        //
-                    },
-                    　　success: function(msg) {
-                        var jsonObj = $.parseJSON(msg);
-                        debugger;
-                        if (jsonObj.result == 0) {
-                            window.location = redirectionLocation;
-                        }
-                    }
-                });
                 setTimeout(function() {
                     $this.button('reset');
                     alert("请检查连接");
@@ -94,8 +78,9 @@
 
             });
             $("#inputmobile").on("change", function() {
+                var fv_mobileNumber = $("#inputmobile").val();
                 if ($("#inputmobile").val().length == 11)
-                    myapi.request("verfymobile", null, "mobile=" + $("#inputmobile").val(), function(result) {
+                    myapi.request("verfymobile", null, "mobile=" + fv_mobileNumber, function(result) {
                         if (result == 0) {
 
                         } else {
@@ -130,7 +115,8 @@
                     }
                 }, 1000);
                 //
-                myapi.request("checkMessage", null, "moblie=" + $("#inputmobile").val(), function(result) {
+                var fv_mobileNumber = $("#inputmobile").val();
+                myapi.request("checkMessage", null, "moblie=" + fv_mobileNumber, function(result) {
                     if (result.valid) {
                         validateCode_static = result.validateCode;
                     } else {

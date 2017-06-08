@@ -220,6 +220,7 @@ var myweixin = (function () {
     var authurl = "https://open.weixin.qq.com/connect/oauth2/";
     var appid = "wx7a6967db884b7058";
     var mythis = {};
+    var myerror = errorHandler;
     mythis.yxName = "廊下经济园区";
     mythis.openid = "";
     mythis.isConfiged = false;
@@ -278,7 +279,7 @@ var myweixin = (function () {
                     if (mythis.onOpenid) mythis.onOpenid();
                     mythis.requestToken();
                 }, function (req, e, data) {
-                    (errorHandler).onWXError(req, e, data);
+                    myerror.onWXError(req, e, data);
                 });
             }
             else {
@@ -295,7 +296,7 @@ var myweixin = (function () {
             localStorage.setItem("wxtokenexpires", (new Date().getTime()) + result.expiresIn);
             window.location = window.location.href.split("?")[0];
         }, function (req, e, data) {
-            (errorHandler).onWXError(req, e, data);
+            myerror.onWXError(req, e, data);
         });
     };
     mythis.requestTicket = function (mytoken = null) {
@@ -311,10 +312,10 @@ var myweixin = (function () {
                     mythis.config(result.ticket);
                 }
                 else {
-                    (errorHandler).onWXError(null, null, result);
+                    myerror.onWXError(null, null, result);
                 }
             }, function (req, e, data) {
-                (errorHandler).onWXError(req, e, data);
+                myerror.onWXError(req, e, data);
             });
         }
     }
