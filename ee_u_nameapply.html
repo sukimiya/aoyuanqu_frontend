@@ -24,18 +24,13 @@
     <script type="text/javascript">
         var investorAry = [];
         $(document).ready(function() {
+            var myapi = restapis;
             var theid = GetRequest()["id"];
             $('textarea').flexText();
-            $.ajax({
-                type: "POST",
-                url: "json/namecheckapply.json",
-                dataType: "json",
-                data: {
-                    id: theid
-                },
-                success: function(ret) {
-                    pressJSONData(ret);
-                }
+            myapi.request("serchYCMJson",null,"id="+theid,function(result){
+                pressJSONData(result);
+            },function(e){
+                alert("网络错误，请稍后再试");
             });
         });
 
@@ -57,11 +52,11 @@
             $("#register_name").html("<span style='font-size:18px;'>" + jsonobj["register_name"] + "</span>");
             $("#register_phone").html("<span style='font-size:18px;'>" + jsonobj["register_phone"] + "</span>");
             $("#apply_remark").val(jsonobj["apply_remark"]);
-            if (jsonobj["apply_state"] == "0") {
+            if (jsonobj["apply_state"] == 0) {
                 $("#btnsGroup").removeClass("hidden");
                 $("#acceptedBtn").addClass("hidden");
                 $("#backedBtn").addClass("hidden");
-            } else if (jsonobj["apply_state"] == "1") {
+            } else if (jsonobj["apply_state"] == 2) {
                 $("#acceptedBtn").removeClass("hidden");
                 $("#btnsGroup").addClass("hidden");
                 $("#backedBtn").addClass("hidden");

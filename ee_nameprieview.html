@@ -20,22 +20,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
     <script type="text/javascript" src="js/jquery.flexText.min.js"></script>
     <script src="https://cdn.bootcss.com/json2/20160511/json2.min.js"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
     <script type="text/javascript" src="js/my.js"></script>
     <script type="text/javascript">
         var investorAry = [];
         $(document).ready(function() {
+            var myapi = restapis;
             var theid = GetRequest()["id"];
             $('textarea').flexText();
-            $.ajax({
-                type: "POST",
-                url: "json/namecheckapply.json",
-                dataType: "json",
-                data: {
-                    id: theid
-                },
-                success: function(ret) {
-                    pressJSONData(ret);
-                }
+            myapi.request("serchYCMJson",null,"id="+theid,function(result){
+                pressJSONData(result);
+            },function(e){
+                alert("网络错误，请稍后再试");
             });
         });
 

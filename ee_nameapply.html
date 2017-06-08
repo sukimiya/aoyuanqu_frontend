@@ -199,7 +199,7 @@
         var isAddMode = true;
         var isFormValidator = false;
 
-        
+
 
         function addAinvestorToList(data, adddata = true) {
             var rsstr = '<a href="javascript:editInvestor(' + data["order"] + ')" class="list-group-item my-list-item"><div class="col-xs-3"><span style="font-size:14px;">' +
@@ -311,9 +311,9 @@
             return jstr;
         }
         var myvalidator = null;
-        $(document).ready(function () {
+        $(document).ready(function() {
             $('textarea').flexText();
-
+            var myapi = restapis;
             myvalidator = $('#naform').bootstrapValidator({
                 feedbackIcons: {
                     valid: 'glyphicon glyphicon-ok',
@@ -336,7 +336,7 @@
                                 /**自定义提交数据，默认值提交当前input value
                                  * 
                                  */
-                                data: function (validator) {
+                                data: function(validator) {
                                     return {
                                         apply_name: $('#apply_name').val()
                                     };
@@ -356,7 +356,7 @@
                                 message: '企业名称已使用',
                                 delay: 2000,
                                 type: 'GET',
-                                data: function (validator) {
+                                data: function(validator) {
                                     return {
                                         apply_name2: $('#apply_name2').val()
                                     };
@@ -376,7 +376,7 @@
                                 message: '企业名称已使用',
                                 delay: 2000,
                                 type: 'GET',
-                                data: function (validator) {
+                                data: function(validator) {
                                     return {
                                         apply_name3: $('#apply_name3').val()
                                     };
@@ -396,7 +396,7 @@
                                 message: '企业名称已使用',
                                 delay: 2000,
                                 type: 'GET',
-                                data: function (validator) {
+                                data: function(validator) {
                                     return {
                                         apply_name4: $('#apply_name4').val()
                                     };
@@ -447,7 +447,7 @@
                 }
             })
 
-            myvalidator.on('success.form.bv', function (e) {
+            myvalidator.on('success.form.bv', function(e) {
                 debugger;
                 e.preventDefault();
                 alert("验证通过");
@@ -486,22 +486,14 @@
                     }
                 }
                 thesubmitbtn.button('loading');
-                $.ajax({
-                    type: "POST",
-                    url: "http://opentest.aoyuanqu.cn/insertYCM.do",
-                    data: getApplyFromJSON(),
-                    dataType: "json",
-                    success: function (data) {
-                        if (data.result == 2) {
-                            debugger;
-                            window.location = "ee_progress.html?id=" + thebillid;
-                        }
-                    },
-                    error: function (xhr, type) {
-                        alert("提交时发生错误!");
+                myapi.request("insertYCM", null, getApplyFromJSON(), function(result) {
+                    if (result.result == 2) {
+                        debugger;
+                        window.location = "ee_progress.html?id=" + result.id;
                     }
-
-                });
+                }, function(e) {
+                    alert("提交时发生错误!");
+                }, "POST");
                 isFormValidator = true;
             });
             /*$("#submitBtn").on("click", function() {
@@ -559,7 +551,7 @@
                 });
 
             });*/
-            $("#addinvestorBtn").on("click", function () {
+            $("#addinvestorBtn").on("click", function() {
                 isAddMode = true;
                 $("#qygd_name").val("");
                 $("#qygd_idnumber").val("");
@@ -575,6 +567,7 @@
             var mywx = myweixin;
             mywx.initial();
         });
+
     </script>
 </body>
 

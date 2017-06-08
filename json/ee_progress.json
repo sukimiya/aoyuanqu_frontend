@@ -1,27 +1,11 @@
 {
     "result": 0,
     "id": 1,
-    "lists": [
-        {
-            "state": 2
-        },
-        {
-            "state": 2
-        },
-        {
-            "state": 1
-        },
-        {
-            "state": 0
-        },
-        {
-            "state": 0
-        },
-        {
-            "state": 0
-        },
-        {
-            "state": 0
-        }
-    ]
+    "apply_state":2//名称申请办理情况
+    ,"allow_notice":2,//核准通知
+    ,"appointment_state":1//面签预约情况
+    ,"license_state":0//执照发放状态
+    ,"account_state":0//企业开户银行情况
+    ,"swsf_state":0//税务三方协议情况
+    ,"szhd_state":0//税种核定预约情况
 }

@@ -21,7 +21,7 @@
             margin-bottom: 30px;
             float: left;
         }
-        
+
         .invers div .triangle {
             height: 0px;
             width: 0px;
@@ -32,7 +32,7 @@
             margin-bottom: 30px;
             float: left;
         }
-        
+
         .bobble-box {
             font-size: 16px;
             background-color: #FAFAFA;
@@ -42,7 +42,7 @@
             display: block;
             margin-top: 15px;
         }
-        
+
         .invers div a {
             color: white;
             font-size: 16px;
@@ -52,7 +52,7 @@
             padding: 14px;
             display: block;
         }
-        
+
         .cricle-num {
             color: #5A5A5A;
             font-weight: bold;
@@ -69,7 +69,7 @@
             font-size: 12px;
             font-weight: normal;
         }
-        
+
         .invers div a .cricle-num {
             color: #FFFFFF;
             font-weight: bold;
@@ -86,18 +86,18 @@
             font-size: 12px;
             font-weight: normal;
         }
-        
+
         .bobble-item-bg {
             padding: 0px;
             padding-top: 0px;
             padding-bottom: 0px;
             background-repeat: repeat-y;
         }
-        
+
         .invers div a .badge {
             background-color: dodgerblue;
         }
-        
+
         .progress-label {
             color: gainsboro;
             text-align: right;
@@ -109,7 +109,7 @@
             margin-top: 15px;
             margin-bottom: 14px;
         }
-        
+
         .invers div .progress-label {
             color: #fa3440;
             text-align: right;
@@ -121,7 +121,7 @@
             margin-top: 15px;
             margin-bottom: 14px;
         }
-        
+
         .pgdided div .progress-label {
             color: #636363;
             text-align: right;
@@ -133,21 +133,21 @@
             margin-top: 15px;
             margin-bottom: 14px;
         }
-        
+
         .pgdided div .progress-line {
             width: 15px;
             padding: 0px;
             float: left;
             background-image: url(images/line_5078b4.png);
         }
-        
+
         .invers div .progress-line {
             width: 15px;
             padding: 0px;
             float: left;
             background-image: url(images/line_5078b4.png);
         }
-        
+
         .progress-line {
             width: 15px;
             padding: 0px;
@@ -155,7 +155,7 @@
             /*background-image: url(images/line_cccccc.png)*/
             ;
         }
-        
+
         .progress-pp {
             border: 0px solid transparent;
             border-radius: 4px;
@@ -167,7 +167,7 @@
             width: 7px;
             height: 7px;
         }
-        
+
         .pgdided div .progress-line .progress-pp {
             border: 0px solid transparent;
             border-radius: 4px;
@@ -179,7 +179,7 @@
             width: 7px;
             height: 7px;
         }
-        
+
         .invers div .progress-line .progress-pp {
             border: 2px solid #FA3440;
             border-radius: 7px;
@@ -281,108 +281,117 @@
 
     <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script src="https://cdn.bootcss.com/json2/20160511/json2.min.js"></script>
     <script type="text/javascript" src="js/my.js"></script>
     <script type="text/javascript">
         function onloginHandler(ret) {
-            var uinfo = mygetsessioninfo();
-            if (uinfo == null) {
-                return;
-            } else {
-                getMyDatabyid();
-            }
-
+            //            var uinfo = mygetsessioninfo();
+            //            if (uinfo == null) {
+            //                return;
+            //            } else {
+            getMyDatabyid();
         }
 
+        //}
+        function setItemState(thename,thevalue,i){
+            var myelement = $("#item" + (i + 1) + "_label");
+                var mylink = $("#item" + (i + 1) + " div .bobble-box");
+                var myparent = $("#item" + (i + 1));
+            if (thevalue == 0) {
+                    //还未处理的状态默认灰色
+                    myparent.removeClass("invers");
+                    myparent.removeClass("pgdided");
+                } else if (thevalue == 1) {
+                    //正在进行中的状态
+                    myparent.removeClass("pgdided");
+                    myparent.addClass("invers");
+                } else if(thevalue==2){
+                    //完成态
+                    myparent.removeClass("invers");
+                    myparent.addClass("pgdided");
+                }
+            switch (thename) {
+                    case "apply_state":
+                        if (thevalue == 2) {
+                            mylink.attr("href", "javascript:gotoNamePriview()");
+                            myelement.text("已办");
+                        } else if (thevalue == 1) {
+                            mylink.attr("href", "javascript:gotoNameApply()");
+                            myelement.text("退回");
+                        } else {
+                            mylink.attr("href", "javascript:gotoNamePriview()");
+                            myelement.text("待办");
+                            myparent.removeClass("pgdided");
+                            myparent.addClass("invers");
+                        }
+                        break;
+                    case "allow_notice":
+                        if (thevalue == 2) {
+                            myelement.text("已办");
+                            mylink.attr("href", "javascript:gotoApplyNotify()");
+                        } else if (thevalue == 1) {
+                            myelement.text("待办");
+                        } else {
+                            myelement.text("待办");
+                        }
+                        break;
+                    case "appointment_state":
+                        if (thevalue == 1) {
+                            myelement.text("待完善信息");
+                            mylink.attr("href", "javascript:gotoMeetting()");
+                        } else if (thevalue == 2) {
+                            myelement.text("面签预约成功");
+                            mylink.attr("href", "javascript:gotoMeettingPriview()");
+                        } else {
+                            myelement.text("待审");
+                        }
+                        break;
+                    case "license_state":
+                        if (thevalue == 1) {
+                            myelement.text("已发放");
+                            mylink.attr("href", "javascript:gotoCAPriview()");
+                        } else if (thevalue == 2) {
+                            mylink.attr("href", "javascript:gotoCA()");
+                            myelement.text("已发放");
+                        } else {
+                            myelement.text("待签");
+                        }
+                        break;
+                    case "account_state":
+                        if (thevalue == 1) {
+                            myelement.text("待传");
+                            mylink.attr("href", "javascript:gotoCheckTax()");
+                        } else if (thevalue == 2) {
+                            myelement.text("已传");
+                        } else {
+                            myelement.text("待传");
+                        }
+                        break;
+                    case "szhd_state":
+                        if (thevalue == 1) {
+                            myelement.text("待预约");
+                            mylink.attr("href", "javascript:gotoEEFinish()");
+                        } else if (thevalue == 2) {
+                            myelement.text("已完成");
+                            mylink.attr("href", "javascript:gotoEEFinish2()");
+                        } else {
+                            myelement.text("待预约");
+                        }
+                        break;
+                }
+        }
         function onDataHandler(data) {
-            if (data.result == 0) {
-                for (var i = 0; i < data.lists.length; i++) {
-                    var node = data.lists[i];
-                    var myelement = $("#item" + (i + 1) + "_label");
-                    var mylink = $("#item" + (i + 1) + " div .bobble-box");
-                    var myparent = $("#item" + (i + 1));
-                    if (node.state == 0) {
-                        //还未处理的状态默认灰色
-                        myparent.removeClass("invers");
-                        myparent.removeClass("pgdided");
-                    } else if (node.state == 1) {
-                        //正在进行中的状态
-                        myparent.removeClass("pgdided");
-                        myparent.addClass("invers");
-                    } else {
-                        //完成态
-                        myparent.removeClass("invers");
-                        myparent.addClass("pgdided");
+            var statelist = data;
+            var i = 0;
+            var stateary = ["apply_state","allow_notice","appointment_state","license_state","account_state","szhd_state"];
+            for (var a in statelist) {
+                for(var l=0;l<stateary.length;l++){
+                    if(stateary[l] == a){
+                        setItemState(a,statelist[a],l);
+                        console.log(a+":"+statelist[a]+":"+l);
+                        i++;
                     }
-                    switch (i) {
-                        case 0:
-                            if (node.state == 2) {
-                                mylink.attr("href", "javascript:gotoNamePriview()");
-                                myelement.text("已办");
-                            } else if (node.state == 1) {
-                                mylink.attr("href", "javascript:gotoNameApply()");
-                                myelement.text("退回");
-                            } else {
-                                mylink.attr("href", "javascript:gotoNameApply()");
-                                myelement.text("待办");
-                                myparent.removeClass("pgdided");
-                                myparent.addClass("invers");
-                            }
-                            break;
-                        case 1:
-                            if (node.state == 2) {
-                                myelement.text("已办");
-                                mylink.attr("href", "javascript:gotoApplyNotify()");
-                            } else if (node.state == 1) {
-                                myelement.text("待办");
-                            } else {
-                                myelement.text("待办");
-                            }
-                            break;
-                        case 2:
-                            if (node.state == 1) {
-                                myelement.text("待完善信息");
-                                mylink.attr("href", "javascript:gotoMeetting()");
-                            } else if (node.state == 2) {
-                                myelement.text("面签预约成功");
-                                mylink.attr("href", "javascript:gotoMeettingPriview()");
-                            } else {
-                                myelement.text("待审");
-                            }
-                            break;
-                        case 3:
-                            if (node.state == 1) {
-                                myelement.text("已发放");
-                                mylink.attr("href", "javascript:gotoCAPriview()");
-                            } else if (node.state == 2) {
-                                mylink.attr("href", "javascript:gotoCA()");
-                                myelement.text("已发放");
-                            } else {
-                                myelement.text("待签");
-                            }
-                            break;
-                        case 4:
-                            if (node.state == 1) {
-                                myelement.text("待传");
-                                mylink.attr("href", "javascript:gotoCheckTax()");
-                            } else if (node.state == 2) {
-                                myelement.text("已传");
-                            } else {
-                                myelement.text("待传");
-                            }
-                            break;
-                        case 5:
-                            if (node.state == 1) {
-                                myelement.text("待预约");
-                                mylink.attr("href", "javascript:gotoEEFinish()");
-                            } else if (node.state == 2) {
-                                myelement.text("已完成");
-                                mylink.attr("href", "javascript:gotoEEFinish2()");
-                            } else {
-                                myelement.text("待预约");
-                            }
-                            break;
-                    }
-
                 }
             }
         }
@@ -400,6 +409,7 @@
         }
 
         function gotoMeetting() {
+            debugger;
             window.location = "ee_meetting.html?id=" + GetRequest()['id'];
         }
 
@@ -428,20 +438,17 @@
         }
 
         function getMyDatabyid() {
-            $.ajax({
-                type: "POST",
-                dataType: "json",
-                url: "json/ee_progress.json",
-                data: {
-                    id: GetRequest()['id']
-                },
-                success: function(data) {
-                    onDataHandler(data);
-                }
+            var myapi = restapis;
+            myapi.request("serchStatus", null, "id=" + GetRequest()['id'], function(result) {
+                debugger;
+                onDataHandler(result);
             });
         }
         $(document).ready(function() {
             getMyDatabyid();
+            //            
+            //            var mywx = myweixin;
+            //            mywx.initial();
         });
 
     </script>
