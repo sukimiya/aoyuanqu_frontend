@@ -35,7 +35,7 @@
         var listdata = [];
         var curPage = 1;
         var totalPage = 1;
-
+        var pageSize=20;
         function switchlisttype() {
             var setl1 = "";
             var setl2 = "";
@@ -84,34 +84,28 @@
         }
 
         function doloadlist(skey = "", page = 1, ttype = 0, isappend = true, me = null) {
-            $.ajax({　　
-                type: "GET", //用POST方式传输
-                　　dataType: "json", //数据格式:JSON
-                　　url: 'json/ee_u_ncompanylist.json', //目标地址
-                　　data: JSON.stringify({
-                    page: page,
-                    type: ttype,
-                    key: skey
-                }),
-                　　error: function(XMLHttpRequest, textStatus, errorThrown) {},
-                　　success: function(jsonObj) {
-                    if (!jsonObj.resault) {
-                        tatalPages = jsonObj.totalPages;
-                        curPage = jsonObj.curPage;
-                        if (jsonObj.lists) {
+            var myapi = restapis;
+            var requestdata = "appointment_state="+ttype+"&page_start="+page*pageSize+"&page_amount="+pageSize;
+            myapi.request("serchMQList",null,requestdata,function(jsonObj){
+                if (!jsonObj.resault) {
+                        if(jsonObj.hasOwnProperty("totalPages")) tatalPages = jsonObj.totalPages;
+                        if(jsonObj.hasOwnProperty("curPage")){curPage = jsonObj.curPage;}else{curPage = page}
+                        if (jsonObj.arr) {
                             var result = "";
-                            for (var i = 0; i < jsonObj.lists.length; i++) {
-                                var node = jsonObj.lists[i];
+                            for (var i = 0; i < jsonObj.arr.length; i++) {
+                                var node = jsonObj.arr[i];
+                                var displayname = node["apply_name"];
+                                if(node.hasOwnProperty("confirm_name"))displayname=node["confirm_name"]
                                 result += '<a href="javascript:gotoEE(' +
-                                    node["cid"] +
+                                    node["id"] +
                                     ')" class="list-group-item my-list-item" style="text-align: left;">' +
-                                    node["company"] +
+                                    displayname +
                                     '<span class="badge mytextbadge">&nbsp;<i class="fa fa-angle-right" aria-hidden="true"></i></span></a>';
                             }
                             if(curPage==1){
-                                listdata = jsonObj.lists;
+                                listdata = jsonObj.arr;
                             }else{
-                                listdata = listdata.concat(jsonObj.lists);
+                                listdata = listdata.concat(jsonObj.arr);
                             }
                         } else {
                             //droplist opration
@@ -134,8 +128,7 @@
                         debugger;
                         alert("获取数据错误");
                     }
-                }
-            });
+            },function(e){alert("网络错误，请检查网络连接是否正常")});
         }
         var dropload = null;
         $(document).ready(function() {

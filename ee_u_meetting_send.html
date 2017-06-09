@@ -114,21 +114,6 @@
                         alert("提交错误，请检查提交的参数.")
                     }
                 },function(e){alert("提交错误，请检网络.")});
-                $.ajax({
-                    type:"POST",
-                    url:"json/ee_u_meetting_send.json",
-                    dataType:"json",
-                    data:JSON.stringify({
-                        id:GetRequest()["id"],
-                        appointment_time:$("#appointment_time").val(),
-                        appointment_address:$("#appointment_address").val()
-                    }),
-                    success:function(data){
-                        if(data.result==0){
-                            window.location = "ee_u_progress.html?id="+GetRequest()["id"];
-                        }
-                    }
-                });
             });
             getmeetingdata();
         })
