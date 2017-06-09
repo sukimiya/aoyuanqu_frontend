@@ -35,6 +35,7 @@
         var listdata = [];
         var curPage = 1;
         var totalPage = 1;
+        var pageSize=20;
 
         function switchlisttype() {
             var setl1 = "";
@@ -82,16 +83,11 @@
 
         function doloadlist(skey = "", page = 1, ttype = 0, isappend = true, me = null) {
             var myapi = restapis;
-            var requestdata = JSON.stringify({
-                    page: page,
-                    type: ttype,
-                    key: skey
-                });
-            
+            var requestdata = "apply_state="+ttype+"&page_start="+page*pageSize+"&page_amount="+pageSize;
             myapi.request("serchYCMList",null,requestdata,function(jsonObj){
                 if (!jsonObj.resault) {
-                        tatalPages = jsonObj.totalPages;
-                        curPage = jsonObj.curPage;
+                        if(jsonObj.hasOwnProperty("totalPages")) tatalPages = jsonObj.totalPages;
+                        if(jsonObj.hasOwnProperty("curPage")){curPage = jsonObj.curPage;}else{curPage = page}
                         if (jsonObj.arr) {
                             var result = "";
                             for (var i = 0; i < jsonObj.arr.length; i++) {
