@@ -105,10 +105,10 @@
             }
         </style>
         <div class="wrp wrp2">
-            <a href="javascript:uploadImgWithName('#qygd_pic1','#qygd_pic1_img')">
+            <a href="javascript:showPic()">
                 <img id="qygd_pic1_img" src="images/picframe.svg" class="img-responsive my-picbackground box box3" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
             </a>
-            
+            <input type="hidden" id="qygd_pic1" name="qygd_pic1">
             <button id="uploadBtn" class="btn btn-success uploadbtn" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>正在上传..."><span style="font-size:18px">拍照上传</span></button>
             <button id="submistBtn" class="btn btn-primary submitbtn"><span style="font-size:22px">确定</span></button>
         </div>
@@ -116,95 +116,38 @@
 
     <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="js/jweixin-1.2.0.js"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
     <script type="text/javascript" src="js/my.js"></script>
     <script type="text/javascript">
         var theimagesid = "";
-
-        function showRemoteImg(mename) {
-            if ($(mename).attr("src") == "images/picframe.svg") return;
-            $.ajax({
-                type: "GET",
-                dataType: "json",
-                data: '{"id":' + GetRequest["id"] + '}',
-                url: "json/applynotify.json",
-                success: function(ret) {
-                    getRemotePic(ret.pic, $(mename))
-                },
-                error: function(e) {
-
-                }
-
-            });
-
-        }
-
-        function uploadImgWithName(theimg) {
-            var imgpath = "";
-            wx.chooseImage({
-                count: 1,
-                sizeType: ['original', 'compressed'],
-                sourceType: ['album', 'camera'],
-                success: function(res) {
-                    var localIds = res.localIds;
-                    imgpath = localIds;
-                    $(theimg).attr("src", imgpath);
-                    console.log("本地图片id:" + imgpath);
-                    $.ajax({
-                        type: "POST",
-                        url: "json/uploadfiles.json",
-                        dataType: "json",
-                        enctype: 'multipart/form-data',
-                        data: {
-                            file: imgpath
-                        },
-                        success: function(ret) {
-                            if (ret == 0) {
-                                theimagesid = ret.picid;
-                                getRemotePic(ret.picid, $(theimg));
-                            }
-                        },
-                        fail: function(e) {
-                            debugger;
-                            console.log("上传失败了");
-                        }
-
-                    });
-                }
-            });
-
+        function showPic(){
+            if ($("qygd_pic1_img").attr("src") == "images/picframe.svg") return;
+            previewImagebyWX($("qygd_pic1_img").attr("src"));
         }
         $(document).ready(function() {
             //showRemoteImg(#qygd_pic1_img');
+            var myapi  = restapis;
+            myapi.request("ee_u_applynotify",null,"id="+GetRequest()["id"],function(result){
+                if(allow_pic.hasOwnProperty("allow_pic")&&result.allow_pic!=null&&result.allow_pic!="")
+                    getRemotePic(result.allow_pic, $("qygd_pic1_img"));
+                if(result.allow_notice==2){
+                    $("submistBtn").addClass("hide");
+                }
+            },function(e){alert("获取数据出错");})
             $("#submistBtn").on("click", function(me) {
+                theimagesid = $("qygd_pic1").val();
                 if(theimagesid!="")
-                $.ajax({
-                        type: "POST",
-                        url: "json/ee_u_applynotify.json",
-                        dataType: "json",
-                        data: {
-                            id: theimagesid
-                        },
-                        success: function(ret) {
-                            if (ret.result == 0) {
+                    myapi.request("updateAllow_pic",null,"id="+theimagesid,function(result){
+                        if (ret.result == 0) {
                                 window.location= "ee_u_progress.html";
                             }
-                        },
-                        fail: function(e) {
-                            debugger;
-                            console.log("提交失败了");
-                        }
-
-                    });
+                    },function(e){alert("提交失败了");});
             });
             $("#uploadBtn").on("click", function(me) {
                 if (theimagesid != "") {
                     var $this = $(this);
                     $this.button('loading');
-                    
-                    uploadImgWithName("#qygd_pic1_img");
-                    
-                    
+                    uploadImgWithName("#qygd_pic1","#qygd_pic1_img");
                 }
             });
         });

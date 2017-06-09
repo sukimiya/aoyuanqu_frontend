@@ -2,56 +2,25 @@
     "resualt": 0,
     "totalPages": 2,
     "curPage": 1,
-    "lists": [
-        {
-            "company": "张三锦",
-            "cid": "1",
-            "state":3
-        },
-        {
-            "company": "王莎",
-            "cid": "2",
-            "state":3
-        },
-        {
-            "company": "木锦里",
-            "cid": "3",
-            "state":3
-        },
-        {
-            "company": "刘先锋",
-            "cid": "4",
-            "state":3
-        },
-        {
-            "company": "辽余元",
-            "cid": "5",
-            "state":3
-        },
-        {
-            "company": "孔明",
-            "cid": "6",
-            "state":3
-        },
-        {
-            "company": "夏侯渊",
-            "cid": "7",
-            "state":3
-        },
-        {
-            "company": "吴三桂",
-            "cid": "8",
-            "state":3
-        },
-        {
-            "company": "周瑜",
-            "cid": "9",
-            "state":3
-        },
-        {
-            "company": "黄盖",
-            "cid": "10",
-            "state":3
-        }
-    ]
+    "arr": [
+    {
+      "id": "147269ed-2e8f-4af7-a493-f3a7399fa350",
+      "confirm_name": "田鸡公司cc",
+      "apply_name": "我的企业333444"
+    },
+    {
+      "id": "37db41e2-e684-408a-b5bf-af9e417505fc",
+      "apply_name": "我的公司3324234243"
+    },
+    {
+      "id": "3a3bb4b5-f104-4219-980b-0c57258ec8c2",
+      "apply_name": "我的企业"
+    },
+    {
+      "id": "89851cb9-2310-40eb-925f-16d16e30f5d7",
+      "confirm_name": "我的企业dalaoye",
+      "apply_name": "我的企业dalaoye"
+    }
+  ]
+
 }

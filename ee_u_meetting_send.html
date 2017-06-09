@@ -30,7 +30,7 @@
     <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://cdn.bootcss.com/bootstrap-validator/0.5.3/js/bootstrapValidator.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
-    <script src="js/jweixin-1.2.0.js"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
     <script type="text/javascript" src="js/jquery.flexText.min.js"></script>
     <script src="https://cdn.bootcss.com/json2/20160511/json2.min.js"></script>
     <script src="https://cdn.bootcss.com/moment.js/2.18.0/moment.min.js"></script>
@@ -40,6 +40,45 @@
     <script type="text/javascript">
         var investorAry = [];
         var isAddMode = true;
+        function getmeetingdata() {
+            var theid = GetRequest()["id"];
+            var myapi = restapis;
+            myapi.request("serchMQ", null, "id=" + theid, function(result) {
+                if (result)
+                    pressData(result);
+            }, function(e) {});
+        }
+        function pressData(data) {
+            if (data.hasOwnProperty("apply_name")) $("#companyname").text(data.apply_name);
+            if (data.hasOwnProperty("actual_address")) $("#actual_address").text(data.actual_address);
+            if (data.hasOwnProperty("manage_range")) $("#manage_range").text(data.manage_range);
+            if (data.hasOwnProperty("register_money")) $("#register_money").val(data.register_money);
+            if (data.hasOwnProperty("register_kind")) $("#register_kind").text(data.register_kind);
+            if (data.hasOwnProperty("appointment_time")) $("#appointment_time").val(data.appointment_time);
+            if (data.hasOwnProperty("tzfr_name")) $("#tzfr_name").val(data.tzfr_name);
+            for (var i = 0; i < data.arr.length; i++) {
+                data.arr[i]["order"] = i;
+                addAinvestorToList(data.arr[i]);
+            }
+            if (data.hasOwnProperty("appointment_time")) {
+                var theyear = Math.round(data.appointment_time.split("年")[0]);
+                var datastr = data.appointment_time.split("年")[1];
+                var themonth = Math.round(datastr.split("月")[0]) - 1;
+                datastr = datastr.split("月")[1];
+                var theday = Math.round(datastr.split("日")[0]);
+                var today = new Date(theyear, themonth, theday);
+                today.setFullYear(theyear);
+                today.setMonth(themonth);
+                today.setDate(theday);
+                $('#appointment_time_picker').datetimepicker({
+                    locale: 'zh-cn',
+                    defaultDate: today,
+                    enabledDates: [today]
+                });
+            }
+            if (data.hasOwnProperty("appointment_address"))
+                $("#appointment_address").val(data.appointment_address);
+        }
         $(document).ready(function() {
             var today = new Date();
             $("#appointment_time").attr('min', today);
@@ -63,6 +102,18 @@
                 enabledDates: darry
             });
             $("#thesubmit").on("click",function(events){
+                var myapi = restapis;
+                var theid= GetRequest()["id"];
+                var thetime = $("#appointment_time").val();
+                var theaddress = $("#appointment_address").val();
+                var theparam = "id="+theid+"&appointment_time="+thetime+"&appointment_address"+theaddress+"&appointment_state=1";
+                myapi.request("startMQ",null,theparam,function(result){
+                    if(result.result ==0){
+                        window.location = "ee_u_progress.html";
+                    }else{
+                        alert("提交错误，请检查提交的参数.")
+                    }
+                },function(e){alert("提交错误，请检网络.")});
                 $.ajax({
                     type:"POST",
                     url:"json/ee_u_meetting_send.json",
@@ -79,6 +130,7 @@
                     }
                 });
             });
+            getmeetingdata();
         })
 
     </script>

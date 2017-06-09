@@ -1,0 +1,23 @@
+{
+    "id": "",
+    "wx_openid":"",
+    "appointment_state": 0,
+    "appointment_time": 1432234400,
+    "appointment_address": "",
+    "zip_code": "",
+    "weituo_state": 0,
+    "qyfr_name": "",
+    "qyfr_telephone": "",
+    "qyfr_mobile": "",
+    "qyfr_email": "",
+    "qycw_name": "",
+    "qycw_telephone": "",
+    "qycw_mobile": "",
+    "qycw_email": "",
+    "qycw_pic1": "",
+    "qycw_pic2": "",
+    "qyjs_name": "",
+    "qyjs_idnumber": "",
+    "qyjs_pic1": "",
+    "qyjs_pic2": ""
+}

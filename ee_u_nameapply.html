@@ -32,6 +32,23 @@
             },function(e){
                 alert("网络错误，请稍后再试");
             });
+            var theid = GetRequest()["id"];
+            $("sendbackBtn").on("click",function(){
+                var thedata = "id="+theid+"&apply_name="+$("#apply_name").val();
+                myapi.request("YCMCheck.do","page",thedata+"&apply_state=1",function(result){
+                    if(result==0){
+                        window.location = "ee_u_progress.html"
+                    }
+                },function(e){alert("提交出错")})
+            });
+            $("acceptBtn").on("click",function(){
+                var thedata = "id="+theid+"&apply_name="+$("#apply_name").val();
+                myapi.request("YCMCheck.do","page",thedata+"&apply_state=2",function(result){
+                    if(result==0){
+                        window.location = "ee_u_progress.html"
+                    }
+                },function(e){alert("提交出错")})
+            });
         });
 
         function onInvestorOKHandler() {

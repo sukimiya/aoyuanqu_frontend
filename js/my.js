@@ -232,7 +232,7 @@ var myweixin = (function () {
                         , 'getNetworkType'];
     mythis.redictlocation = window.location.href.split("#")[0];
     var mylocation = encodeURIComponent(mythis.redictlocation);
-    wx.error(function (res) {
+    if(wx) wx.error(function (res) {
         if (mythis.onError) mythis.onError(res)
     });
     mythis.initial = function () {
@@ -356,13 +356,13 @@ var myweixin = (function () {
         }
         else {
             if (toConfig) {
-                            mywx.onConfig = function () {
-                                if (successCallback) successCallback();
-                            }
-                            mywx.requestTicket();
-                        }else{
-                            if (errorCallback) errorCallback();
-                        }
+                mywx.onConfig = function () {
+                    if (successCallback) successCallback();
+                }
+                mywx.requestTicket();
+            }else{
+                if (errorCallback) errorCallback();
+            }
         }
     }
     mythis.login = function () {}
@@ -400,7 +400,7 @@ function uploadImgWithName(picname, theimg) {
             success: function (res) {
                 var localIds = res.localIds;
                 imgpath = localIds[0];
-                $(theimg).attr("src", imgpath);
+                $(theimg).attr("src", getRemotePic(imgpath));
                 console.log("本地图片id:" + imgpath);
                 $.ajax({
                     type: "POST"
@@ -444,6 +444,7 @@ function setFromDisabled(formname, toDisabled) {
 }
 /*---------------------------上传文件----------------------*/
 //policy 要经过base64编码， signature 还要进一步处理，可以查阅官方文档
+//https://help.aliyun.com/document_detail/31848.html
 function OssUpload(param, file, fileName, callBack) {
     var policyBase64 = Base64.encode(param.policy);
     var signature = param.signature.split(':')[1];

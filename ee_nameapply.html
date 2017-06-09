@@ -314,6 +314,7 @@
         $(document).ready(function() {
             $('textarea').flexText();
             var myapi = restapis;
+            //Reference from http://www.cnblogs.com/hwaggLee/p/6565604.html
             myvalidator = $('#naform').bootstrapValidator({
                 feedbackIcons: {
                     valid: 'glyphicon glyphicon-ok',
@@ -496,61 +497,6 @@
                 }, "POST");
                 isFormValidator = true;
             });
-            /*$("#submitBtn").on("click", function() {
-                var $this = $(this);
-                var myvalid = myvalidator.isValid;
-                debugger;
-                if (!isFormValidator) {
-                    debugger;
-                    if ($("#apply_name")["0"].validity.valid &&
-                        $("#apply_name2")["0"].validity.valid &&
-                        $("#apply_name3")["0"].validity.valid &&
-                        $("#apply_name4")["0"].validity.valid &&
-                        $("#register_money")["0"].validity.valid &&
-                        $("#register_name")["0"].validity.valid &&
-                        $("#register_phone")["0"].validity.valid
-                    ) {
-                        isFormValidator = true;
-                    } else {
-                        alert("请完整填写表格并保证正确");
-                        return;
-                    }
-                }
-                if (investorAry.length <= 0) {
-                    alert("请填写法人和投资人信息");
-                    return;
-                } else {
-                    for (var i = 0; i < investorAry.length; i++) {
-                        var node = investorAry[i];
-                        if (node["qygd_jobtitle"] == "法人") {
-                            break;
-                        }
-                    }
-                    if (i == investorAry.length) {
-                        alert("请填写法人信息");
-                        return;
-                    }
-                }
-
-                $this.button('loading');
-                $.ajax({
-                    type: "POST",
-                    url: "http://119.29.153.19:8082/page/insertYCM.do",
-                    data: getApplyFromJSON(),
-                    dataType: "json",
-                    success: function(data) {
-                        if (data.result == 2) {
-                            debugger;
-                            window.location = "ee_progress.html?id=" + thebillid;
-                        }
-                    },
-                    error: function(xhr, type) {
-                        alert("提交时发生错误!");
-                    }
-
-                });
-
-            });*/
             $("#addinvestorBtn").on("click", function() {
                 isAddMode = true;
                 $("#qygd_name").val("");
