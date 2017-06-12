@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="css/my.css" rel="stylesheet" type="text/css">
+    <title>O2O招商</title>
+    <style type="text/css">
+        .policy-top {
+            background-color: #51669e;
+            height: 55px;
+        }
+
+        .policy-title {
+            margin: 10px;
+            padding-left: 10px;
+            padding-right: 10px;
+            font-size: 14px;
+            color: #ff9800;
+            border-right-width: 1px;
+            border-right-style: solid;
+            border-right-color: white;
+            float: left;
+        }
+
+        .policy-body {
+            color: white;
+            font-size: 18px;
+            line-height: 55px;
+            height: 55px;
+        }
+
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="policy-top clearfix">
+            <div class="policy-title">
+                优惠&nbsp;<br>政策&nbsp;
+            </div>
+            <div class="policy-body">财政扶持政策</div>
+        </div>
+        <div id="notifybar" class="container text-left" style="height:0px;">
+            <i class="fa fa-bookmark" aria-hidden="true" style="color:#5066b4;width:24px;line-height:30px;float:left"></i>
+            <div style="float:left;line-height:30px;"><span>最新政策</span></div>
+            <a href="javascript:hidenotify()" style="float:right;width:24px;line-height:30px;"><i class="fa fa-close" aria-hidden="true" style="background-color:transparent;color:#636363">&nbsp;</i></a>
+        </div>
+    </nav>
+    <table style="height:510px;width:100%">
+        <tr>
+            <td align="center" vertical-align="middle"><a href="ee_nameapply.html" class="btn btn-success" style="font-size:24px;border-radius: 50px;padding:10px;padding-left:30px;padding-right:30px">一键注册&nbsp;<i class="fa fa-hand-pointer-o" aria-hidden="true" style="font-size:24px;"></i></a></td>
+        </tr>
+    </table>
+    <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation" style="background-color:transparent;border:0px solid transparent;">
+        <a href="ee_conpanylist.html" class="col-xs-3 text-center" style="color:#5066b4;margin:15px;padding-top:20px;padding-bottom:20px">
+            <i class="fa fa-clock-o" aria-hidden="true" style="font-size:40px"></i><br>
+            进度查询
+        </a>
+        <a href="#" class="col-xs-3 text-center" style="color:#ff1259;margin:15px;padding-top:20px;padding-bottom:20px">
+            <i class="fa fa-heart-o" aria-hidden="true" style="font-size:40px"></i><br>
+            招商奖励
+        </a>
+        <a href="#" class="col-xs-3 text-center" style="color:#5066b4;margin:15px;padding-top:20px;padding-bottom:20px">
+            <i class="fa fa-credit-card" aria-hidden="true" style="font-size:40px"></i><br>
+            代理记账
+        </a>
+    </nav>
+    <!--div class="zs-guid-toolbar">
+        <ul class="mui-table-view mui-grid-view mui-grid-9" style="background-color: #11ab87;margin-top: 0px;">
+            <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+                <a href="O2O_zhaoshang_list.html">
+                    <span class="iconfont icon-shijian1" style="font-size:32px;color:#ffffff"></span>
+                    <div class="mui-media-body" style="margin-top: 18px;color:#ffffff">
+                        进度查询
+                    </div>
+                </a>
+            </li>
+
+            <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+                <a href="O2O_zhaoshangjiangli.html">
+                    <span class="iconfont icon-hongbao" style="font-size:32px;color:#ff0000"></span>
+                    <div class="mui-media-body" style="margin-top: 18px;color:#ffffff">
+                        招商奖励
+                    </div>
+                </a>
+            </li>
+            <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+                <a href="aaAgent.html">
+                    <span class="iconfont icon-shenpi" style="font-size:32px;color:#ffffff"></span>
+                    <div class="mui-media-body" style="margin-top: 18px;color:#ffffff">
+                        代理记账
+                    </div>
+                </a>
+            </li>
+
+        </ul>
+    </div-->
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
+    <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script src="https://cdn.bootcss.com/json2/20160511/json2.min.js"></script>
+    <script type="text/javascript" src="js/my.js"></script>
+    <script type="text/javascript">
+        var isnotifybarhiden = false;
+
+        function hidenotify() {
+            if (!isnotifybarhiden) {
+                $("#notifybar").addClass("hide");
+                isnotifybarhiden = true;
+            } else {
+                $("#notifybar").removeClass("hide");
+                isnotifybarhiden = false;
+            }
+        }
+
+    </script>
+</body>
+
+</html>

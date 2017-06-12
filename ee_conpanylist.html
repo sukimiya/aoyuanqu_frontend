@@ -29,6 +29,7 @@
     <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
     <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="dist/dropload.min.js"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
     <script type="text/javascript" src="js/my.js"></script>
     <script type="text/javascript">
         var isunfinishList = true;
@@ -83,7 +84,8 @@
 
         function doloadlist(skey = "", page = 1, ttype = 0, isappend = true, me = null) {
             var myapi = restapis;
-            var requestdata = "check_state="+ttype+"&page_start="+page*pageSize+"&page_amount="+pageSize;
+            var mywx = myweixin;
+            var requestdata = "check_state="+ttype+"&wx_openid="+mywx.openid+"&page_start="+page*pageSize+"&page_amount="+pageSize;
             myapi.request("serchCompanyList",null,requestdata,function(jsonObj){
                 if (!jsonObj.resault) {
                         if(jsonObj.hasOwnProperty("totalPages")) tatalPages = jsonObj.totalPages;
@@ -129,7 +131,7 @@
             },function(e){alert("网络错误，请检查网络连接是否正常")});
         }
         var dropload = null;
-        $(document).ready(function() {
+        function initDropload(){
             dropload = $("#listdatasection").dropload({
                 scrollArea: window,
                 domUp: {
@@ -160,8 +162,16 @@
                 }
             });
             //-----------获取第一页数据----------
-
+            
             doloadlist("", 1, 0, false, dropload);
+        }
+        $(document).ready(function() {
+            
+            var mywx = myweixin;
+            mywx.onInitial(){
+                initDropload();
+            }
+            mywx.initial();
         });
 
     </script>

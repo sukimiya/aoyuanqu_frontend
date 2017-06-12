@@ -334,8 +334,44 @@
     font-weight: bold;
     color: #e51c23;
 }
-
-
+.my-icon-container{
+    
+}
+.my-icon{
+    width: 100%;
+}
+.my-icon-text{
+    text-align: center;
+    font-size: 12px;
+    color: #636363;
+}
+.my-nav-group{
+    
+}
+.my-nav-item{
+    border: 0px soild white;
+    line-height: 16px;
+}
+.my-nav-group>.btn{
+    border-radius: 0px;
+    border: 0px solid transparent;
+}
+.my-nav-group>.btn-default {
+    color: #636363;
+    background-color: #f8f8f8;
+    border:0px solid transparent;
+}
+.my-nav-item span{
+    font-size: 12px;
+    line-height:18px;
+}
+.my-nav-item i{
+    font-size: 20px;
+}
+.my-nav-group .disabled{
+    color: #2d3c70;
+    opacity:1;
+}
 /*------------------------mycompanyprofile.html----------------------*/
 
 .mycompany-select {
