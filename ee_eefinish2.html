@@ -186,8 +186,9 @@
                 dataTyle: "json",
                 type: "GET",
                 success: function(data) {
-                    var getobj = JSON.parse(data);
                     debugger;
+                    var getobj = data;
+                    
                     if (getobj.license_state == 1) {
                         $("#company_name").text(getobj["company_name"]);
                         $("#receive_name").text(getobj["receive_name"]);
