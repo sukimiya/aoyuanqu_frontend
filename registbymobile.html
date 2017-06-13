@@ -55,7 +55,9 @@
                         }
                     }
                 }
-            }).on('success.form.bv', function(e) {
+            })
+            $("#submitBtn").on("click", function() {
+
                 var $this = $(this);
                 $this.button('loading');
 
@@ -74,6 +76,8 @@
                     $this.button('reset');
                     alert("请检查连接");
                 }, 30000); //30秒超时
+
+
             });
             $("#inputmobile").on("change", function() {
                 var fv_mobileNumber = $("#inputmobile").val();
@@ -159,7 +163,7 @@
                     </div>
                 </div>
 
-                <button id="submitBtn" class="btn btn-primary col-xs-12" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> " style="font-size:22px;">注册</button>
+                <a id="submitBtn" class="btn btn-primary col-xs-12" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> " style="font-size:22px;">注册</a>
             </form>
         </div>
     </div>
