@@ -25,6 +25,7 @@
         $(document).ready(function() {
             var myapi = restapis;
             var mywx = myweixin;
+            mywx.initial();
             $('form').bootstrapValidator({
                 feedbackIcons: {
                     valid: 'glyphicon glyphicon-ok',
@@ -63,7 +64,7 @@
 
                 var fv_timestamp = Date.parse(new Date());
                 var fv_mobileNumber = $("#inputmobile").val();
-                console.log("mobile=" + fv_mobileNumber + "  oppen_id=" + mywx.requestOpenid);
+                console.log("mobile=" + fv_mobileNumber + "  oppen_id=" + mywx.requestOpenid());
                 debugger;
                 myapi.request("UserUpdate", null, "mobile=" + fv_mobileNumber + "&oppen_id=" + mywx.openid, function(result) {
                     if (result.result == 0) {
@@ -136,8 +137,6 @@
                     alert("网络错误，请稍后再试");
                 });
             });
-            var mywx = myweixin;
-            mywx.initial();
         }); //ready
 
     </script>
