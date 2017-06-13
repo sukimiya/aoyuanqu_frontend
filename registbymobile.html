@@ -67,7 +67,7 @@
                 console.log("mobile=" + fv_mobileNumber + "  oppen_id=" + mywx.requestOpenid());
                 debugger;
                 myapi.request("UserUpdate", null, "mobile=" + fv_mobileNumber + "&oppen_id=" + mywx.openid, function(result) {
-                    if (result.result == 0) {
+                    if (result) {
                         window.location = redirectionLocation;
                     }
                 }, function(e) {
