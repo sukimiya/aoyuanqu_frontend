@@ -55,14 +55,14 @@
                         }
                     }
                 }
-            });
-            $("#submitBtn").on("click", function() {
-
+            }).on('success.form.bv', function(e) {
                 var $this = $(this);
                 $this.button('loading');
 
                 var fv_timestamp = Date.parse(new Date());
                 var fv_mobileNumber = $("#inputmobile").val();
+                console.log("mobile=" + fv_mobileNumber + "  oppen_id=" + mywx.openid);
+                debugger;
                 myapi.request("UserUpdate", null, "mobile=" + fv_mobileNumber + "&oppen_id=" + mywx.openid, function(result) {
                     if (result.result == 0) {
                         window.location = redirectionLocation;
@@ -74,12 +74,10 @@
                     $this.button('reset');
                     alert("请检查连接");
                 }, 30000); //30秒超时
-
-
             });
             $("#inputmobile").on("change", function() {
                 var fv_mobileNumber = $("#inputmobile").val();
-                if ($("#inputmobile").val().length == 11){
+                if ($("#inputmobile").val().length == 11) {
                     myapi.request("verfymobile", null, "mobile=" + fv_mobileNumber, function(result) {
                         if (result == 0) {
 
@@ -89,15 +87,15 @@
                     }, function(e) {
                         $("#changpwdform").data("bootstrapValidator").updateStatus("inputmobile", "NOT_VALIDATED", "手机号码验证错误,请稍后再试");
                     });
-                }else{
-                    $("#submitBtn").attr("disabled","yes");
+                } else {
+                    $("#submitBtn").attr("disabled", "yes");
                 }
             });
             $("#InputValidateCode").on("change", function() {
                 if (validateCode_static != null && $("InputValidateCode").val() == validateCode_static) {
                     $("#submitBtn").removeAttr("disabled");
-                }else{
-                    $("#submitBtn").attr("disabled","yes");
+                } else {
+                    $("#submitBtn").attr("disabled", "yes");
                 }
             });
             var request = GetRequest();
@@ -120,7 +118,7 @@
                     }
                 }, 1000);
                 //
-                
+
                 var fv_mobileNumber = $("#inputmobile").val();
                 debugger;
                 myapi.request("checkMessage", null, "mobile=" + fv_mobileNumber, function(result) {
@@ -157,7 +155,7 @@
                             <input type="number" name="validateCode" class="form-control col-xs-6" id="InputValidateCode" placeholder="------" maxlength="6" required>
                         </div>
                         <div class="col-xs-2">&nbsp;</div>
-                        <button id="verfiyBtn" href="#" class="btn btn-success col-xs-4"验证</button>
+                        <button id="verfiyBtn" href="#" class="btn btn-success col-xs-4" 验证</button>
                     </div>
                 </div>
 
