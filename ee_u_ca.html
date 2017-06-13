@@ -15,7 +15,7 @@
     <link href="css/my.css" rel="stylesheet" type="text/css">
     <style type="text/css">
         .my-form-h1 {}
-        
+
         .my-form-label {
             font-size: 16px;
             font-weight: bold;
@@ -161,7 +161,11 @@
                 }
             });
         }
+        //
+        var curlicense_state = 0;
+        var hasexpress=false;
         $(document).ready(function() {
+            var myapi = restapis;
             $('textarea').flexText();
             $("#submitBtn").on("clilck", function() {
                 var postobj = {
@@ -170,41 +174,60 @@
                     "express_code": $("#express_code").val(),
                     "express_shipper": $("#express_shipper").val()
                 };
-                $.ajax({
-                    url: "json/ee_u_finish2_post.json",
-                    dataType: "json",
-                    data: JSON.stringify(postobj),
-                    success: function(data) {
-                        console.log("deliver infomation had been record.");
-                        window.location = "ee_u_progress.html";
+                var requestStr = "id="+GetRequest()["id"];
+                var expcode = $("#express_code").val();
+                if(expcode!=undefined&&expcode!=null&&expcode!=""){
+                    requestStr += "?express_number="+expcode;
+                }
+                var expshipper = $("#express_shipper").val();
+                if(expshipper!=undefined&&expshipper!=null&&expshipper!=""){
+                    requestStr += "?express_company="+expshipper;
+                }
+                requestStr += "&license_pic="+$("#lisence_pic1").val();
+                if($("#receive_name").text()!=null&&$("#receive_phone").text()!=null&&$("#express_address").text()!=null){
+                    if(curlicense_state==1){
+                        requestStr += "&license_state=2";
+                    }else{
+                        requestStr += "&license_state=1";
                     }
-                });
+                }else{
+                    requestStr += "&license_state=1";
+                }
+                myapi.request("updateLicense",null,requestStr,function(data){
+                    debugger;
+                    console.log("deliver infomation had been record.");
+                    window.location = "ee_u_progress.html";
+                },function(e){});
             });
             getShippers();
-            $.ajax({
-                url: "json/ee_u_finish2_get.json",
-                dataTyle: "json",
-                type: "GET",
-                success: function(data) {
-                    debugger;
-                    var getobj = data;
-                    
-                    if (getobj.license_state == 1) {
-                        $("#company_name").text(getobj["company_name"]);
+            
+            myapi.request("serchZZFF", null, "id=" + GetRequest()["id"], function(data) {
+                debugger;
+                var getobj = data;
+                curlicense_state = getobj.license_state;
+                $("#company_name").text(getobj["confirm_name"]);
+                if (getobj.license_state == 1) {
+                    if(getobj.license_takekind==1){
+                        $("#my-state-1").addClass("hide"); 
+                    }else{
                         $("#receive_name").text(getobj["receive_name"]);
                         $("#receive_phone").text(getobj["receive_phone"]);
                         $("#express_address").text(getobj["express_address"]);
-                        $("#my-state-1").removeClass("hide");
-                    } else {
-                        $("#my-state-1").addClass("hide");
+                        $("#my-state-1").removeClass("hide"); 
                     }
-                    if (getobj.license_state == 2) {
-                        $("#my-state-1").addClass("hide");
-                        $("#uploadbtn").addClass("hide");
-                        getRemotePic(getobj.license_pic1, $("#lisenceImg"));
-                    }
+                } else {
+                    $("#my-state-1").addClass("hide");
                 }
-            });
+                if (getobj.license_state == 2) {
+                    $("#receive_name").text(getobj["receive_name"]);
+                    $("#receive_phone").text(getobj["receive_phone"]);
+                    $("#express_address").text(getobj["express_address"]);
+                    $("#lisence_pic1").val(getobj["license_pic"]);
+                    $("#my-state-1").removeClass("hide");
+                    $("#uploadbtn").addClass("hide");
+                    getRemotePic(getobj.license_pic, $("#lisenceImg"));
+                }
+            }, function(e) {});
         });
 
     </script>
@@ -251,9 +274,10 @@
                         <label>快递单号:</label>
                         <input class="form-control" id="express_code" required/>
                     </div>
-                    <a id="submitBtn" class="btn btn-primary col-xs-12">提交</a>
+
                 </form>
             </div>
+            <a id="submitBtn" class="btn btn-primary col-xs-12">提交</a>
         </div>
     </div>
 

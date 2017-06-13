@@ -232,7 +232,7 @@ var myweixin = (function () {
                         , 'getNetworkType'];
     mythis.redictlocation = window.location.href.split("#")[0];
     var mylocation = encodeURIComponent(mythis.redictlocation);
-    if(wx) wx.error(function (res) {
+    if(this.hasOwnProperty("wx")) wx.error(function (res) {
         if (mythis.onError) mythis.onError(res)
     });
     mythis.initial = function () {
@@ -439,7 +439,12 @@ function setFromDisabled(formname, toDisabled) {
     }
     debugger;
     for (var i = 0; i < aform.length; i++) {
-        if (aform[i].hasOwnProperty("disabled")) aform[i].disabled = toDisabled;
+        if (aform[i].hasOwnProperty("disabled"))
+            if(toDisabled){
+                aform[i].disabled = toDisabled;
+            }else{
+                if(afor[i].hasOwnProperty("removeAttr"))aform[i].removeAttr("disabled");
+            } 
     }
 }
 /*---------------------------上传文件----------------------*/

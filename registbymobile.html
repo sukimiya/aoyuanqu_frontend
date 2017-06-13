@@ -79,7 +79,7 @@
             });
             $("#inputmobile").on("change", function() {
                 var fv_mobileNumber = $("#inputmobile").val();
-                if ($("#inputmobile").val().length == 11)
+                if ($("#inputmobile").val().length == 11){
                     myapi.request("verfymobile", null, "mobile=" + fv_mobileNumber, function(result) {
                         if (result == 0) {
 
@@ -89,10 +89,15 @@
                     }, function(e) {
                         $("#changpwdform").data("bootstrapValidator").updateStatus("inputmobile", "NOT_VALIDATED", "手机号码验证错误,请稍后再试");
                     });
+                }else{
+                    $("#submitBtn").attr("disabled","yes");
+                }
             });
             $("#InputValidateCode").on("change", function() {
                 if (validateCode_static != null && $("InputValidateCode").val() == validateCode_static) {
                     $("#submitBtn").removeAttr("disabled");
+                }else{
+                    $("#submitBtn").attr("disabled","yes");
                 }
             });
             var request = GetRequest();

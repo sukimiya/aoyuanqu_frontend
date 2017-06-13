@@ -14,7 +14,7 @@
     <link href="css/my.css" rel="stylesheet" type="text/css">
     <style type="text/css">
         .my-form-h1 {}
-        
+
         .my-form-label {
             font-size: 16px;
             font-weight: bold;
@@ -67,34 +67,54 @@
             previewImagebyWX(imgpath);
         }
         $(document).ready(function() {
+            var myapi = restapis;
             $('textarea').flexText();
             $("#submitbtn").on("clilck", function() {
                 var postobj = {};
+                postobj["id"] = GetRequest()["id"];
                 postobj["receive_name"] = $("#receive_name").val();
+                postobj["license_takekind"] = isunfinishList?1:0;
                 postobj["receive_phone"] = $("#receive_phone").val();
                 postobj["express_address"] = $("#express_address").text();
-                $.ajax({
-                    url: "ee_eefinish_post.json",
-                    dataType: "json",
-                    data: JSON.stringify(postobj),
-                    success: function(data) {
-                        console.log("deliver infomation had been record.");
-                        window.location = "ee_eefinish2.html?id=" + GetRequest()["id"];
-                    }
-                });
+                myapi.request("updateZZFF.do", "page", JSON.stringify(postobj), function(data) {
+                    debugger;
+                    console.log("deliver infomation had been record.");
+                    window.location = "ee_eefinish2.html?id=" + GetRequest()["id"];
+                }, function(e) {}, "POST");
             });
+            myapi.request("searchZZFF", null, "id=" + GetRequest()["id"], function(data) {
+                var jdata = data;
+                if (jdata.license_state == 2) {
+                    //2 已经投递
+                    getRemotePic(jdata.license_pic, $("#lisenceImg"));
+                    //$("#my-state-1").addClass("hide");
+                    setFromDisabled("deliverform",true);
+                    if (jdata.license_takekind == 0) {
+                        $("#my-state-1").addClass("hide");
+                    }
+                } else if (jdata.license_state == 1) {
+                    //0 未发
+                    getRemotePic(jdata.license_pic, $("#lisenceImg"));
+                } else {
+                    //1 已经填写快递信息
+                    $("#my-state-1").addClass("hide");
+                    if (jdata.license_takekind == 2) {
+                        //等待查询显示快递信息
+                    }
+                }
+            }, function(e) {});
             $.ajax({
                 url: "json/ee_eefinish_get.json",
                 dataType: "json",
-                data: "{}"，
+                data: "{}",
                 success: function(data) {
-                    var jdata = JSON.parse(data);
+                    var jdata = data;
                     if (jdata.license_state == 2) {
                         //2 已经投递
                         $("#my-state-1").addClass("hide");
                     } else if (jdata.license_state == 0) {
                         //0 未发
-                        
+
                     } else {
                         //1 已经填写快递信息
                         $("#my-state-1").addClass("hide");
@@ -104,6 +124,8 @@
                     }
                 }
             });
+            var mywx = myweixin;
+            mywx.initial();
         });
 
     </script>
@@ -144,10 +166,10 @@
                         <textarea id="express_address" name="express_address" class="form-control" required style="font-size:18px;border-color: #5066b4;"></textarea>
                     </div>
                     <input type="hidden" id="license_takekind">
-                    <a id="submitbtn" class="btn btn-primary col-xs-12 my-gap-bottom">提交</a>
                 </form>
             </div>
         </div>
+        <a id="submitbtn" class="btn btn-primary col-xs-12 my-gap-bottom">提交</a>
     </div>
 
 </body>

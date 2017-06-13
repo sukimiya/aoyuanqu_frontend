@@ -22,11 +22,11 @@
     <script type="text/javascript" src="js/my.js"></script>
     <script type="text/javascript">
         function initial(itype, data) {
-            if (itype) {
+            if (itype == 1) {
                 if (data != null) {
 
                 }
-            } else {
+            } else if(itype == 2){
                 if (data != null) {
                     $("#account_bank").val(data.account_bank);
                     $("#account_number").val(data.account_number);
@@ -45,23 +45,12 @@
             }
         }
         $(document).ready(function() {
-            $.ajax({
-                url: "json/ee_openaccount_get.json",
-                type: "GET"，
-                dataType: "json",
-                data: {
-                    id: GetRequest()["id"]
-                }，
-                success: function(data) {
-                    if (data.swsf_state == 1) {
-                        initial(1, data);
-                    } else {
-                        initial(0, data);
-                    }
-                }
-            });
+            var myapi = restapis;
+            if (GetRequest()["id"])
+                myapi.request("searchYHKH", null, "id=" + GetRequest()["id"], function(result) {
+                    initial(data.swsf_state, data);
+                }, function(e) {});
         });
-
     </script>
 </head>
 

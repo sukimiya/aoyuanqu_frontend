@@ -85,10 +85,13 @@
         function doloadlist(skey = "", page = 1, ttype = 0, isappend = true, me = null) {
             var myapi = restapis;
             var mywx = myweixin;
-            var requestdata = "check_state="+ttype+"&wx_openid="+mywx.openid+"&page_start="+page*pageSize+"&page_amount="+pageSize;
+            var requestdata = "check_state="+ttype+"&wx_openid="+mywx.openid+"&page="+page;
+            if(skey!=null&&skey!=""){
+                requestdata+="&key="+skey;
+            }
             myapi.request("serchCompanyList",null,requestdata,function(jsonObj){
                 if (!jsonObj.resault) {
-                        if(jsonObj.hasOwnProperty("totalPages")) tatalPages = jsonObj.totalPages;
+                        if(jsonObj.hasOwnProperty("totalPage")) tatalPages = jsonObj.totalPage;
                         if(jsonObj.hasOwnProperty("curPage")){curPage = jsonObj.curPage;}else{curPage = page}
                         if (jsonObj.arr) {
                             var result = "";

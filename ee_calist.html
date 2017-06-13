@@ -81,19 +81,15 @@
         }
 
         function doloadlist(skey = "", page = 1, ttype = 0, isappend = true, me = null) {
-            $.ajax({　　
-                type: "GET", //用POST方式传输
-                　　dataType: "json", //数据格式:JSON
-                　　url: 'json/ee_u_ncompanylist.json', //目标地址
-                　　data: JSON.stringify({
-                    page: page,
-                    type: ttype,
-                    key: skey
-                }),
-                　　error: function(XMLHttpRequest, textStatus, errorThrown) {},
-                　　success: function(jsonObj) {
+            
+            var requestdata = "check_state="+ttype+"&wx_openid="+mywx.openid+"&page="+page;
+            if(skey!=null&&skey!=""){
+                requestdata+="&key="+skey;
+            }
+            myapi.request("serchCompanyList",null,requestdata,function(jsonObj){
+                if (!jsonObj.resault) {
                     if (!jsonObj.resault) {
-                        tatalPages = jsonObj.totalPages;
+                        tatalPages = jsonObj.totalPage;
                         curPage = jsonObj.curPage;
                         if (jsonObj.lists) {
                             var result = "";
@@ -132,7 +128,7 @@
                         alert("获取数据错误");
                     }
                 }
-            });
+            },function(e){});
         }
         var dropload = null;
         $(document).ready(function() {
