@@ -115,7 +115,9 @@
                     }
                 }, 1000);
                 //
+                
                 var fv_mobileNumber = $("#inputmobile").val();
+                debugger;
                 myapi.request("checkMessage", null, "moblie=" + fv_mobileNumber, function(result) {
                     if (result.valid) {
                         validateCode_static = result.validateCode;
@@ -150,7 +152,7 @@
                             <input type="number" name="validateCode" class="form-control col-xs-6" id="InputValidateCode" placeholder="------" maxlength="6" required>
                         </div>
                         <div class="col-xs-2">&nbsp;</div>
-                        <button id="verfiyBtn" href="#" class="btn btn-success col-xs-4" onclick="javascript:void()">验证</button>
+                        <button id="verfiyBtn" href="#" class="btn btn-success col-xs-4"验证</button>
                     </div>
                 </div>
 
