@@ -16,7 +16,7 @@
     <script type="text/javascript" src="js/my.js"></script>
     <link href="css/my.css" rel="stylesheet" type="text/css">
     <script type="text/javascript">
-        var redirectionLocation = "http://wxapp.aoyuanqu.com/wxapp/aoyuanqu_frontend/index.html";
+        var redirectionLocation = "index.html";
         var validateCode_static = null;
         //----------------Reference from http://www.cnblogs.com/xcsn/archive/2013/04/22/3035240.html--------
         var InterValObj; //timer变量，控制时间
@@ -118,7 +118,7 @@
                 
                 var fv_mobileNumber = $("#inputmobile").val();
                 debugger;
-                myapi.request("checkMessage", null, "moblie=" + fv_mobileNumber, function(result) {
+                myapi.request("checkMessage", null, "mobile=" + fv_mobileNumber, function(result) {
                     if (result.valid) {
                         validateCode_static = result.validateCode;
                     } else {
