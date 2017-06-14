@@ -52,7 +52,7 @@
     </nav>
     <table style="height:510px;width:100%">
         <tr>
-            <td align="center" vertical-align="middle"><a href="ee_nameapply.html" class="btn btn-success" style="font-size:24px;border-radius: 50px;padding:10px;padding-left:30px;padding-right:30px">一键注册&nbsp;<i class="fa fa-hand-pointer-o" aria-hidden="true" style="font-size:24px;"></i></a></td>
+            <td align="center" vertical-align="middle"><a href="javascript:openNameapply()" class="btn btn-success" style="font-size:24px;border-radius: 50px;padding:10px;padding-left:30px;padding-right:30px">一键注册&nbsp;<i class="fa fa-hand-pointer-o" aria-hidden="true" style="font-size:24px;"></i></a></td>
         </tr>
     </table>
     <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation" style="background-color:transparent;border:0px solid transparent;">
@@ -116,7 +116,9 @@
                 isnotifybarhiden = false;
             }
         }
-
+        function openNameapply(){
+            window.location = "ee_nameapply.html?timestamp="+(new Date().getTime());
+        }
     </script>
 </body>
 
