@@ -264,7 +264,7 @@ var myweixin = (function () {
         var openid = localStorage.getItem("wxopenid");
         if (openid != null && openid != undefined) {
             console.log("wxopenid:" + openid);
-            mythis.requestToken();
+            mythis.requestTicket();
             return openid;
         }
         else {
