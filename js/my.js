@@ -350,10 +350,13 @@ var myweixin = (function () {
             if (errorCallback) errorCallback();
         }
     }
-}
-mythis.login = function () {}
-mythis.onInitial = null; mythis.onTicketGet = null; mythis.onOpenid = null; mythis.onError = null; mythis.onConfig = null;
-return mythis;
+    mythis.login = function () {}
+    mythis.onInitial = null;
+    mythis.onTicketGet = null;
+    mythis.onOpenid = null;
+    mythis.onError = null;
+    mythis.onConfig = null;
+    return mythis;
 }());
 
 function previewImagebyWX(theimg) {
