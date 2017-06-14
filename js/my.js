@@ -261,10 +261,10 @@ var myweixin = (function () {
         var openid = localStorage.getItem("wxopenid");
         if (openid != null && openid != undefined) {
             console.log("wxopenid:" + openid);
-            mywx.onTicketGet = function (theticket) {
+            mythis.onTicketGet = function (theticket) {
                 mythis.config(theticket);
             }
-            mywx.requestTicket();
+            mythis.requestTicket();
             return openid;
         } else {
             if (GetRequest()["code"] != null && GetRequest()["code"] != undefined) wxcode = GetRequest()["code"];
@@ -277,10 +277,10 @@ var myweixin = (function () {
                     localStorage.setItem("wxwebtoken", result.access_token);
                     localStorage.setItem("wxwebrefreshtoken", result.refresh_token);
                     localStorage.setItem("wxwebtokenexpires", (new Date().getTime()) + result.expires_in);
-                    mywx.onTicketGet = function (theticket) {
+                    mythis.onTicketGet = function (theticket) {
                         mythis.config(theticket);
                     }
-                    mywx.requestTicket();
+                    mythis.requestTicket();
                     if (mythis.onOpenid) mythis.onOpenid();
                     mythis.requestToken();
                 }, function (req, e, data) {
@@ -328,8 +328,7 @@ var myweixin = (function () {
         window.location = authurl + "authorize" + "?" + "appid=" + appid + "&redirect_uri=" + mylocation + "&response_type=code&scope=snsapi_base&state=0#wechat_redirect";
     }
     mythis.checkapi = function (theapis, successCallback, errorCallback, toConfig = true) {
-        var mywx = myweixin;
-        if (mywx.isConfiged) {
+        if (mythis.isConfiged) {
             wx.checkJsApi({
                 jsApiList: theapis, // 需要检测的JS接口列表，所有JS接口列表见附录2,
                 success: function (res) {
@@ -349,7 +348,7 @@ var myweixin = (function () {
             });
         } else {
             if (toConfig) {
-                mywx.onConfig = function () {
+                mythis.onConfig = function () {
                     wx.checkJsApi({
                         jsApiList: theapis, // 需要检测的JS接口列表，所有JS接口列表见附录2,
                         success: function (res) {
@@ -368,10 +367,10 @@ var myweixin = (function () {
                         }
                     });
                 }
-                mywx.onTicketGet = function (theticket) {
+                mythis.onTicketGet = function (theticket) {
                     if (toConfig) mythis.config(theticket);
                 }
-                mywx.requestTicket();
+                mythis.requestTicket();
             } else {
                 if (errorCallback) errorCallback();
             }
