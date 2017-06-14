@@ -277,6 +277,7 @@ var myweixin = (function () {
                     localStorage.setItem("wxwebtoken", result.access_token);
                     localStorage.setItem("wxwebrefreshtoken", result.refresh_token);
                     localStorage.setItem("wxwebtokenexpires", (new Date().getTime()) + result.expires_in);
+                    mythis.requestTicket();
                     if (mythis.onOpenid) mythis.onOpenid();
                     mythis.requestToken();
                 }, function (req, e, data) {
