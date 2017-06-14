@@ -158,8 +158,8 @@ QueryString = {
 QueryString.Initial();
 
 function getRemotePic(picid, me = null) {
-    var myapi= restapis;
-    var rsstr = myapi.getRoot()+ picid; //remoteaddress+"/"+picid
+    var myapi = restapis;
+    var rsstr = myapi.getRoot() + picid; //remoteaddress+"/"+picid
     if (me != null) {
         if (me.nodeName == "img") me.attr("src", rsstr);
     }
@@ -210,7 +210,7 @@ var restapis = (function () {
             error: onError
         });
     }
-    mythis.getRoot = function(){
+    mythis.getRoot = function () {
         return requestRoot;
     }
     return mythis;
@@ -229,7 +229,8 @@ var myweixin = (function () {
                         , 'chooseImage'
                         , 'previewImage'
                         , 'uploadImage'
-                        , 'getNetworkType'];
+                        , 'getNetworkType'
+                        , 'getLocalImgData'];
     mythis.redictlocation = window.location.href.split("#")[0];
     var mylocation = encodeURIComponent(mythis.redictlocation);
     if (this.hasOwnProperty("wx")) wx.error(function (res) {
@@ -395,7 +396,7 @@ function uploadImgWithName(picname, theimg) {
     var imgpath = "";
     debugger;
     var mywx = myweixin;
-    var myapi  = restapis;
+    var myapi = restapis;
     mywx.checkapi(['chooseImage'], function () {
         wx.error(function (e) {
             var estr = "";
@@ -411,29 +412,34 @@ function uploadImgWithName(picname, theimg) {
             success: function (res) {
                 var localIds = res.localIds;
                 imgpath = localIds[0];
-                $(theimg).attr("src", getRemotePic(imgpath));
+                $(theimg).attr("src", imgpath);
                 console.log("本地图片id:" + imgpath);
-                alert(localIds[0].toString());
-                $.ajax({
-                    type: "POST",
-                    url: myapi.getRoot()+"upload",
-                    dataType: "json",
-                    cache: false,
-                    enctype: 'multipart/form-data',
-                    data: {
-                        test: imgpath
-                    },
-                    success: function (ret) {
-                        if (ret == 0) {
-                            $(picname).val(ret.picid);
-                        }
-                    },
-                    error: function (e) {
-                        debugger;
-                        console.log("上传失败了");
-                    },
-                    processData: false,
-                    contentType: false
+                //alert(localIds[0].toString());
+                wx.getLocalImgData(imgpath, function (res) {
+                    var fd = new FormData();
+                    var imgname = sha1.hash((new Data().getTime()).toString());
+                    var blob = dataURItoBlob(res.localData);
+                    alert(blob.mimeString);
+                    fd.append("test", blob, imgname);
+                    $.ajax({
+                        type: "POST",
+                        url: myapi.getRoot() + "upload",
+                        dataType: "json",
+                        cache: false,
+                        enctype: 'multipart/form-data',
+                        data: fd,
+                        success: function (ret) {
+                            if (ret == 0) {
+                                $(picname).val(imgname);
+                            }
+                        },
+                        error: function (e) {
+                            debugger;
+                            console.log("上传失败了");
+                        },
+                        processData: false,
+                        contentType: false
+                    });
                 });
             }
         });
@@ -441,6 +447,22 @@ function uploadImgWithName(picname, theimg) {
         setTimeout(function () {
             uploadImgWithName(picname, theimg);
         }, 200);
+    });
+}
+
+function dataURItoBlob(base64Data) {
+    var byteString;
+    if (base64Data.split(',')[0].indexOf('base64') >= 0)
+        byteString = atob(base64Data.split(',')[1]);
+    else
+        byteString = unescape(base64Data.split(',')[1]);
+    var mimeString = base64Data.split(',')[0].split(':')[1].split(';')[0];
+    var ia = new Uint8Array(byteString.length);
+    for (var i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+    }
+    return new Blob([ia], {
+        type: mimeString
     });
 }
 //Disable Form
