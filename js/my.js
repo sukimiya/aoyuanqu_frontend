@@ -387,38 +387,34 @@ function uploadImgWithName(picname, theimg) {
                 success: function (res) {
                     var localIds = res.localIds;
                     console.log("本地图片id:" + localIds[0]);
+                    var img = document.getElementById(theimg);
                     $(theimg).attr('src', localIds[0]);
-                    setTimeout(function () {
-                        wx.uploadImage({
-                            localId: localIds[0], // 需要上传的图片的本地ID，由chooseImage接口获得
-                            isShowProgressTips: 1, // 默认为1，显示进度提示
-                            success: function (res) {
-                                var serverId = res.serverId; // 返回图片的服务器端ID
-                                var fd = new FormData();
-                                var imgname = sha1.hash((new Data().getTime()).toString());
-                                fd.append("test", serverId, imgname);
-                                $.ajax({
-                                    type: "POST",
-                                    url: myapi.getRoot() + "upload",
-                                    dataType: "json",
-                                    cache: false,
-                                    enctype: 'multipart/form-data',
-                                    data: fd,
-                                    success: function (ret) {
-                                        if (ret == 0) {
-                                            $(picname).val(imgname);
-                                        }
-                                    },
-                                    error: function (e) {
-                                        debugger;
-                                        console.log("上传失败了");
-                                    },
-                                    processData: false,
-                                    contentType: false
-                                });
-                            }
+                    img.onload = function () {
+                        var data = getBase64Image(img);
+                        var fd = new FormData();
+                        var imgname = sha1.hash((new Data().getTime()).toString());
+                        fd.append("test", data, imgname);
+                        $.ajax({
+                            type: "POST",
+                            url: myapi.getRoot() + "upload",
+                            dataType: "json",
+                            cache: false,
+                            enctype: 'multipart/form-data',
+                            data: fd,
+                            success: function (ret) {
+                                alert(ret)
+                                if (ret == 0) {
+                                    $(picname).val(imgname);
+                                }
+                            },
+                            error: function (e) {
+                                debugger;
+                                console.log("上传失败了");
+                            },
+                            processData: false,
+                            contentType: false
                         });
-                    }, 500);
+                    }
                 }
             });
         }, 500);
@@ -439,20 +435,14 @@ function uploadImgWithName(picname, theimg) {
     });
 }
 
-function dataURItoBlob(base64Data) {
-    var byteString;
-    if (base64Data.split(',')[0].indexOf('base64') >= 0)
-        byteString = atob(base64Data.split(',')[1]);
-    else
-        byteString = unescape(base64Data.split(',')[1]);
-    var mimeString = base64Data.split(',')[0].split(':')[1].split(';')[0];
-    var ia = new Uint8Array(byteString.length);
-    for (var i = 0; i < byteString.length; i++) {
-        ia[i] = byteString.charCodeAt(i);
-    }
-    return new Blob([ia], {
-        type: mimeString
-    });
+function getBase64Image(img) {
+    var canvas = document.createElement("canvas");
+    canvas.width = img.width;
+    canvas.height = img.height;
+    var ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0, img.width, img.height);
+    var dataURL = canvas.toDataURL("image/png");
+    return dataURL // return dataURL.replace("data:image/png;base64,", ""); 
 }
 //Disable Form
 function setFromDisabled(formname, toDisabled) {
