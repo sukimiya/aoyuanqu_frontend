@@ -451,7 +451,7 @@
             myvalidator.on('success.form.bv', function(e) {
                 debugger;
                 e.preventDefault();
-                alert("验证通过");
+                //alert("验证通过");
                 var thesubmitbtn = $("#submitBtn");
                 var myvalid = myvalidator.isValid;
                 debugger;
@@ -494,7 +494,7 @@
                     }
                 }, function(e) {
                     alert("提交时发生错误!");
-                }, "POST");
+                });
                 isFormValidator = true;
             });
             $("#addinvestorBtn").on("click", function() {

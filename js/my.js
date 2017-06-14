@@ -183,39 +183,39 @@ var errorHandler = (function () {
 }());
 //--------------------restful apis-----------------------
 var restapis = (function () {
-    var requestRoot = "http://119.29.153.19:8082/";
-    var appid = "wx7a6967db884b7058";
-    var mythis = {};
-    mythis.yxName = "廊下经济园区";
-    mythis.openid = "";
-    mythis.requestRoot = "http://119.29.153.19:8082/";
-    mythis.redictlocation = window.location.href.split("#")[0];
-    /**
-     *function(mothed,module,data,onSeccess,onError,post="GET",dataType="json")
-     */
-    mythis.request = function (mothed, module, data, onSeccess, onError, post = "GET", dataType = "json") {
-        var theurl = requestRoot;
-        if (module) {
-            theurl += module + "/";
+        var requestRoot = "http://119.29.153.19:8082/";
+        var appid = "wx7a6967db884b7058";
+        var mythis = {};
+        mythis.yxName = "廊下经济园区";
+        mythis.openid = "";
+        mythis.requestRoot = "http://119.29.153.19:8082/";
+        mythis.redictlocation = window.location.href.split("#")[0];
+        /**
+         *function(mothed,module,data,onSeccess,onError,post="GET",dataType="json")
+         */
+        mythis.request = function (mothed, module, data, onSeccess, onError, post = "GET", dataType = "json") {
+            var theurl = requestRoot;
+            if (module) {
+                theurl += module + "/";
+            }
+            if (mothed) {
+                theurl += mothed
+            }
+            $.ajax({
+                type: post,
+                dataType: dataType,
+                url: theurl,
+                data: data,
+                success: onSeccess,
+                error: onError
+            });
         }
-        if (mothed) {
-            theurl += mothed
+        mythis.getRoot = function () {
+            return requestRoot;
         }
-        $.ajax({
-            type: post,
-            dataType: dataType,
-            url: theurl,
-            data: data,
-            success: onSeccess,
-            error: onError
-        });
-    }
-    mythis.getRoot = function () {
-        return requestRoot;
-    }
-    return mythis;
-}())
-//-----------------------------微信---------------------------
+        return mythis;
+    }())
+    //-----------------------------微信---------------------------
 var myweixin = (function () {
     var authurl = "https://open.weixin.qq.com/connect/oauth2/";
     var appid = "wx7a6967db884b7058";
@@ -229,8 +229,8 @@ var myweixin = (function () {
                         , 'chooseImage'
                         , 'previewImage'
                         , 'uploadImage'
-                        , 'getNetworkType'
-                        , 'getLocalImgData'];
+                        , 'getLocalImgData'
+                        , 'getNetworkType'];
     mythis.redictlocation = window.location.href.split("#")[0];
     var mylocation = encodeURIComponent(mythis.redictlocation);
     if (this.hasOwnProperty("wx")) wx.error(function (res) {
@@ -374,7 +374,6 @@ function previewImagebyWX(theimg) {
 }
 
 function uploadImgWithName(picname, theimg) {
-    var imgpath = "";
     debugger;
     var mywx = myweixin;
     var myapi = restapis;
@@ -387,36 +386,39 @@ function uploadImgWithName(picname, theimg) {
                 sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
                 success: function (res) {
                     var localIds = res.localIds;
-                    imgpath = localIds[0];
-                    $(theimg).attr("src", imgpath);
-                    console.log("本地图片id:" + imgpath);
-                    //alert(localIds[0].toString());
-                    wx.getLocalImgData(imgpath, function (res) {
-                        var fd = new FormData();
-                        var imgname = sha1.hash((new Data().getTime()).toString());
-                        var blob = dataURItoBlob(res.localData);
-                        alert(blob.mimeString);
-                        fd.append("test", blob, imgname);
-                        $.ajax({
-                            type: "POST",
-                            url: myapi.getRoot() + "upload",
-                            dataType: "json",
-                            cache: false,
-                            enctype: 'multipart/form-data',
-                            data: fd,
-                            success: function (ret) {
-                                if (ret == 0) {
-                                    $(picname).val(imgname);
-                                }
-                            },
-                            error: function (e) {
-                                debugger;
-                                console.log("上传失败了");
-                            },
-                            processData: false,
-                            contentType: false
+                    console.log("本地图片id:" + localIds[0]);
+                    $(theimg).attr('src', localIds[0]);
+                    setTimeout(function () {
+                        wx.uploadImage({
+                            localId: localIds[0], // 需要上传的图片的本地ID，由chooseImage接口获得
+                            isShowProgressTips: 1, // 默认为1，显示进度提示
+                            success: function (res) {
+                                var serverId = res.serverId; // 返回图片的服务器端ID
+                                var fd = new FormData();
+                                var imgname = sha1.hash((new Data().getTime()).toString());
+                                fd.append("test", serverId, imgname);
+                                $.ajax({
+                                    type: "POST",
+                                    url: myapi.getRoot() + "upload",
+                                    dataType: "json",
+                                    cache: false,
+                                    enctype: 'multipart/form-data',
+                                    data: fd,
+                                    success: function (ret) {
+                                        if (ret == 0) {
+                                            $(picname).val(imgname);
+                                        }
+                                    },
+                                    error: function (e) {
+                                        debugger;
+                                        console.log("上传失败了");
+                                    },
+                                    processData: false,
+                                    contentType: false
+                                });
+                            }
                         });
-                    });
+                    }, 500);
                 }
             });
         }, 500);
