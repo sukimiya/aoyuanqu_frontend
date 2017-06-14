@@ -327,13 +327,18 @@ var myweixin = (function () {
     mythis.checkapi = function (theapis, successCallback, errorCallback, toConfig = true) {
         var mycheckfun;
         var myconfigfun = function () {
-            mythis.onConfig = function () {
+            if (mythis.isConfiged) {
                 mycheckfun();
+            } else {
+                mythis.onConfig = function () {
+                    mycheckfun();
+                }
+                mythis.onTicketGet = function (theticket) {
+                    if (toConfig) mythis.config(theticket);
+                }
+                mythis.requestTicket();
             }
-            mythis.onTicketGet = function (theticket) {
-                if (toConfig) mythis.config(theticket);
-            }
-            mythis.requestTicket();
+
         }
         mycheckfun = function () {
             wx.checkJsApi({
@@ -397,7 +402,7 @@ function uploadImgWithName(picname, theimg) {
     debugger;
     var mywx = myweixin;
     var myapi = restapis;
-    mywx.checkapi(['chooseImage','getLocalImgData'], function () {
+    mywx.checkapi(['chooseImage', 'getLocalImgData'], function () {
         wx.error(function (e) {
             var estr = "";
             for (var a in e) {
@@ -444,9 +449,9 @@ function uploadImgWithName(picname, theimg) {
             }
         });
     }, function () {
-        setTimeout(function () {
+        /*setTimeout(function () {
             uploadImgWithName(picname, theimg);
-        }, 200);
+        }, 200);*/
     });
 }
 
