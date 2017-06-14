@@ -158,7 +158,8 @@ QueryString = {
 QueryString.Initial();
 
 function getRemotePic(picid, me = null) {
-    var rsstr = "uploads/" + picid; //remoteaddress+"/"+picid
+    var myapi= restapis;
+    var rsstr = myapi.getRoot()+ picid; //remoteaddress+"/"+picid
     if (me != null) {
         if (me.nodeName == "img") me.attr("src", rsstr);
     }
@@ -209,6 +210,9 @@ var restapis = (function () {
             error: onError
         });
     }
+    mythis.getRoot = function(){
+        return requestRoot;
+    }
     return mythis;
 }())
 //-----------------------------微信---------------------------
@@ -242,7 +246,6 @@ var myweixin = (function () {
         var mynonceStr = sha1.hash(String(mytimestamp)).substring(0, 16);
         debugger;
         var mysignature = "jsapi_ticket=" + wxjsapi_ticket + "&noncestr=" + mynonceStr + "&timestamp=" + mytimestamp + "&url=" + window.location.href.split("#")[0];
-        alert(mysignature);
         console.log(mynonceStr + "::" + wxjsapi_ticket + "::" + mytimestamp + "::" + window.location.href.split("#")[0]);
         var signatureSHA1 = sha1.hash(mysignature);
         debugger;
@@ -305,13 +308,6 @@ var myweixin = (function () {
     };
     mythis.requestTicket = function (mytoken = null) {
         var myapi = restapis;
-        /*
-        if (localStorage.getItem("wxticket") != null && localStorage.getItem("wxticket") != undefined) {
-            
-        } else {
-            
-        }
-        */
         myapi.request("getJSApiTicket", null, "yxName=" + mythis.yxName + "&timestamp=" + (new Date().getTime()), function (result) {
             if (result.errcode == 0) {
                 localStorage.setItem("wxticket", result.ticket);
@@ -399,13 +395,14 @@ function uploadImgWithName(picname, theimg) {
     var imgpath = "";
     debugger;
     var mywx = myweixin;
+    var myapi  = restapis;
     mywx.checkapi(['chooseImage'], function () {
         wx.error(function (e) {
             var estr = "";
             for (var a in e) {
                 estr += a + ":" + e[a] + "\n";
             }
-            alert(estr);
+            console.log(estr);
         })
         wx.chooseImage({
             count: 1, // 默认9
@@ -416,13 +413,15 @@ function uploadImgWithName(picname, theimg) {
                 imgpath = localIds[0];
                 $(theimg).attr("src", getRemotePic(imgpath));
                 console.log("本地图片id:" + imgpath);
+                alert(imgpath);
                 $.ajax({
                     type: "POST",
-                    url: "json/uploadfiles.json",
+                    url: myapi.getRoot()+"upload",
                     dataType: "json",
+                    cache: false,
                     enctype: 'multipart/form-data',
                     data: {
-                        file: imgpath
+                        test: imgpath
                     },
                     success: function (ret) {
                         if (ret == 0) {
@@ -432,7 +431,9 @@ function uploadImgWithName(picname, theimg) {
                     error: function (e) {
                         debugger;
                         console.log("上传失败了");
-                    }
+                    },
+                    processData: false,
+                    contentType: false
                 });
             }
         });
@@ -491,9 +492,9 @@ function OssUpload(param, file, fileName, callBack) {
         success: function (data, textStatus, request) {
             if (textStatus === "nocontent") {
                 callBack(fileFullName);
-                alert("success!");
+                console.log("success!");
             } else {
-                alert(textStatus);
+                console.log(textStatus);
             }
         }
     });
