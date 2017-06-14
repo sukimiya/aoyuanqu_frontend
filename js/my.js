@@ -284,7 +284,7 @@ var myweixin = (function () {
                     if (mythis.onOpenid) mythis.onOpenid();
                     mythis.requestToken();
                 }, function (req, e, data) {
-                    myerror.onWXError(req, e, data);
+                    if(myerror.onWXError)myerror.onWXError(req, e, data);
                 });
             } else {
                 mythis.requestCode();
@@ -300,7 +300,7 @@ var myweixin = (function () {
             localStorage.setItem("wxtokenexpires", (new Date().getTime()) + result.expiresIn);
             window.location = window.location.href.split("?")[0];
         }, function (req, e, data) {
-            myerror.onWXError(req, e, data);
+            if(myerror.onWXError)myerror.onWXError(req, e, data);
         });
     };
     mythis.requestTicket = function (mytoken = null) {
@@ -317,11 +317,11 @@ var myweixin = (function () {
                 localStorage.setItem("wxticket", result.ticket);
                 localStorage.setItem("wxticketexpires", (new Date().getTime()) + result.expires_in);
             } else {
-                myerror.onWXError(null, null, result);
+                if(myerror.onWXError)myerror.onWXError(null, null, result);
             }
             if (mythis.onTicketGet) mythis.onTicketGet(result.ticket);
         }, function (req, e, data) {
-            myerror.onWXError(req, e, data);
+            if(myerror.onWXError)myerror.onWXError(req, e, data);
         });
     }
     mythis.requestCode = function () {
