@@ -378,51 +378,62 @@ function uploadImgWithName(picname, theimg) {
     debugger;
     var mywx = myweixin;
     var myapi = restapis;
-    mywx.checkapi(['chooseImage', 'getLocalImgData'], function () {
-        wx.chooseImage({
-            count: 1, // 默认9
-            sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
-            sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
-            success: function (res) {
-                var localIds = res.localIds;
-                imgpath = localIds[0];
-                $(theimg).attr("src", imgpath);
-                console.log("本地图片id:" + imgpath);
-                //alert(localIds[0].toString());
-                wx.getLocalImgData(imgpath, function (res) {
-                    var fd = new FormData();
-                    var imgname = sha1.hash((new Data().getTime()).toString());
-                    var blob = dataURItoBlob(res.localData);
-                    alert(blob.mimeString);
-                    fd.append("test", blob, imgname);
-                    $.ajax({
-                        type: "POST",
-                        url: myapi.getRoot() + "upload",
-                        dataType: "json",
-                        cache: false,
-                        enctype: 'multipart/form-data',
-                        data: fd,
-                        success: function (ret) {
-                            if (ret == 0) {
-                                $(picname).val(imgname);
-                            }
-                        },
-                        error: function (e) {
-                            debugger;
-                            console.log("上传失败了");
-                        },
-                        processData: false,
-                        contentType: false
+    var myuploadRun = function () {
+        console.log("myuploadRun");
+        setTimeout(function () {
+            wx.chooseImage({
+                count: 1, // 默认9
+                sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+                sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+                success: function (res) {
+                    var localIds = res.localIds;
+                    imgpath = localIds[0];
+                    $(theimg).attr("src", imgpath);
+                    console.log("本地图片id:" + imgpath);
+                    //alert(localIds[0].toString());
+                    wx.getLocalImgData(imgpath, function (res) {
+                        var fd = new FormData();
+                        var imgname = sha1.hash((new Data().getTime()).toString());
+                        var blob = dataURItoBlob(res.localData);
+                        alert(blob.mimeString);
+                        fd.append("test", blob, imgname);
+                        $.ajax({
+                            type: "POST",
+                            url: myapi.getRoot() + "upload",
+                            dataType: "json",
+                            cache: false,
+                            enctype: 'multipart/form-data',
+                            data: fd,
+                            success: function (ret) {
+                                if (ret == 0) {
+                                    $(picname).val(imgname);
+                                }
+                            },
+                            error: function (e) {
+                                debugger;
+                                console.log("上传失败了");
+                            },
+                            processData: false,
+                            contentType: false
+                        });
                     });
-                });
-            }
-        });
-    }, function (e) {
+                }
+            });
+        }, 500);
+    };
+    mywx.checkapi(['chooseImage', 'getLocalImgData'], myuploadRun, function (e) {
         var estr = "checkapi error:";
         for (var a in e) {
             estr += a + ":" + e[a] + "\n";
         }
         console.log(estr);
+        mywx.onConfig = function () {
+            myuploadRun();
+        }
+        mywx.onTicketGet = function (theticket) {
+            mywx.config(theticket);
+        }
+        mywx.requestTicket();
     });
 }
 
