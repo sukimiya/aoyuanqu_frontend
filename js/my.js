@@ -327,6 +327,7 @@ var myweixin = (function () {
     mythis.checkapi = function (theapis, successCallback, errorCallback, toConfig = true) {
         var mycheckfun;
         var myconfigfun = function () {
+            console.log("mythis.isConfiged:"+mythis.isConfiged);
             if (mythis.isConfiged) {
                 mycheckfun();
             } else {
@@ -360,6 +361,7 @@ var myweixin = (function () {
                             }
                         }
                         if (successCallback) successCallback();
+                        return;
                     }
                 }
             });
