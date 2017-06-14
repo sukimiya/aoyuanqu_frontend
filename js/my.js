@@ -420,7 +420,11 @@ function uploadImgWithName(picname, theimg) {
     var mywx = myweixin;
     mywx.checkapi(['chooseImage'], function () {
         wx.error(function(e){
-            alert(e);
+            var estr = "";
+            for(var a in e){
+                estr +=a+":"+e[a]+"\n";
+            }
+            alert(estr);
         })
         wx.chooseImage({
             count: 1, // 默认9
