@@ -413,7 +413,7 @@ function uploadImgWithName(picname, theimg) {
                 imgpath = localIds[0];
                 $(theimg).attr("src", getRemotePic(imgpath));
                 console.log("本地图片id:" + imgpath);
-                alert(imgpath);
+                alert(localIds[0].toString());
                 $.ajax({
                     type: "POST",
                     url: myapi.getRoot()+"upload",
