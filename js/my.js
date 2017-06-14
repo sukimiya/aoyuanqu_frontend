@@ -327,38 +327,33 @@ var myweixin = (function () {
     mythis.checkapi = function (theapis, successCallback, errorCallback, toConfig = true) {
         if (mythis.isConfiged) {
             wx.checkJsApi({
-                    jsApiList: theapis, // 需要检测的JS接口列表，所有JS接口列表见附录2,
-                    success: function (res) {
-                        if (res.errMsg == "checkJsApi:ok") {
-                            for (var i = 0; i < theapis.length; i++) {
-                                if (res.checkResult.hasOwnProperty(theapis[i]) && res.checkResult[theapis[i]]) {
-                                    //check ok
-                                } else {
-                                    console.log("checkapi fail");
-                                    console.log(res);
-                                    if (errorCallback) errorCallback();
-                                    return;
-                                }
+                jsApiList: theapis, // 需要检测的JS接口列表，所有JS接口列表见附录2,
+                success: function (res) {
+                    if (res.errMsg == "checkJsApi:ok") {
+                        for (var i = 0; i < theapis.length; i++) {
+                            if (res.checkResult.hasOwnProperty(theapis[i]) && res.checkResult[theapis[i]]) {
+                                //check ok
+                            } else {
+                                console.log("checkapi fail");
+                                console.log(res);
+                                if (errorCallback) errorCallback();
+                                return;
                             }
-                            if (successCallback) successCallback();
-                            return;
                         }
+                        if (successCallback) successCallback();
+                        return;
                     }
                 }
-            }
-            else {
-                console.log("checkapi fail no wx.config");
-                if (errorCallback) errorCallback();
-            }
+            });
+        } else {
+            console.log("checkapi fail no wx.config");
+            if (errorCallback) errorCallback();
         }
     }
-    mythis.login = function () {}
-    mythis.onInitial = null;
-    mythis.onTicketGet = null;
-    mythis.onOpenid = null;
-    mythis.onError = null;
-    mythis.onConfig = null;
-    return mythis;
+}
+mythis.login = function () {}
+mythis.onInitial = null; mythis.onTicketGet = null; mythis.onOpenid = null; mythis.onError = null; mythis.onConfig = null;
+return mythis;
 }());
 
 function previewImagebyWX(theimg) {
