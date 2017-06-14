@@ -261,7 +261,10 @@ var myweixin = (function () {
         var openid = localStorage.getItem("wxopenid");
         if (openid != null && openid != undefined) {
             console.log("wxopenid:" + openid);
-            mythis.requestTicket();
+            mywx.onTicketGet = function (theticket) {
+                mythis.config(theticket);
+            }
+            mywx.requestTicket();
             return openid;
         } else {
             if (GetRequest()["code"] != null && GetRequest()["code"] != undefined) wxcode = GetRequest()["code"];
@@ -274,7 +277,10 @@ var myweixin = (function () {
                     localStorage.setItem("wxwebtoken", result.access_token);
                     localStorage.setItem("wxwebrefreshtoken", result.refresh_token);
                     localStorage.setItem("wxwebtokenexpires", (new Date().getTime()) + result.expires_in);
-                    mythis.requestTicket();
+                    mywx.onTicketGet = function (theticket) {
+                        mythis.config(theticket);
+                    }
+                    mywx.requestTicket();
                     if (mythis.onOpenid) mythis.onOpenid();
                     mythis.requestToken();
                 }, function (req, e, data) {
@@ -299,21 +305,24 @@ var myweixin = (function () {
     };
     mythis.requestTicket = function (mytoken = null) {
         var myapi = restapis;
+        /*
         if (localStorage.getItem("wxticket") != null && localStorage.getItem("wxticket") != undefined) {
-
+            
         } else {
-            myapi.request("getJSApiTicket", null, "yxName=" + mythis.yxName + "&timestamp=" + (new Date().getTime()), function (result) {
-                if (result.errcode == 0) {
-                    localStorage.setItem("wxticket", result.ticket);
-                    localStorage.setItem("wxticketexpires", (new Date().getTime()) + result.expires_in);
-                } else {
-                    myerror.onWXError(null, null, result);
-                }
-                if (mythis.onTicketGet) mythis.onTicketGet();
-            }, function (req, e, data) {
-                myerror.onWXError(req, e, data);
-            });
+            
         }
+        */
+        myapi.request("getJSApiTicket", null, "yxName=" + mythis.yxName + "&timestamp=" + (new Date().getTime()), function (result) {
+            if (result.errcode == 0) {
+                localStorage.setItem("wxticket", result.ticket);
+                localStorage.setItem("wxticketexpires", (new Date().getTime()) + result.expires_in);
+            } else {
+                myerror.onWXError(null, null, result);
+            }
+            if (mythis.onTicketGet) mythis.onTicketGet(result.ticket);
+        }, function (req, e, data) {
+            myerror.onWXError(req, e, data);
+        });
     }
     mythis.requestCode = function () {
         window.location = authurl + "authorize" + "?" + "appid=" + appid + "&redirect_uri=" + mylocation + "&response_type=code&scope=snsapi_base&state=0#wechat_redirect";
@@ -335,22 +344,11 @@ var myweixin = (function () {
                             }
                         }
                         if (successCallback) successCallback();
-                    } else {
-                        if (toConfig) {
-                            mywx.onConfig = function () {
-                                if (successCallback) successCallback();
-                            }
-                            mywx.requestTicket();
-                        } else {
-                            if (errorCallback) errorCallback();
-                        }
                     }
                 }
             });
         } else {
-
             if (toConfig) {
-                var wxticket = localStorage.getItem("wxticket");
                 mywx.onConfig = function () {
                     wx.checkJsApi({
                         jsApiList: theapis, // 需要检测的JS接口列表，所有JS接口列表见附录2,
@@ -366,27 +364,14 @@ var myweixin = (function () {
                                     }
                                 }
                                 if (successCallback) successCallback();
-                            } else {
-                                if (toConfig) {
-                                    mywx.onConfig = function () {
-                                        if (successCallback) successCallback();
-                                    }
-                                    mywx.requestTicket();
-                                } else {
-                                    if (errorCallback) errorCallback();
-                                }
                             }
                         }
                     });
                 }
-                if (wxticket != undefined && wxticket != null) {
-                    if (toConfig) mythis.config(localStorage.getItem("wxticket"));
-                } else {
-                    mywx.onTicketGet = function () {
-                        if (toConfig) mythis.config(localStorage.getItem("wxticket"));
-                    }
-                    mywx.requestTicket();
+                mywx.onTicketGet = function (theticket) {
+                    if (toConfig) mythis.config(theticket);
                 }
+                mywx.requestTicket();
             } else {
                 if (errorCallback) errorCallback();
             }
@@ -420,10 +405,10 @@ function uploadImgWithName(picname, theimg) {
     debugger;
     var mywx = myweixin;
     mywx.checkapi(['chooseImage'], function () {
-        wx.error(function(e){
+        wx.error(function (e) {
             var estr = "";
-            for(var a in e){
-                estr +=a+":"+e[a]+"\n";
+            for (var a in e) {
+                estr += a + ":" + e[a] + "\n";
             }
             alert(estr);
         })
