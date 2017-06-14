@@ -308,7 +308,7 @@ var myweixin = (function () {
             mythis.config(localStorage.getItem("wxticket"));
         }
         else {
-            myapi.request("getJSApiTicket", null, "yxName=" + mythis.yxName, function (result) {
+            myapi.request("getJSApiTicket", null, "yxName=" + mythis.yxName+"&timestamp="+(new Date().getTime()), function (result) {
                 if (result.errcode == 0) {
                     localStorage.setItem("wxticket", result.ticket);
                     localStorage.setItem("wxticketexpires", (new Date().getTime()) + result.expires_in);
