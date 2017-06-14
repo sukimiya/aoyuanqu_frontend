@@ -397,7 +397,7 @@ function uploadImgWithName(picname, theimg) {
     debugger;
     var mywx = myweixin;
     var myapi = restapis;
-    mywx.checkapi(['chooseImage'], function () {
+    mywx.checkapi(['chooseImage','getLocalImgData'], function () {
         wx.error(function (e) {
             var estr = "";
             for (var a in e) {
