@@ -325,53 +325,29 @@ var myweixin = (function () {
         window.location = authurl + "authorize" + "?" + "appid=" + appid + "&redirect_uri=" + mylocation + "&response_type=code&scope=snsapi_base&state=0#wechat_redirect";
     }
     mythis.checkapi = function (theapis, successCallback, errorCallback, toConfig = true) {
-        var mycheckfun;
-        var myconfigfun = function () {
-            console.log("mythis.isConfiged:"+mythis.isConfiged);
-            if (mythis.isConfiged) {
-                mycheckfun();
-            } else {
-                mythis.onConfig = function () {
-                    mycheckfun();
-                }
-                mythis.onTicketGet = function (theticket) {
-                    if (toConfig) mythis.config(theticket);
-                }
-                mythis.requestTicket();
-            }
-
-        }
-        mycheckfun = function () {
+        if (mythis.isConfiged) {
             wx.checkJsApi({
-                jsApiList: theapis, // 需要检测的JS接口列表，所有JS接口列表见附录2,
-                success: function (res) {
-                    if (res.errMsg == "checkJsApi:ok") {
-                        for (var i = 0; i < theapis.length; i++) {
-                            if (res.checkResult.hasOwnProperty(theapis[i]) && res.checkResult[theapis[i]]) {
-                                //check ok
-
-                            } else {
-                                if (toConfig) {
-                                    myconfigfun();
+                    jsApiList: theapis, // 需要检测的JS接口列表，所有JS接口列表见附录2,
+                    success: function (res) {
+                        if (res.errMsg == "checkJsApi:ok") {
+                            for (var i = 0; i < theapis.length; i++) {
+                                if (res.checkResult.hasOwnProperty(theapis[i]) && res.checkResult[theapis[i]]) {
+                                    //check ok
                                 } else {
-                                    console.log("check fail with:" + theapis[i]);
+                                    console.log("checkapi fail");
+                                    console.log(res);
                                     if (errorCallback) errorCallback();
                                     return;
                                 }
                             }
+                            if (successCallback) successCallback();
+                            return;
                         }
-                        if (successCallback) successCallback();
-                        return;
                     }
                 }
-            });
-        }
-        if (mythis.isConfiged) {
-            mycheckfun();
-        } else {
-            if (toConfig) {
-                myconfigfun();
-            } else {
+            }
+            else {
+                console.log("checkapi fail no wx.config");
                 if (errorCallback) errorCallback();
             }
         }
@@ -405,13 +381,6 @@ function uploadImgWithName(picname, theimg) {
     var mywx = myweixin;
     var myapi = restapis;
     mywx.checkapi(['chooseImage', 'getLocalImgData'], function () {
-        wx.error(function (e) {
-            var estr = "";
-            for (var a in e) {
-                estr += a + ":" + e[a] + "\n";
-            }
-            console.log(estr);
-        })
         wx.chooseImage({
             count: 1, // 默认9
             sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
@@ -451,7 +420,7 @@ function uploadImgWithName(picname, theimg) {
             }
         });
     }, function (e) {
-        var estr = "";
+        var estr = "checkapi error:";
         for (var a in e) {
             estr += a + ":" + e[a] + "\n";
         }
