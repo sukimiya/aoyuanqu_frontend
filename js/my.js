@@ -284,7 +284,7 @@ var myweixin = (function () {
                     if (mythis.onOpenid) mythis.onOpenid();
                     mythis.requestToken();
                 }, function (req, e, data) {
-                    if(myerror&&myerror.hasOwnProperty(onWXError))myerror.onWXError(req, e, data);
+                    if (myerror && myerror.hasOwnProperty(onWXError)) myerror.onWXError(req, e, data);
                 });
             } else {
                 mythis.requestCode();
@@ -300,7 +300,7 @@ var myweixin = (function () {
             localStorage.setItem("wxtokenexpires", (new Date().getTime()) + result.expiresIn);
             window.location = window.location.href.split("?")[0];
         }, function (req, e, data) {
-            if(myerror&&myerror.hasOwnProperty(onWXError))myerror.onWXError(req, e, data);
+            if (myerror && myerror.hasOwnProperty(onWXError)) myerror.onWXError(req, e, data);
         });
     };
     mythis.requestTicket = function (mytoken = null) {
@@ -317,18 +317,28 @@ var myweixin = (function () {
                 localStorage.setItem("wxticket", result.ticket);
                 localStorage.setItem("wxticketexpires", (new Date().getTime()) + result.expires_in);
             } else {
-                if(myerror&&myerror.hasOwnProperty(onWXError))myerror.onWXError(null, null, result);
+                if (myerror && myerror.hasOwnProperty(onWXError)) myerror.onWXError(null, null, result);
             }
             if (mythis.onTicketGet) mythis.onTicketGet(result.ticket);
         }, function (req, e, data) {
-            if(myerror&&myerror.hasOwnProperty(onWXError))myerror.onWXError(req, e, data);
+            if (myerror && myerror.hasOwnProperty(onWXError)) myerror.onWXError(req, e, data);
         });
     }
     mythis.requestCode = function () {
         window.location = authurl + "authorize" + "?" + "appid=" + appid + "&redirect_uri=" + mylocation + "&response_type=code&scope=snsapi_base&state=0#wechat_redirect";
     }
     mythis.checkapi = function (theapis, successCallback, errorCallback, toConfig = true) {
-        if (mythis.isConfiged) {
+        var mycheckfun;
+        var myconfigfun = function () {
+            mythis.onConfig = function () {
+                mycheckfun();
+            }
+            mythis.onTicketGet = function (theticket) {
+                if (toConfig) mythis.config(theticket);
+            }
+            mythis.requestTicket();
+        }
+        mycheckfun = function () {
             wx.checkJsApi({
                 jsApiList: theapis, // 需要检测的JS接口列表，所有JS接口列表见附录2,
                 success: function (res) {
@@ -336,41 +346,27 @@ var myweixin = (function () {
                         for (var i = 0; i < theapis.length; i++) {
                             if (res.checkResult.hasOwnProperty(theapis[i]) && res.checkResult[theapis[i]]) {
                                 //check ok
+
                             } else {
-                                console.log("check fail with:" + theapis[i]);
-                                if (errorCallback) errorCallback();
-                                return;
+                                if (toConfig) {
+                                    myconfigfun();
+                                } else {
+                                    console.log("check fail with:" + theapis[i]);
+                                    if (errorCallback) errorCallback();
+                                    return;
+                                }
                             }
                         }
                         if (successCallback) successCallback();
                     }
                 }
             });
+        }
+        if (mythis.isConfiged) {
+            mycheckfun();
         } else {
             if (toConfig) {
-                mythis.onConfig = function () {
-                    wx.checkJsApi({
-                        jsApiList: theapis, // 需要检测的JS接口列表，所有JS接口列表见附录2,
-                        success: function (res) {
-                            if (res.errMsg == "checkJsApi:ok") {
-                                for (var i = 0; i < theapis.length; i++) {
-                                    if (res.checkResult.hasOwnProperty(theapis[i]) && res.checkResult[theapis[i]]) {
-                                        //check ok
-                                    } else {
-                                        console.log("check fail with:" + theapis[i]);
-                                        if (errorCallback) errorCallback();
-                                        return;
-                                    }
-                                }
-                                if (successCallback) successCallback();
-                            }
-                        }
-                    });
-                }
-                mythis.onTicketGet = function (theticket) {
-                    if (toConfig) mythis.config(theticket);
-                }
-                mythis.requestTicket();
+                myconfigfun();
             } else {
                 if (errorCallback) errorCallback();
             }
