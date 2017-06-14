@@ -448,10 +448,12 @@ function uploadImgWithName(picname, theimg) {
                 });
             }
         });
-    }, function () {
-        /*setTimeout(function () {
-            uploadImgWithName(picname, theimg);
-        }, 200);*/
+    }, function (e) {
+        var estr = "";
+        for (var a in e) {
+            estr += a + ":" + e[a] + "\n";
+        }
+        console.log(estr);
     });
 }
 
