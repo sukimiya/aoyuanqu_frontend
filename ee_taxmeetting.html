@@ -20,7 +20,7 @@
     <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://cdn.bootcss.com/bootstrap-validator/0.5.3/js/bootstrapValidator.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
-    <script src="js/jweixin-1.2.0.js"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
     <script type="text/javascript" src="js/jquery.flexText.min.js"></script>
     <script src="https://cdn.bootcss.com/json2/20160511/json2.min.js"></script>
     <script src="https://cdn.bootcss.com/moment.js/2.18.0/moment.min.js"></script>
@@ -34,7 +34,7 @@
         function initial(data) {
             if (data.company_name)
                 $("#companyname").text(data.company_name);
-            if (data.szhd_state == 1) {
+            if (data.szhd_state == 2) {
                 var theyear = Math.round(data.szhd_time.split("年")[0]);
                 var datastr = data.szhd_time.split("年")[1];
                 var themonth = Math.round(datastr.split("月")[0]) - 1;
@@ -62,6 +62,7 @@
                     enabledDates: darry
                 });
             } else {
+                mywx.initial();
                 $("#szhd_time").val(data.szhd_time);
                 $("#szhd_address").val(data.szhd_address);
                 if (data.szhd_license == null || data.szhd_license) {
@@ -69,38 +70,20 @@
                 }
             }
         }
-        $(document).ready(function() {
+        var myapi = restapis;
+        var mywx = myweixin;
+        $(document).ready(function () {
 
-            $("#thesubmit").on("click", function(events) {
-                $.ajax({
-                    type: "POST",
-                    url: "json/ee_u_taxmeetting_post.json",
-                    dataType: "json",
-                    data: JSON.stringify({
-                        id: GetRequest()["id"],
-                        szhd_time: $("#szhd_time").val(),
-                        appointment_address: $("#szhd_address").val()
-                    }),
-                    success: function(data) {
-                        if (data.result == 0) {
-                            window.location = "ee_u_progress.html";
-                        }
-                    }
-                });
+            $("#thesubmit").on("click", function (events) {
+                var params = "id=" + GetRequest()["id"] + "&szhd_time=" + $("#szhd_time").val() + "&szhd_address=" + $("#szhd_address").val() + "&szhd_state1=1";
+                myapi.request("updateStartSZHD", null, params, function (result) {
+                    window.location = "ee_progress.html";
+                }, function () {});
             });
-            $.ajax({
-                type: "POST",
-                url: "json/ee_u_taxmeetting_get.json",
-                dataType: "json",
-                data: JSON.stringify({
-                    id: GetRequest()["id"]
-                }),
-                success: function(data) {
-                    initial(JSON.parse(data));
-                }
-            });
+            myapi.request("searchSZHD", null, "id=" + GetRequest()["id"], function (result) {
+                initial(result);
+            }, function (e) {});
         })
-
     </script>
 </head>
 
@@ -135,8 +118,8 @@
                     <div class="form-group">
                         <label class="clearfix">面签预约地点</label>
                         <select id="appointment_address" name="appointment_address" class="selectpicker mycompany-select">
-                        <option title="小区总部" value="小区总部"><span style="font-size:12;color:#cccccc">园区小区总部，地址是：上海市XX区XX路233号</span></option>
-                        <option title="市区总部" value="市区总部"><span style="font-size:12;color:#cccccc">园区市区总部，地址是：上海市XX区XX路233号</span></option>
+                            <option title="小区总部" value="小区总部"><span style="font-size:12;color:#cccccc">园区小区总部，地址是：上海市XX区XX路233号</span></option>
+                            <option title="市区总部" value="市区总部"><span style="font-size:12;color:#cccccc">园区市区总部，地址是：上海市XX区XX路233号</span></option>
                         </select>
                     </div>
                     <div class="text-center">

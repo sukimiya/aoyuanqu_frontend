@@ -43,7 +43,7 @@
         function getmeetingdata() {
             var theid = GetRequest()["id"];
             var myapi = restapis;
-            myapi.request("serchMQ", null, "id=" + theid, function(result) {
+            myapi.request("searchMQ", null, "id=" + theid, function(result) {
                 if (result)
                     pressData(result);
             }, function(e) {});

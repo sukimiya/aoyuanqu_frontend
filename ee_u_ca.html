@@ -201,7 +201,7 @@
             });
             getShippers();
             
-            myapi.request("serchZZFF", null, "id=" + GetRequest()["id"], function(data) {
+            myapi.request("searchZZFF", null, "id=" + GetRequest()["id"], function(data) {
                 debugger;
                 var getobj = data;
                 curlicense_state = getobj.license_state;

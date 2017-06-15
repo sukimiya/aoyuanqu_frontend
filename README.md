@@ -152,13 +152,13 @@ mysettingpassword.html  我的密码设置
 
 列表查询接口
 我的注册公司列表
-Request：serchCompanyList?   
+Request：searchCompanyList?   
     参数:check_state  状态 0/1
         wx_openid   微信openid
         page        第多少页
         key         关键字         符合这个关键字的查询条件
 管理员名称核准列表
-Request:serchYCMList?
+Request:searchYCMList?
     参数:apply_state  状态 0/1/2
         page        第多少页
         key         关键字         符合这个关键字的查询条件
@@ -169,7 +169,7 @@ Request:ee_u_applynotifylist ?
         key         关键字         符合这个关键字的查询条件
         
 工商面签列表_管理员
-Request:serchMQList ?
+Request:searchMQList ?
     参数:appointment_state  状态 0/1
         page        第多少页
         key         关键字         符合这个关键字的查询条件
@@ -180,7 +180,7 @@ Request:searchZZFFList ?
         key         关键字         符合这个关键字的查询条件
 银行开户列表_管理员
 Request:searchYHKHList ?
-    参数:account_state  状态 0/1
+    参数:swsf_state  状态 0/1
         page        第多少页
         key         关键字         符合这个关键字的查询条件
 银行开户列表_管理员

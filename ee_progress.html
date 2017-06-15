@@ -439,7 +439,7 @@
 
         function getMyDatabyid() {
             var myapi = restapis;
-            myapi.request("serchStatus", null, "id=" + GetRequest()['id'], function(result) {
+            myapi.request("searchStatus", null, "id=" + GetRequest()['id'], function(result) {
                 debugger;
                 onDataHandler(result);
             });

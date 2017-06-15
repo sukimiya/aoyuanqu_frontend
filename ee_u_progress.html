@@ -12,7 +12,7 @@
     <link href="css/my.css" rel="stylesheet" type="text/css">
 </head>
 
-<body>
+<body class="mybody">
     <div class="section my-topsection">
         <div class="container">
             <div class="bobble-item-bg clearfix">
@@ -62,6 +62,7 @@
 
     <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
     <script type="text/javascript" src="js/my.js"></script>
     <script type="text/javascript">
         function onloginHandler(ret) {
@@ -106,8 +107,36 @@
         function gotoEEFinish() {
             window.location = "ee_taxmeettinglist.html";
         }
+        var myapi = restapis;
+        function initial(data){
+            
+            var mybadges = $(".badge");
+            for(var i=0;i<mybadges.length;i++){
+                var node = mybadges[i];
+                switch(i){
+                    case 0:
+                        node.firstChild.data = data["apply_state"];
+                        break;
+                    case 1:
+                        node.firstChild.data = data["allow_notice"];
+                        break;
+                    case 2:
+                        node.firstChild.data = data["appointment_state"];
+                        break;
+                    case 3:
+                        node.firstChild.data = data["license_state"];
+                        break;
+                    case 4:
+                        node.firstChild.data = data["swsf_state"];
+                        break;
+                    case 5:
+                        node.firstChild.data = data["szhd_state"];
+                        break;
+                }
+            }
+        }
         $(document).ready(function() {
-            var uinfo = mygetsessioninfo();
+            /*var uinfo = mygetsessioninfo();
             debugger;
             if (uinfo == null) {
                 logins(onloginHandler);
@@ -124,7 +153,10 @@
             if (uinfo["pri_ee_u_3"]) {
                 $("#item1").attr("href", "javascript:gotoCheckTax()");
                 $("#item2").attr("href", "javascript:gotoEEFinish()");
-            }
+            }*/
+            myapi.request("ee_u_progress",null,"",function(result){
+                initial(result);
+            },function(e){})
         });
 
     </script>
