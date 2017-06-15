@@ -375,9 +375,14 @@ function previewImagebyWX(theimg) {
 
 function uploadImgWithName(picname, theimg) {
     debugger;
+    var hidefeild;
     var mywx = myweixin;
     var myapi = restapis;
     var myuploadRun = function () {
+        hidefeild = document.createElement("div");
+        hidefeild.classList = ["hide"];
+        hidefeild.id = "myuploadImgWithNamehidefield";
+        document.body.appendChild(hidefeild);
         console.log("myuploadRun");
         setTimeout(function () {
             wx.chooseImage({
@@ -387,9 +392,10 @@ function uploadImgWithName(picname, theimg) {
                 success: function (res) {
                     var localIds = res.localIds;
                     console.log("本地图片id:" + localIds[0]);
-                    var img = document.getElementById(theimg);
+                    var img = document.createElement("img");
                     $(theimg).attr('src', localIds[0]);
                     img.onload = function () {
+                        alert("图片上传中请稍等");
                         var data = getBase64Image(img);
                         var fd = new FormData();
                         var imgname = sha1.hash((new Data().getTime()).toString());
@@ -406,6 +412,9 @@ function uploadImgWithName(picname, theimg) {
                                 if (ret == 0) {
                                     $(picname).val(imgname);
                                 }
+                                console.log("upload success");
+                                alert("upload success");
+                                document.body.removeChild(hidefeild);
                             },
                             error: function (e) {
                                 debugger;
@@ -414,7 +423,9 @@ function uploadImgWithName(picname, theimg) {
                             processData: false,
                             contentType: false
                         });
-                    }
+                    };
+                    img.src = localIds[0];
+                    hidefeild.appendChild(img);
                 }
             });
         }, 500);

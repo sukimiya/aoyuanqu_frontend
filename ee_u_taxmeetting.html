@@ -66,7 +66,7 @@
             }
         }
         $(document).ready(function() {
-
+            var myapi = restapis;
             $("#thesubmit").on("click", function(events) {
                 $.ajax({
                     type: "POST",
@@ -84,17 +84,9 @@
                     }
                 });
             });
-            $.ajax({
-                type: "POST",
-                url: "json/ee_u_taxmeetting_get.json",
-                dataType: "json",
-                data: JSON.stringify({
-                    id: GetRequest()["id"]
-                }),
-                success: function(data) {
-                    initial(JSON.parse(data));
-                }
-            });
+            myapi.request("searchZZFF",null,"id="+GetRequest()["id"],function(result){
+                initial(result);
+            },function(e){});
         })
 
     </script>
