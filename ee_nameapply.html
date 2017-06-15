@@ -199,7 +199,7 @@
         var isAddMode = true;
         var isFormValidator = false;
 
-
+        var mywx = myweixin;
 
         function addAinvestorToList(data, adddata = true) {
             var rsstr = '<a href="javascript:editInvestor(' + data["order"] + ')" class="list-group-item my-list-item"><div class="col-xs-3"><span style="font-size:14px;">' +
@@ -273,12 +273,13 @@
             $("#addinvestorpanel").modal("hide");
         }
         var thebillid = 0;
-
+        
         function getApplyFromJSON() {
             var jsonobj = {};
-            var mywx = myweixin;
+            
             thebillid = Date.parse(new Date());
-            jsonobj["wx_openid"] = mywx.openid;
+            jsonobj["wx_openid"] = mywx.requestOpenid();
+            debugger;
             jsonobj["id"] = thebillid;
             jsonobj["apply_name"] = $("#apply_name").val();
             jsonobj["apply_name2"] = $("#apply_name2").val();
@@ -487,14 +488,14 @@
                     }
                 }
                 thesubmitbtn.button('loading');
-                myapi.request("insertYCM", null, getApplyFromJSON(), function(result) {
+                myapi.request("insertYCM.do", "page", getApplyFromJSON(), function(result) {
                     if (result.result == 2) {
                         debugger;
                         window.location = "ee_progress.html?id=" + result.id;
                     }
                 }, function(e) {
                     alert("提交时发生错误!");
-                });
+                },"POST");
                 isFormValidator = true;
             });
             $("#addinvestorBtn").on("click", function() {
@@ -509,8 +510,6 @@
                 //setFromDisabled("naform", true);
                 $("#addinvestorpanel").modal("toggle");
             });
-            //
-            var mywx = myweixin;
             mywx.initial();
         });
 

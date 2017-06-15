@@ -395,22 +395,21 @@ function uploadImgWithName(picname, theimg) {
                     var img = document.createElement("img");
                     $(theimg).attr('src', localIds[0]);
                     img.onload = function () {
-                        alert("图片上传中请稍等");
+                        alert("图片上传中请稍等...");
                         var data = getBase64Image(img);
                         var fd = new FormData();
                         var imgname = sha1.hash((new Data().getTime()).toString());
                         fd.append("test", data, imgname);
                         $.ajax({
                             type: "POST",
-                            url: myapi.getRoot() + "upload",
+                            url: myapi.getRoot() + "uploadBase64",
                             dataType: "json",
                             cache: false,
-                            enctype: 'multipart/form-data',
-                            data: fd,
+                            data: "imgStr="+data,
                             success: function (ret) {
                                 alert(ret)
-                                if (ret == 0) {
-                                    $(picname).val(imgname);
+                                if (ret.result == 1) {
+                                    $(picname).val(ret.fileName);
                                 }
                                 console.log("upload success");
                                 alert("upload success");
