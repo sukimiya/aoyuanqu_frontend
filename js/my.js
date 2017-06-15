@@ -206,6 +206,7 @@ var restapis = (function () {
                 dataType: dataType,
                 url: theurl,
                 data: data,
+                contentType: "application/json; charset=utf-8",
                 success: onSeccess,
                 error: onError
             });
@@ -222,7 +223,7 @@ var myweixin = (function () {
     var mythis = {};
     var myerror = errorHandler;
     mythis.yxName = "廊下经济园区";
-    mythis.openid = "";
+    mythis.openid = localStorage.getItem("wxopenid");
     mythis.isConfiged = false;
     mythis.requestRoot = "http://119.29.153.19:8082/";
     mythis.apilist = ['checkJsApi'
@@ -299,7 +300,7 @@ var myweixin = (function () {
         var myapi = restapis;
         myapi.request("getAccessToken", null, "yxName=" + mythis.yxName, function (result) {
             debugger;
-            mythis.openid = result.openid;
+            //mythis.openid = result.openid;
             localStorage.setItem("wxtoken", result.accessToken);
             localStorage.setItem("wxtokenexpires", (new Date().getTime()) + result.expiresIn);
             window.location = window.location.href.split("?")[0];
