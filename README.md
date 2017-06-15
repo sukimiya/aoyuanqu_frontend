@@ -1,6 +1,45 @@
 # aoyuanqu_frontend
 #pages description
+招商通
+ee_index.html           招商通首页_客户端
 ee_applynotify.html params： id:int 单子id
+ee_applynotify.html     招商通_核准通知
+ee_cadistribute.html    执照发放
+ee_calist.html          管理员执照发放列表
+ee_capriview.html       执照发放查看
+ee_checktax.html        核税客户端
+ee_checktaxlist.html    核税管理员列表
+ee_conpanylist.html     客户端注册公司列表
+ee_license.html         执照发放客户端
+ee_meetting.html        客户端面签预约
+ee_meettingpriview.html 客户端面签预约查看
+ee_nameapply.html       客户端名核申请
+ee_nameprieview.html    客户端名核查看
+ee_openaccount.html     客户端银行开户
+ee_progress.html        客户端招商进度
+ee_taxmeetting.html     客户端核税面签预约
+ee_taxmeettinglist.html 管理员端核税列表
+ee_u_applynotify.html   管理员核准通知
+ee_u_applynotifylist.html   管理员端核准通知列表
+ee_u_ca.html            管理员执照发放
+ee_u_meetinglist.html   管理员面签预约列表
+ee_u_meetting.html      管理员面签预约审核
+ee_u_meetting_send.html 管理员面签预约发起
+ee_u_nameapply.html     管理员名称审核
+ee_u_nameapplylist.html 管理员名称审核列表
+ee_u_openccount.html    管理员银行开户
+ee_u_progress.html      管理员招商进度列表
+ee_u_taxmeetting.html   管理员核税面签
+
+其他
+index.html              首页
+listgroup.html          组列表
+my.html                 我的首页
+mycompanyprofile.html   我的公司信息页
+mycrew.html             公司成员列表
+mymoneypackage.html     我的钱包
+mysecuritysettings.html 我的安全设置
+mysettingpassword.html  我的密码设置
 
 #招商通json
 //预查明
