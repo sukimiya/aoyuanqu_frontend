@@ -212,7 +212,7 @@ var restapis = (function () {
         });
     }
     mythis.getRoot = function () {
-        return requestRoot;
+        return "http://119.29.153.19:8082/";
     }
     return mythis;
 }())
@@ -284,7 +284,7 @@ var myweixin = (function () {
                     localStorage.setItem("userid", result.userid);
                     localStorage.setItem("wxname", result.name);
                     localStorage.setItem("wxhead_img_url", result.head_img_url);
-                    localStorage.setItem("roles", result.roles);
+                    localStorage.setItem("roleid", result.roleid);
                     mythis.onTicketGet = function (theticket) {
                         mythis.config(theticket);
                     }
@@ -306,11 +306,11 @@ var myweixin = (function () {
         user.userid = localStorage.getItem("userid");
         user.wxname = localStorage.getItem("wxname");
         user.wxhead_img_url = localStorage.getItem("wxhead_img_url");
-        user.roles = localStorage.getItem("roles");
+        user.roleid = localStorage.getItem("roleid").split(",");
         user.hasPri = function (pri) {
-            if (user.hasOwnProperty("roles"))
-                for (var i = 0; i < user.roles.length; i++) {
-                    if (pri == user.roles[i])
+            if (user.hasOwnProperty("roleid"))
+                for (var i = 0; i < user.roleid.length; i++) {
+                    if (pri == user.roleid[i])
                         return true;
                 }
             return false;
@@ -586,4 +586,25 @@ function isManager() {
         return true;
     }
     return false;
+}
+
+function getDatePickerTime(datastr) {
+    if (datastr) {
+        debugger;
+        var harr = datastr.split(" ");
+        var darr = harr[0].split("-");
+        var theyear = Math.round(darr[0]);
+        var themonth = Math.round(darr[1]) - 1;
+        var theday = Math.round(darr[2]);
+        datastr = harr[1];
+        var thehour = Math.round(datastr.split(":")[0]);
+        var them = Math.round(datastr.split(":")[1]);
+        var today = new Date(theyear, themonth, theday, thehour, them);
+        today.setFullYear(theyear);
+        today.setMonth(themonth);
+        today.setDate(theday);
+        today.setHours(thehour);
+        today.setMinutes(them);
+        return today;
+    }
 }

@@ -28,27 +28,32 @@
             var myapi = restapis;
             var theid = GetRequest()["id"];
             $('textarea').flexText();
-            myapi.request("searchYCMJson",null,"id="+theid,function(result){
+            myapi.request("searchYCM", null, "id=" + theid, function(result) {
                 pressJSONData(result);
-            },function(e){
+            }, function(e) {
                 alert("网络错误，请稍后再试");
             });
             var theid = GetRequest()["id"];
-            $("sendbackBtn").on("click",function(){
-                var thedata = "id="+theid+"&apply_name="+$("#apply_name").val();
-                myapi.request("YCMCheck.do","page",thedata+"&apply_state=1",function(result){
-                    if(result==0){
+            $("#sendbackBtn").on("click", function() {
+                var thedata = "id=" + theid + "&apply_name=" + $("#apply_name").val();
+                myapi.request("YCMCheck.do", "page", thedata + "&apply_state=1", function(result) {
+                    if (result == 1) {
                         window.location = "ee_u_progress.html"
                     }
-                },function(e){alert("提交出错")})
+                }, function(e) {
+                    alert("提交出错")
+                })
             });
-            $("acceptBtn").on("click",function(){
-                var thedata = "id="+theid+"&apply_name="+$("#apply_name").val();
-                myapi.request("YCMCheck.do","page",thedata+"&apply_state=2",function(result){
-                    if(result==0){
+            $("#acceptBtn").on("click", function() {
+                var thedata = "id=" + theid + "&apply_name=" + $("#apply_name").val();
+                debugger;
+                myapi.request("YCMCheck.do", "page", thedata + "&apply_state=2", function(result) {
+                    if (result == 1) {
                         window.location = "ee_u_progress.html"
                     }
-                },function(e){alert("提交出错")})
+                }, function(e) {
+                    alert("提交出错")
+                })
             });
         });
 
@@ -71,34 +76,53 @@
             $("#register_phone").html("<span style='font-size:18px;'>" + jsonobj["register_phone"] + "</span>");
             $("#apply_remark").val(jsonobj["apply_remark"]);
             if (jsonobj["apply_state"] == 0) {
-                $("#btnsGroup").removeClass("hidden");
-                $("#acceptedBtn").addClass("hidden");
-                $("#backedBtn").addClass("hidden");
+                $("#btnsGroup").removeClass("hide");
+                $("#acceptedBtn").addClass("hide");
+                $("#backedBtn").addClass("hide");
             } else if (jsonobj["apply_state"] == 2) {
-                $("#acceptedBtn").removeClass("hidden");
-                $("#btnsGroup").addClass("hidden");
-                $("#backedBtn").addClass("hidden");
+                $("#acceptedBtn").removeClass("hide");
+                $("#btnsGroup").addClass("hide");
+                $("#backedBtn").addClass("hide");
             } else {
-                $("#backedBtn").removeClass("hidden");
-                $("#acceptedBtn").addClass("hidden");
-                $("#btnsGroup").addClass("hidden");
+                $("#backedBtn").removeClass("hide");
+                $("#acceptedBtn").addClass("hide");
+                $("#btnsGroup").addClass("hide");
             }
-            var liststr = "";
-            for (var i = 0; i < jsonobj.arr.length; i++) {
-                var node = jsonobj.arr[i];
-                node["order"] = i;
-                var rsitem = '<a href="javascript:editInvestor(' + node["order"] + ')" class="list-group-item my-list-item-42"><div class="col-xs-3">' +
-                    node["qygd_name"] +
-                    '</div><div class="col-xs-4">' +
-                    node["qygd_idnumber"] +
-                    '</div><div class="col-xs-3 text-center">' +
-                    calculate_qygd_investment(node["qygd_investment"]) +
-                    '</div><div class="col-xs-2 text-center">' +
-                    node["qygd_jobtitle"] + '</div></a>';
-                liststr += rsitem;
-                investorAry.push(node);
+            if (jsonobj.hasOwnProperty("tzfr_name")) {
+                debugger;
+                var tzfr = {
+                    qygd_name: jsonobj["tzfr_name"],
+                    qygd_idnumber: jsonobj["tzfr_idnumber"],
+                    qygd_investment: jsonobj["tzfr_investment"],
+                    qygd_pic1: jsonobj["tzfr_pic1"],
+                    qygd_pic2: jsonobj["tzfr_pic2"],
+                    qygd_pic3: jsonobj["tzfr_pic3"],
+                    o2o_id: jsonobj["id"],
+                    qygd_jobtitle: "法人"
+                };
+                jsonobj.arr.unshift(tzfr);
             }
-            $("#investorlists").html(liststr);
+            if (jsonobj.hasOwnProperty("arr")) {
+
+                for (var i = 0; i < jsonobj.arr.length; i++) {
+                    var node = jsonobj.arr[i];
+                    addAinvestorToList(node);
+                }
+            }
+            
+        }
+
+        function addAinvestorToList(data) {
+            var rsstr = '<a href="javascript:editInvestor(' +
+                data["order"] + ')" class="list-group-item my-list-item-42"><div class="col-xs-4">' +
+                data["qygd_name"] +
+                '</div><div class="col-xs-4">' +
+                data["qygd_jobtitle"] +
+                '</div><div class="col-xs-4">' + data["qygd_investment"] + "万元 "
+            calculate_qygd_investment(data["qygd_investment"]) +
+                '</div></a>';
+            $("#investorlists").append(rsstr);
+            investorAry.push(data);
         }
 
         function uploadImgWithName(picname, theimg) {
@@ -110,6 +134,7 @@
             });
         }
         var curSelectedIndex = -1;
+
         function editInvestor(index) {
             if (investorAry.length > index) {
                 var investor = investorAry[index];
@@ -175,30 +200,13 @@
                     <hr>
                     <label class="my-gap-bottom">投资人信息</label>
                     <div class="row">
-                        <div class="col-xs-3" style="font-size:14px;">名称</div>
-                        <div class="col-xs-4" style="font-size:14px;">证件号码</div>
-                        <div class="col-xs-3" style="font-size:14px;">金额</div>
-                        <div class="col-xs-2" style="font-size:14px;">职务</div>
+                        <div class="col-xs-4" style="font-size:14px;">名称</div>
+                        <div class="col-xs-4" style="font-size:14px;">职务</div>
+                        <div class="col-xs-4" style="font-size:14px;">金额</div>
+
                     </div>
                     <div id="investorlists" class="list-group my-list" style="padding-left:0px;padding-right:0px;marging-left:0px;marging-right:0px;">
-                        <a class="list-group-item my-list-item-42">
-                            <div class="col-xs-3">michael</div>
-                            <div class="col-xs-4">676383888773678</div>
-                            <div class="col-xs-3 text-center">50%</div>
-                            <div class="col-xs-2 text-center">法人</div>
-                        </a>
-                        <a class="list-group-item my-list-item-42">
-                            <div class="col-xs-3">michael</div>
-                            <div class="col-xs-4">676383888773678</div>
-                            <div class="col-xs-3 text-center">50%</div>
-                            <div class="col-xs-2 text-center">法人</div>
-                        </a>
-                        <a class="list-group-item my-list-item-42">
-                            <div class="col-xs-3">michael</div>
-                            <div class="col-xs-4">676383888773678</div>
-                            <div class="col-xs-3 text-center">50%</div>
-                            <div class="col-xs-2 text-center">法人</div>
-                        </a>
+
                     </div>
                     <hr class="my-gap-top">
                     <div class="form-group">
@@ -214,12 +222,12 @@
                         <label for="apply_remark">备注</label>
                         <textarea id="apply_remark" name="apply_remark" style="font-size:18px;border-color: #5066b4;"></textarea>
                     </div>
-                    <div id="btnsGroup my-gap-bottom" style="height:42px;">
+                    <div id="btnsGroup" class="col-xs-12" style="height:42px;">
                         <a id="acceptBtn" class="btn btn-success col-xs-5" style="font-size:24px;">受理</a>
                         <a id="sendbackBtn" class="btn btn-danger col-xs-5 col-xs-offset-2" style="font-size:24px;">退回</a>
                     </div>
-                    <a id="acceptedBtn" class="btn btn-success col-xs-12 hidden" style="font-size:24px;" disabled="disabled">已受理</a>
-                    <a id="backedBtn" class="btn btn-danger col-xs-12 hidden" style="font-size:24px;" disabled="disabled">已退回</a>
+                    <a id="acceptedBtn" class="btn btn-success col-xs-12 hide" style="font-size:24px;" disabled="disabled">已受理</a>
+                    <a id="backedBtn" class="btn btn-danger col-xs-12 hide" style="font-size:24px;" disabled="disabled">已退回</a>
                 </form>
             </div>
         </div>
@@ -274,9 +282,9 @@
                                 <label class="col-xs-4" style="font-size:14px;font-weight:normal">证件照</label>
                             </div>
                         </div>
-                        <input type="hidden" id="qygd_pic1">
-                        <input type="hidden" id="qygd_pic2">
-                        <input type="hidden" id="qygd_pic3">
+                        <input type="hide" id="qygd_pic1">
+                        <input type="hide" id="qygd_pic2">
+                        <input type="hide" id="qygd_pic3">
                         <div class="container">
                             <a href="javascript:onInvestorOKHandler()" class="btn btn-success col-xs-12 my-gap-top" style="font-size:22px;padding:5px;">确定</a>
                         </div>

@@ -48,7 +48,7 @@
         function getmeetingdata() {
             var theid = GetRequest()["id"];
             var myapi = restapis;
-            myapi.request("searchMQ", null, "id=" + theid, function(result) {
+            myapi.request("searchYCM", null, "id=" + theid, function(result) {
                 if (result)
                     pressData(result);
             }, function(e) {});
@@ -89,23 +89,37 @@
                 addAinvestorToList(data.arr[i]);
             }
             if (data.hasOwnProperty("appointment_time")) {
-                var theyear = Math.round(data.appointment_time.split("年")[0]);
-                var datastr = data.appointment_time.split("年")[1];
-                var themonth = Math.round(datastr.split("月")[0]) - 1;
-                datastr = datastr.split("月")[1];
-                var theday = Math.round(datastr.split("日")[0]);
+                var theyear = Math.round(data.appointment_time.split("-")[0]);
+                var datastr = data.appointment_time.split("-")[1];
+                var themonth = Math.round(datastr.split("-")[0]) - 1;
+                datastr = datastr.split("-")[1];
+                var theday = Math.round(datastr.split("-")[0]);
                 var today = new Date(theyear, themonth, theday);
                 today.setFullYear(theyear);
                 today.setMonth(themonth);
                 today.setDate(theday);
                 $('#appointment_time_picker').datetimepicker({
                     locale: 'zh-cn',
+                    format: 'YYYY-MM-DD hh:mm',
                     defaultDate: today,
                     enabledDates: [today]
                 });
             }
             if (data.hasOwnProperty("appointment_address"))
                 $("#appointment_address").val(data.appointment_address);
+            if (data.hasOwnProperty("tzfr_name")) {
+                var tzfr = {
+                    qygd_name: data["tzfr_name"],
+                    qygd_idnumber: data["tzfr_idnumber"],
+                    qygd_investment: data["tzfr_investment"],
+                    qygd_pic1: data["tzfr_pic1"],
+                    qygd_pic2: data["tzfr_pic2"],
+                    qygd_pic3: data["tzfr_pic3"],
+                    o2o_id: data["id"],
+                    qygd_jobtitle: "法人"
+                };
+                jsonobj.arr.unshift(tzfr);
+            }
             if(data.hasOwnProperty("arr")){
                 for(var i=0;i<data.arr.length;i++){
                     var node = data.arr[i];
@@ -145,21 +159,7 @@
             rsobj["id"] = GetRequest()["id"];
             rsobj["wx_openid"] = myweixin.openid;
             rsobj["appointment_state"] = 1;
-            var theyear = parseInt($("#appointment_time").val().split("年")[0]);
-            var thelast = $("#appointment_time").val().split("年")[1];
-            var themonth = parseInt(thelast.split("月")[0]);
-            thelast = thelast.split("月")[1];
-            var theday = parseInt(thelast.split("日")[0]);
-            thelast = thelast.split("日")[1];
-            var thehour = parseInt(thelast.split("：")[0]);
-            var them = parseInt(thelast.split(":")[1]);
-            var thedate = new Date();
-            thedate.setFullYear(theyear);
-            thedate.setMonth(themonth);
-            thedate.setDate(theday);
-            thedate.setHours(thehour);
-            thedate.setMinutes(them);
-            rsobj["appointment_time"] = thedate.getTime() / 1000;
+            rsobj["appointment_time"] = $("#appointment_time").val();
             rsobj["appointment_address"] = $("#appointment_address").val();
             rsobj["zip_code"] = $("#zip_code").val();
             rsobj["weituo_state"] = $("#weituo_state").val();

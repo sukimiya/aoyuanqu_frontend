@@ -440,6 +440,11 @@
                             message: '请正确填经营范围',
                             notEmpty: {
                                 message: '经营范围必须填写',
+                            },
+                            stringLength: {
+                                min: 12,
+                                max: 120,
+                                message: '经营范围不得超过120字'
                             }
                         }
                     }

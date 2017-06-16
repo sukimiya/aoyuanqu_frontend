@@ -21,6 +21,7 @@
                 debugger;
                 if (user.hasOwnProperty("userid")) {
                     console.log("login success");
+                    debugger;
                     if (user.hasPri("402880e74d75c4dd014d75d3c5f40001") || user.hasPri("402881875b19f141015b19fb1d490019") || user.hasPri("8a8ab0b246dc81120146dc81818b0051")) {
                         $("#o2o_admin").removeClass("hide");
                     }
@@ -127,8 +128,8 @@
                 </div>
                 <div class="modal-body">
                     <div class="container">
-                        <div id="o2o_admin" class="my-icon-container col-xs-3 text-center">
-                            <a href="ee_u_progress.html" class="hide text-center">
+                        <div id="o2o_admin" class="hide my-icon-container col-xs-3 text-center">
+                            <a href="ee_u_progress.html" class="text-center">
                                 <img src="images/ao_icons_zhaoshang.png" class="img-responsive my-icon">
                                 <span class="my-icon-text">招商管理</span>
                             </a>

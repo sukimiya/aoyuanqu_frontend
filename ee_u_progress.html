@@ -67,7 +67,7 @@
     <script type="text/javascript">
 
         function gotoNameApply() {
-            window.location = "ee_nameapplylist.html";
+            window.location = "ee_u_nameapplylist.html";
         }
 
         function gotoApplyNotify() {
@@ -75,7 +75,7 @@
         }
 
         function gotoMeetting() {
-            window.location = "ee_meettinglist.html";
+            window.location = "ee_u_meetinglist.html";
         }
 
         function gotoCA() {
@@ -120,6 +120,7 @@
         }
         $(document).ready(function() {
             myweixin.onUser = function() {
+                var user = myweixin.getUserInfo();
                 if (user.hasOwnProperty("userid")) {
                     console.log("login success");
                     if (user.hasPri("402880e74d75c4dd014d75d3c5f40001")) {
@@ -127,18 +128,19 @@
                         $("#item2").attr("href", "javascript:gotoApplyNotify()");
                     }
                     if (user.hasPri("402881875b19f141015b19fb1d490019")) {
-                        $("#item1").attr("href", "javascript:gotoMeetting()");
-                        $("#item2").attr("href", "javascript:gotoCA()");
+                        $("#item3").attr("href", "javascript:gotoMeetting()");
+                        $("#item4").attr("href", "javascript:gotoCA()");
                     }
                     if (user.hasPri("8a8ab0b246dc81120146dc81818b0051")) {
-                        $("#item1").attr("href", "javascript:gotoCheckTax()");
-                        $("#item2").attr("href", "javascript:gotoEEFinish()");
+                        $("#item5").attr("href", "javascript:gotoCheckTax()");
+                        $("#item6").attr("href", "javascript:gotoEEFinish()");
                     }
                 } else {
                     console.log("no user");
                     window.location = "registbymobile.html";
                 }
-                myweixin.request("ee_u_progress", null, "", function(result) {
+                
+                myapi.request("ee_u_progress", null, "", function(result) {
                     initial(result);
                 }, function(e) {});
 

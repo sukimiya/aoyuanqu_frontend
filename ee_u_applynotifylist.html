@@ -67,7 +67,7 @@
         }
 
         function gotoEE(order) {
-            window.location = "ee_u_nameapply.html?id="+order;
+            window.location = "ee_u_applynotify.html?id="+order;
         }
 
         function searchbykey() {
@@ -87,7 +87,7 @@
                 　　url: 'json/ee_u_ncompanylist.json', //目标地址
                 　　data: JSON.stringify({
                     page: page,
-                    type: ttype,
+                    type: (ttype+1),
                     key: skey
                 }),
                 　　error: function(XMLHttpRequest, textStatus, errorThrown) {},

@@ -69,7 +69,7 @@
         }
 
         function gotoEE(order) {
-                window.location = "ee_progress.html?id="+listdata[order].id;
+                window.location = "ee_progress.html?id="+order;
         }
 
         function searchbykey() {
@@ -84,7 +84,7 @@
 
         function doloadlist(skey = "", page = 1, ttype = 0, isappend = true, me = null) {
             var myapi = restapis;
-            var requestdata = "check_state="+ttype+"&wx_openid="+myweixin.openid+"&page="+page;
+            var requestdata = "check_state="+(ttype+1)+"&wx_openid="+myweixin.openid+"&page="+page;
             if(skey!=null&&skey!=""){
                 requestdata+="&key="+skey;
             }
@@ -98,11 +98,11 @@
                                 var node = jsonObj.arr[i];
                                 var displayname = node["apply_name"];
                                 if(node.hasOwnProperty("confirm_name")) displayname=node["confirm_name"]
-                                result += '<a href="javascript:gotoEE(' +
-                                    node["id"] +
-                                    ')" class="list-group-item my-list-item" style="text-align: left;">' +
-                                    displayname +
-                                    '<span class="badge mytextbadge">&nbsp;<i class="fa fa-angle-right" aria-hidden="true"></i></span></a>';
+                                result += '<a href="javascript:gotoEE(' 
+                                +"'"+node["id"]+"'"
+                                +')" class="list-group-item my-list-item" style="text-align: left;">' 
+                                +displayname 
+                                +'<span class="badge mytextbadge">&nbsp;<i class="fa fa-angle-right" aria-hidden="true"></i></span></a>';
                             }
                             if(curPage==1){
                                 listdata = jsonObj.arr;

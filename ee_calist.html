@@ -81,8 +81,8 @@
         }
 
         function doloadlist(skey = "", page = 1, ttype = 0, isappend = true, me = null) {
-            
-            var requestdata = "check_state="+ttype+"&page="+page;
+            var myapi = restapis;
+            var requestdata = "license_state="+(ttype+1)+"&page="+page;
             if(skey!=null&&skey!=""){
                 requestdata+="&key="+skey;
             }

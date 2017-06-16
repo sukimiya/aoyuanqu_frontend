@@ -128,7 +128,7 @@
             //showRemoteImg(#qygd_pic1_img');
             var myapi  = restapis;
             myapi.request("ee_u_applynotify",null,"id="+GetRequest()["id"],function(result){
-                if(allow_pic.hasOwnProperty("allow_pic")&&result.allow_pic!=null&&result.allow_pic!="")
+                if(result.hasOwnProperty("allow_pic")&&result.allow_pic!=null&&result.allow_pic!="")
                     getRemotePic(result.allow_pic, $("qygd_pic1_img"));
                 if(result.allow_notice==2){
                     $("submistBtn").addClass("hide");
@@ -137,14 +137,14 @@
             $("#submistBtn").on("click", function(me) {
                 theimagesid = $("qygd_pic1").val();
                 if(theimagesid!="")
-                    myapi.request("updateAllow_pic",null,"id="+theimagesid,function(result){
-                        if (ret.result == 0) {
+                    myapi.request("updateAllow_pic",null,"id="+theimagesid+"&allow_pic="+theimagesid,function(result){
+                        if (result == 0) {
                                 window.location= "ee_u_progress.html";
                             }
                     },function(e){alert("提交失败了");});
             });
             $("#uploadBtn").on("click", function(me) {
-                if (theimagesid != "") {
+                if (theimagesid == "") {
                     var $this = $(this);
                     $this.button('loading');
                     uploadImgWithName("#qygd_pic1","#qygd_pic1_img");
