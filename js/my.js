@@ -268,6 +268,7 @@ var myweixin = (function () {
             }
             if (mythis.onOpenid) mythis.onOpenid();
             if (mythis.onUser) mythis.onUser();
+            if (mythis.onInitial) mythis.onInitial();
             mythis.requestTicket();
             return openid;
         } else {
@@ -291,6 +292,7 @@ var myweixin = (function () {
                     mythis.requestTicket();
                     if (mythis.onOpenid) mythis.onOpenid();
                     if (mythis.onUser) mythis.onUser();
+                    if (mythis.onInitial) mythis.onInitial();
 
                     mythis.requestToken();
                 }, function (req, e, data) {

@@ -84,7 +84,7 @@
 
         function doloadlist(skey = "", page = 1, ttype = 0, isappend = true, me = null) {
             var myapi = restapis;
-            var requestdata = "check_state="+(ttype+1)+"&wx_openid="+myweixin.openid+"&page="+page;
+            var requestdata = "check_state="+ttype+"&wx_openid="+myweixin.openid+"&page="+page;
             if(skey!=null&&skey!=""){
                 requestdata+="&key="+skey;
             }
@@ -168,7 +168,7 @@
             doloadlist("", 1, 0, false, dropload);
         }
         $(document).ready(function() {
-            myweixin.onInitial(){
+            myweixin.onInitial=function(){
                 initDropload();
             }
             myweixin.initial();

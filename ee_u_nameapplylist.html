@@ -35,7 +35,7 @@
         var listdata = [];
         var curPage = 1;
         var totalPage = 1;
-        var pageSize = 20;
+        var pageSize = 10;
 
         function switchlisttype() {
             var setl1 = "";
@@ -107,6 +107,7 @@
                                 +displayname 
                                 +'<span class="badge mytextbadge">&nbsp;<i class="fa fa-angle-right" aria-hidden="true"></i></span></a>';
                         }
+                        debugger;
                         if (curPage == 1) {
                             listdata = jsonObj.arr;
                         } else {
