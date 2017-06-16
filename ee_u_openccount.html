@@ -48,7 +48,7 @@
             var myapi = restapis;
             if (GetRequest()["id"])
                 myapi.request("searchYHKH", null, "id=" + GetRequest()["id"], function(result) {
-                    initial(data.swsf_state, data);
+                    initial(result.swsf_state, result);
                 }, function(e) {});
         });
     </script>

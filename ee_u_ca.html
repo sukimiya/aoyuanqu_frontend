@@ -108,7 +108,7 @@
                 dataTyle: "json",
                 type: "GET",
                 success: function(data) {
-                    var jobj = JSON.parse(data);
+                    var jobj = data;
                     for (var i = 0; i < jobj.lists.length; i++) {
                         var node = jobj.lists[i];
                         var nodestr = "<option value='" + node["ShipperCode"] + "'>" + node["Shipper"] + "</option>";
@@ -124,13 +124,8 @@
         $(document).ready(function() {
             var myapi = restapis;
             $('textarea').flexText();
-            $("#submitBtn").on("clilck", function() {
-                var postobj = {
-                    "id": GetRequest()["id"],
-                    "lisence_pic1": $("#lisence_pic1").val(),
-                    "express_code": $("#express_code").val(),
-                    "express_shipper": $("#express_shipper").val()
-                };
+            $("#submitBtn").on("click", function() {
+                debugger;
                 var requestStr = "id="+GetRequest()["id"];
                 var expcode = $("#express_code").val();
                 if(expcode!=undefined&&expcode!=null&&expcode!=""){
@@ -141,7 +136,7 @@
                     requestStr += "?express_company="+expshipper;
                 }
                 requestStr += "&license_pic="+$("#lisence_pic1").val();
-                if($("#receive_name").text()!=null&&$("#receive_phone").text()!=null&&$("#express_address").text()!=null){
+                if($("#receive_name").text()!=null||$("#receive_phone").text()!=null||$("#express_address").text()!=null){
                     if(curlicense_state==1){
                         requestStr += "&license_state=2";
                     }else{
