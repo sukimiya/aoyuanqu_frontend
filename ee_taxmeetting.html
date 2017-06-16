@@ -62,7 +62,7 @@
                     enabledDates: darry
                 });
             } else {
-                mywx.initial();
+                myweixin.initial();
                 $("#szhd_time").val(data.szhd_time);
                 $("#szhd_address").val(data.szhd_address);
                 if (data.szhd_license == null || data.szhd_license) {
@@ -71,7 +71,6 @@
             }
         }
         var myapi = restapis;
-        var mywx = myweixin;
         $(document).ready(function () {
 
             $("#thesubmit").on("click", function (events) {

@@ -198,9 +198,6 @@
         var curSelect = null;
         var isAddMode = true;
         var isFormValidator = false;
-
-        var mywx = myweixin;
-
         function addAinvestorToList(data, adddata = true) {
             var rsstr = '<a href="javascript:editInvestor(' + data["order"] + ')" class="list-group-item my-list-item"><div class="col-xs-3"><span style="font-size:14px;">' +
                 data["qygd_name"] +
@@ -278,7 +275,7 @@
             var jsonobj = {};
             
             thebillid = Date.parse(new Date());
-            jsonobj["wx_openid"] = mywx.requestOpenid();
+            jsonobj["wx_openid"] = myweixin.requestOpenid();
             debugger;
             jsonobj["id"] = thebillid;
             jsonobj["apply_name"] = $("#apply_name").val();
@@ -510,7 +507,7 @@
                 //setFromDisabled("naform", true);
                 $("#addinvestorpanel").modal("toggle");
             });
-            mywx.initial();
+            myweixin.initial();
         });
 
     </script>

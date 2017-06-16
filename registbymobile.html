@@ -24,8 +24,7 @@
         var curCount; //当前剩余秒数
         $(document).ready(function() {
             var myapi = restapis;
-            var mywx = myweixin;
-            mywx.initial();
+            myweixin.initial();
             $('form').bootstrapValidator({
                 feedbackIcons: {
                     valid: 'glyphicon glyphicon-ok',
@@ -64,9 +63,9 @@
 
                 var fv_timestamp = Date.parse(new Date());
                 var fv_mobileNumber = $("#inputmobile").val();
-                console.log("mobile=" + fv_mobileNumber + "  oppen_id=" + mywx.requestOpenid());
+                console.log("mobile=" + fv_mobileNumber + "  oppen_id=" + myweixin.requestOpenid());
                 debugger;
-                myapi.request("UserUpdate", null, "mobile=" + fv_mobileNumber + "&oppen_id=" + mywx.openid, function(result) {
+                myapi.request("UserUpdate", null, "mobile=" + fv_mobileNumber + "&oppen_id=" + myweixin.openid, function(result) {
                     if (result) {
                         window.location = redirectionLocation;
                     }

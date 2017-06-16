@@ -65,24 +65,6 @@
     <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
     <script type="text/javascript" src="js/my.js"></script>
     <script type="text/javascript">
-        function onloginHandler(ret) {
-            var uinfo = mygetsessioninfo();
-            if (uinfo == null) {
-                return;
-            }
-            if (uinfo["pri_ee_u_1"]) {
-                $("#item1").attr("href", "javascript:gotoNameApply()");
-                $("#item2").attr("href", "javascript:gotoApplyNotify()");
-            }
-            if (uinfo["pri_ee_u_2"]) {
-                $("#item1").attr("href", "javascript:gotoMeetting()");
-                $("#item2").attr("href", "javascript:gotoCA()");
-            }
-            if (uinfo["pri_ee_u_3"]) {
-                $("#item1").attr("href", "javascript:gotoCheckTax()");
-                $("#item2").attr("href", "javascript:gotoEEFinish()");
-            }
-        }
 
         function gotoNameApply() {
             window.location = "ee_nameapplylist.html";
@@ -108,12 +90,13 @@
             window.location = "ee_taxmeettinglist.html";
         }
         var myapi = restapis;
-        function initial(data){
-            
+
+        function initial(data) {
+
             var mybadges = $(".badge");
-            for(var i=0;i<mybadges.length;i++){
+            for (var i = 0; i < mybadges.length; i++) {
                 var node = mybadges[i];
-                switch(i){
+                switch (i) {
                     case 0:
                         node.firstChild.data = data["apply_state"];
                         break;
@@ -136,27 +119,31 @@
             }
         }
         $(document).ready(function() {
-            /*var uinfo = mygetsessioninfo();
-            debugger;
-            if (uinfo == null) {
-                logins(onloginHandler);
-                return;
+            myweixin.onUser = function() {
+                if (user.hasOwnProperty("userid")) {
+                    console.log("login success");
+                    if (user.hasPri("402880e74d75c4dd014d75d3c5f40001")) {
+                        $("#item1").attr("href", "javascript:gotoNameApply()");
+                        $("#item2").attr("href", "javascript:gotoApplyNotify()");
+                    }
+                    if (user.hasPri("402881875b19f141015b19fb1d490019")) {
+                        $("#item1").attr("href", "javascript:gotoMeetting()");
+                        $("#item2").attr("href", "javascript:gotoCA()");
+                    }
+                    if (user.hasPri("8a8ab0b246dc81120146dc81818b0051")) {
+                        $("#item1").attr("href", "javascript:gotoCheckTax()");
+                        $("#item2").attr("href", "javascript:gotoEEFinish()");
+                    }
+                } else {
+                    console.log("no user");
+                    window.location = "registbymobile.html";
+                }
+                myweixin.request("ee_u_progress", null, "", function(result) {
+                    initial(result);
+                }, function(e) {});
+
             }
-            if (uinfo["pri_ee_u_1"]) {
-                $("#item1").attr("href", "javascript:gotoNameApply()");
-                $("#item2").attr("href", "javascript:gotoApplyNotify()");
-            }
-            if (uinfo["pri_ee_u_2"]) {
-                $("#item1").attr("href", "javascript:gotoMeetting()");
-                $("#item2").attr("href", "javascript:gotoCA()");
-            }
-            if (uinfo["pri_ee_u_3"]) {
-                $("#item1").attr("href", "javascript:gotoCheckTax()");
-                $("#item2").attr("href", "javascript:gotoEEFinish()");
-            }*/
-            myapi.request("ee_u_progress",null,"",function(result){
-                initial(result);
-            },function(e){})
+            myweixin.initial();
         });
 
     </script>

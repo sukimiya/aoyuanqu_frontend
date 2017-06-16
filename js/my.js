@@ -183,40 +183,40 @@ var errorHandler = (function () {
 }());
 //--------------------restful apis-----------------------
 var restapis = (function () {
-        var requestRoot = "http://119.29.153.19:8082/";
-        var appid = "wx7a6967db884b7058";
-        var mythis = {};
-        mythis.yxName = "廊下经济园区";
-        mythis.openid = "";
-        mythis.requestRoot = "http://119.29.153.19:8082/";
-        mythis.redictlocation = window.location.href.split("#")[0];
-        /**
-         *function(mothed,module,data,onSeccess,onError,post="GET",dataType="json")
-         */
-        mythis.request = function (mothed, module, data, onSeccess, onError, post = "GET", dataType = "json") {
-            var theurl = requestRoot;
-            if (module) {
-                theurl += module + "/";
-            }
-            if (mothed) {
-                theurl += mothed
-            }
-            $.ajax({
-                type: post,
-                dataType: dataType,
-                url: theurl,
-                data: data,
-                contentType: "application/json; charset=utf-8",
-                success: onSeccess,
-                error: onError
-            });
+    var requestRoot = "http://119.29.153.19:8082/";
+    var appid = "wx7a6967db884b7058";
+    var mythis = {};
+    mythis.yxName = "廊下经济园区";
+    mythis.openid = "";
+    mythis.requestRoot = "http://119.29.153.19:8082/";
+    mythis.redictlocation = window.location.href.split("#")[0];
+    /**
+     *function(mothed,module,data,onSeccess,onError,post="GET",dataType="json")
+     */
+    mythis.request = function (mothed, module, data, onSeccess, onError, post = "GET", dataType = "json") {
+        var theurl = requestRoot;
+        if (module) {
+            theurl += module + "/";
         }
-        mythis.getRoot = function () {
-            return requestRoot;
+        if (mothed) {
+            theurl += mothed
         }
-        return mythis;
-    }())
-    //-----------------------------微信---------------------------
+        $.ajax({
+            type: post,
+            dataType: dataType,
+            url: theurl,
+            data: data,
+            contentType: "application/json; charset=utf-8",
+            success: onSeccess,
+            error: onError
+        });
+    }
+    mythis.getRoot = function () {
+        return requestRoot;
+    }
+    return mythis;
+}())
+//-----------------------------微信---------------------------
 var myweixin = (function () {
     var authurl = "https://open.weixin.qq.com/connect/oauth2/";
     var appid = "wx7a6967db884b7058";
@@ -239,18 +239,15 @@ var myweixin = (function () {
     });
     mythis.initial = function () {
         console.log("微信配置初始化中");
-        debugger;
         mythis.requestOpenid();
     };
     mythis.config = function (wxticket) {
         var wxjsapi_ticket = wxticket;
         var mytimestamp = (Date.parse(new Date())) / 1000;
         var mynonceStr = sha1.hash(String(mytimestamp)).substring(0, 16);
-        debugger;
         var mysignature = "jsapi_ticket=" + wxjsapi_ticket + "&noncestr=" + mynonceStr + "&timestamp=" + mytimestamp + "&url=" + window.location.href.split("#")[0];
         console.log(mynonceStr + "::" + wxjsapi_ticket + "::" + mytimestamp + "::" + window.location.href.split("#")[0]);
         var signatureSHA1 = sha1.hash(mysignature);
-        debugger;
         wx.config({
             debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
             appId: appid, // 必填，公众号的唯一标识
@@ -269,6 +266,8 @@ var myweixin = (function () {
             mythis.onTicketGet = function (theticket) {
                 mythis.config(theticket);
             }
+            if (mythis.onOpenid) mythis.onOpenid();
+            if (mythis.onUser) mythis.onUser();
             mythis.requestTicket();
             return openid;
         } else {
@@ -282,11 +281,17 @@ var myweixin = (function () {
                     localStorage.setItem("wxwebtoken", result.access_token);
                     localStorage.setItem("wxwebrefreshtoken", result.refresh_token);
                     localStorage.setItem("wxwebtokenexpires", (new Date().getTime()) + result.expires_in);
+                    localStorage.setItem("userid", result.userid);
+                    localStorage.setItem("wxname", result.name);
+                    localStorage.setItem("wxhead_img_url", result.head_img_url);
+                    localStorage.setItem("roles", result.roles);
                     mythis.onTicketGet = function (theticket) {
                         mythis.config(theticket);
                     }
                     mythis.requestTicket();
                     if (mythis.onOpenid) mythis.onOpenid();
+                    if (mythis.onUser) mythis.onUser();
+
                     mythis.requestToken();
                 }, function (req, e, data) {
                     if (myerror && myerror.hasOwnProperty(onWXError)) myerror.onWXError(req, e, data);
@@ -296,10 +301,25 @@ var myweixin = (function () {
             }
         }
     }
+    mythis.getUserInfo = function () {
+        var user = {};
+        user.userid = localStorage.getItem("userid");
+        user.wxname = localStorage.getItem("wxname");
+        user.wxhead_img_url = localStorage.getItem("wxhead_img_url");
+        user.roles = localStorage.getItem("roles");
+        user.hasPri = function (pri) {
+            if (user.hasOwnProperty("roles"))
+                for (var i = 0; i < user.roles.length; i++) {
+                    if (pri == user.roles[i])
+                        return true;
+                }
+            return false;
+        }
+        return user;
+    }
     mythis.requestToken = function () {
         var myapi = restapis;
         myapi.request("getAccessToken", null, "yxName=" + mythis.yxName, function (result) {
-            debugger;
             //mythis.openid = result.openid;
             localStorage.setItem("wxtoken", result.accessToken);
             localStorage.setItem("wxtokenexpires", (new Date().getTime()) + result.expiresIn);
@@ -357,12 +377,13 @@ var myweixin = (function () {
     mythis.onOpenid = null;
     mythis.onError = null;
     mythis.onConfig = null;
+    mythis.onUser = null;
     return mythis;
 }());
 
 function previewImagebyWX(theimg) {
-    var mywx = myweixin;
-    mywx.checkapi(['chooseImage'], function () {
+    myweixin;
+    myweixin.checkapi(['chooseImage'], function () {
         wx.previewImage({
             current: theimg, // 当前显示图片的http链接
             urls: [theimg] // 需要预览的图片http链接列表
@@ -375,9 +396,7 @@ function previewImagebyWX(theimg) {
 }
 
 function uploadImgWithName(picname, theimg) {
-    debugger;
     var hidefeild;
-    var mywx = myweixin;
     var myapi = restapis;
     var myuploadRun = function () {
         hidefeild = document.createElement("div");
@@ -406,7 +425,7 @@ function uploadImgWithName(picname, theimg) {
                             url: myapi.getRoot() + "uploadBase64",
                             dataType: "json",
                             cache: false,
-                            data: "imgStr="+data,
+                            data: "imgStr=" + data,
                             success: function (ret) {
                                 alert(ret)
                                 if (ret.result == 1) {
@@ -417,7 +436,6 @@ function uploadImgWithName(picname, theimg) {
                                 document.body.removeChild(hidefeild);
                             },
                             error: function (e) {
-                                debugger;
                                 console.log("上传失败了");
                             },
                             processData: false,
@@ -430,19 +448,19 @@ function uploadImgWithName(picname, theimg) {
             });
         }, 500);
     };
-    mywx.checkapi(['chooseImage', 'getLocalImgData'], myuploadRun, function (e) {
+    myweixin.checkapi(['chooseImage', 'getLocalImgData'], myuploadRun, function (e) {
         var estr = "checkapi error:";
         for (var a in e) {
             estr += a + ":" + e[a] + "\n";
         }
         console.log(estr);
-        mywx.onConfig = function () {
+        myweixin.onConfig = function () {
             myuploadRun();
         }
-        mywx.onTicketGet = function (theticket) {
-            mywx.config(theticket);
+        myweixin.onTicketGet = function (theticket) {
+            myweixin.config(theticket);
         }
-        mywx.requestTicket();
+        myweixin.requestTicket();
     });
 }
 
@@ -464,7 +482,6 @@ function setFromDisabled(formname, toDisabled) {
             break;
         }
     }
-    debugger;
     for (var i = 0; i < aform.length; i++) {
         if (aform[i].hasOwnProperty("disabled"))
             if (toDisabled) {
@@ -518,7 +535,6 @@ function logins(logincallbackFn) {
         url: "json/u_login.json",
         dataType: "json",
         success: function (data, textStatus, request) {
-            debugger;
             if (data.result == 0) {
                 var rsobj = {};
                 rsobj["userid"] = data.userid;

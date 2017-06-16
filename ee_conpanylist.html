@@ -84,8 +84,7 @@
 
         function doloadlist(skey = "", page = 1, ttype = 0, isappend = true, me = null) {
             var myapi = restapis;
-            var mywx = myweixin;
-            var requestdata = "check_state="+ttype+"&wx_openid="+mywx.openid+"&page="+page;
+            var requestdata = "check_state="+ttype+"&wx_openid="+myweixin.openid+"&page="+page;
             if(skey!=null&&skey!=""){
                 requestdata+="&key="+skey;
             }
@@ -169,12 +168,10 @@
             doloadlist("", 1, 0, false, dropload);
         }
         $(document).ready(function() {
-            
-            var mywx = myweixin;
-            mywx.onInitial(){
+            myweixin.onInitial(){
                 initDropload();
             }
-            mywx.initial();
+            myweixin.initial();
         });
 
     </script>

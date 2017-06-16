@@ -14,10 +14,28 @@
     <script type="text/javascript" src="js/my.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
-            var mywx = myweixin;
-            //mywx.initial();
+            myweixin;
+            debugger;
+            myweixin.onUser = function() {
+                var user = myweixin.getUserInfo();
+                debugger;
+                if (user.hasOwnProperty("userid")) {
+                    console.log("login success");
+                    if (user.hasPri("402880e74d75c4dd014d75d3c5f40001") || user.hasPri("402881875b19f141015b19fb1d490019") || user.hasPri("8a8ab0b246dc81120146dc81818b0051")) {
+                        $("#o2o_admin").removeClass("hide");
+                    }
+                } else {
+                    console.log("no user");
+                    window.location = "registbymobile.html";
+                }
+            }
+            myweixin.initial();
             $('.carousel').carousel();
         });
+
+        function popApps() {
+            $("#appmodel").modal("toggle");
+        }
 
     </script>
 </head>
@@ -84,7 +102,7 @@
                 </a>
             </div>
             <div class="my-icon-container col-xs-3 text-center">
-                <a href="app_index.html" class="text-center">
+                <a href="javascript:popApps()" class="text-center">
                     <img src="images/ao_icons_more.png" class="img-responsive my-icon">
                     <span class="my-icon-text">更多应用</span>
                 </a>
@@ -92,10 +110,36 @@
         </div>
     </div>
     <div id="notifybar" class="container my-gap-top">
-            <i class="fa fa-bookmark" aria-hidden="true" style="color:#5066b4"></i>
-            <span>最新动态</span>
+        <i class="fa fa-bookmark" aria-hidden="true" style="color:#5066b4"></i>
+        <span>最新动态</span>
         <a href="javascript:hidenotify()"><i class="fa fa-close badge" aria-hidden="true" style="background-color:transparent;color:#636363">&nbsp;</i></a>
     </div>
+
+    <div class="modal fade" id="appmodel">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only"></span>
+                    </a>
+                    <h4 id="mysetTitle">应用</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div id="o2o_admin" class="my-icon-container col-xs-3 text-center">
+                            <a href="ee_u_progress.html" class="hide text-center">
+                                <img src="images/ao_icons_zhaoshang.png" class="img-responsive my-icon">
+                                <span class="my-icon-text">招商管理</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
     <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
         <div class="btn-group col-xs-12 my-nav-group">
             <a href="#" class="btn btn-default col-xs-3 my-nav-item">
@@ -116,17 +160,20 @@
             </a>
         </div>
     </nav>
+
     <script type="text/javascript">
         var isnotifybarhiden = false;
-        function hidenotify(){
-            if(!isnotifybarhiden){
+
+        function hidenotify() {
+            if (!isnotifybarhiden) {
                 $("#notifybar").addClass("hide");
                 isnotifybarhiden = true;
-            }else{
+            } else {
                 $("#notifybar").removeClass("hide");
                 isnotifybarhiden = false;
             }
         }
+
     </script>
 </body>
 

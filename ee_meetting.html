@@ -141,11 +141,9 @@
             curSelectedIndex = index;
         }
         function encodeDatas() {
-            var mywx = myweixin;
-
             var rsobj = {};
             rsobj["id"] = GetRequest()["id"];
-            rsobj["wx_openid"] = mywx.openid;
+            rsobj["wx_openid"] = myweixin.openid;
             rsobj["appointment_state"] = 1;
             var theyear = parseInt($("#appointment_time").val().split("年")[0]);
             var thelast = $("#appointment_time").val().split("年")[1];
@@ -208,8 +206,7 @@
                 console.log(e, $el, value);
             });
             getmeetingdata();
-            var mywx = myweixin;
-            mywx.initial();
+            myweixin.initial();
         })
 
     </script>
