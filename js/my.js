@@ -239,7 +239,27 @@ var myweixin = (function () {
     });
     mythis.initial = function () {
         console.log("微信配置初始化中");
-        mythis.requestOpenid();
+        if (GetRequest()["code"] != null && GetRequest()["code"] != undefined) {
+            mythis.code = GetRequest()["code"];
+            if (localStorage.getItem("wxopenid") == undefined || localStorage.getItem("wxopenid") == null) {
+                mythis.requestOpenid(mythis.code);
+            }
+        } else {
+            var thewxcode = GetRequest()["code"];
+            var openid = localStorage.getItem("wxopenid");
+            debugger;
+            if(localStorage.getItem("wxopenid")){
+                mythis.openid = localStorage.getItem("wxopenid");
+                mythis.webtoken = localStorage.getItem("wxwebtoken");
+                mythis.webrefreshtoken = localStorage.getItem("wxwebrefreshtoken");
+                mythis.webtokenexpires = localStorage.getItem("wxwebtokenexpires");
+                mythis.wxhead_img_url = localStorage.getItem("wxhead_img_url");
+                if (mythis.onOpenid) mythis.onOpenid();
+                if (mythis.onUser) mythis.onUser();
+            }else{
+                mythis.requestCode();
+            }
+        }
     };
     mythis.config = function (wxticket) {
         var wxjsapi_ticket = wxticket;
@@ -258,49 +278,33 @@ var myweixin = (function () {
         });
         mythis.isConfiged = true;
         if (mythis.onConfig) mythis.onConfig();
+        if (mythis.onInitial) mythis.onInitial();
     };
     mythis.requestOpenid = function (wxcode) {
-        var openid = localStorage.getItem("wxopenid");
-        if (openid != null && openid != undefined) {
-            console.log("wxopenid:" + openid);
-            mythis.onTicketGet = function (theticket) {
-                mythis.config(theticket);
-            }
+        if (localStorage.getItem("wxopenid")) {
             if (mythis.onOpenid) mythis.onOpenid();
             if (mythis.onUser) mythis.onUser();
-            if (mythis.onInitial) mythis.onInitial();
             mythis.requestTicket();
-            return openid;
-        } else {
-            if (GetRequest()["code"] != null && GetRequest()["code"] != undefined) wxcode = GetRequest()["code"];
-            if (wxcode != null && wxcode != undefined) {
-                var myapi = restapis;
-                myapi.request("getOppen_id", null, "code=" + wxcode + "&yxName=" + mythis.yxName, function (result) {
-                    debugger;
-                    mythis.openid = result.openid;
-                    localStorage.setItem("wxopenid", result.openid);
-                    localStorage.setItem("wxwebtoken", result.access_token);
-                    localStorage.setItem("wxwebrefreshtoken", result.refresh_token);
-                    localStorage.setItem("wxwebtokenexpires", (new Date().getTime()) + result.expires_in);
-                    localStorage.setItem("userid", result.userid);
-                    localStorage.setItem("wxname", result.name);
-                    localStorage.setItem("wxhead_img_url", result.head_img_url);
-                    localStorage.setItem("roleid", result.roleid);
-                    mythis.onTicketGet = function (theticket) {
-                        mythis.config(theticket);
-                    }
-                    mythis.requestTicket();
-                    if (mythis.onOpenid) mythis.onOpenid();
-                    if (mythis.onUser) mythis.onUser();
-                    if (mythis.onInitial) mythis.onInitial();
-
-                    mythis.requestToken();
-                }, function (req, e, data) {
-                    if (myerror && myerror.hasOwnProperty(onWXError)) myerror.onWXError(req, e, data);
-                });
-            } else {
-                mythis.requestCode();
-            }
+            return localStorage.getItem("wxopenid");
+        }
+        if (wxcode != null && wxcode != undefined) {
+            var myapi = restapis;
+            myapi.request("getOppen_id", null, "code=" + wxcode + "&yxName=" + mythis.yxName, function (result) {
+                debugger;
+                console.log("getOppen_id result" + result);
+                mythis.openid = result.openid;
+                localStorage.setItem("wxopenid", result.openid);
+                localStorage.setItem("wxwebtoken", result.access_token);
+                localStorage.setItem("wxwebrefreshtoken", result.refresh_token);
+                localStorage.setItem("wxwebtokenexpires", (new Date().getTime()) + result.expires_in);
+                localStorage.setItem("userid", result.username);
+                localStorage.setItem("wxname", result.realname);
+                localStorage.setItem("wxhead_img_url", result.head_img_url);
+                localStorage.setItem("roleid", result.roleid);
+                window.location.replace(window.location.href.split("?")[0]);
+            }, function (req, e, data) {
+                if (myerror && myerror.hasOwnProperty(onWXError)) myerror.onWXError(req, e, data);
+            });
         }
     }
     mythis.getUserInfo = function () {
@@ -319,17 +323,6 @@ var myweixin = (function () {
         }
         return user;
     }
-    mythis.requestToken = function () {
-        var myapi = restapis;
-        myapi.request("getAccessToken", null, "yxName=" + mythis.yxName, function (result) {
-            //mythis.openid = result.openid;
-            localStorage.setItem("wxtoken", result.accessToken);
-            localStorage.setItem("wxtokenexpires", (new Date().getTime()) + result.expiresIn);
-            window.location = window.location.href.split("?")[0];
-        }, function (req, e, data) {
-            if (myerror && myerror.hasOwnProperty(onWXError)) myerror.onWXError(req, e, data);
-        });
-    };
     mythis.requestTicket = function (mytoken = null) {
         var myapi = restapis;
         myapi.request("getJSApiTicket", null, "yxName=" + mythis.yxName + "&timestamp=" + (new Date().getTime()), function (result) {
@@ -340,6 +333,7 @@ var myweixin = (function () {
                 if (myerror && myerror.hasOwnProperty(onWXError)) myerror.onWXError(null, null, result);
             }
             if (mythis.onTicketGet) mythis.onTicketGet(result.ticket);
+            mythis.config(result.ticket);
         }, function (req, e, data) {
             if (myerror && myerror.hasOwnProperty(onWXError)) myerror.onWXError(req, e, data);
         });
@@ -373,13 +367,13 @@ var myweixin = (function () {
             if (errorCallback) errorCallback();
         }
     }
-    mythis.login = function () {}
     mythis.onInitial = null;
     mythis.onTicketGet = null;
     mythis.onOpenid = null;
     mythis.onError = null;
     mythis.onConfig = null;
     mythis.onUser = null;
+    //
     return mythis;
 }());
 

@@ -87,6 +87,7 @@
             if (skey != null && skey != "") {
                 requestdata += "&key=" + skey;
             }
+            debugger;
             myapi.request("searchYCMList", null, requestdata, function(jsonObj) {
                 if (!jsonObj.resault) {
                     if (jsonObj.hasOwnProperty("totalPage")) tatalPages = jsonObj.totalPage;
