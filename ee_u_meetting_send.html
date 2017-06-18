@@ -59,26 +59,24 @@
             if (data.hasOwnProperty("register_kind")) $("#register_kind").text(data.register_kind);
             if (data.hasOwnProperty("appointment_time")) $("#appointment_time").val(data.appointment_time);
             if (data.hasOwnProperty("tzfr_name")) $("#tzfr_name").val(data.tzfr_name);
-            for (var i = 0; i < data.arr.length; i++) {
-                data.arr[i]["order"] = i;
-                addAinvestorToList(data.arr[i]);
+            if(data.hasOwnProperty("qyfr_mobile")&&data.qyfr_mobile!=""){
+                window.location.replace("ee_u_meetting.html"+"?id="+GetRequest()["id"]);
+                return;
             }
+//            for (var i = 0; i < data.arr.length; i++) {
+//                data.arr[i]["order"] = i;
+//                addAinvestorToList(data.arr[i]);
+//            }
             if (data.hasOwnProperty("appointment_time")) {
-                var theyear = Math.round(data.appointment_time.split("-")[0]);
-                var datastr = data.appointment_time.split("-")[1];
-                var themonth = Math.round(datastr.split("-")[0]) - 1;
-                datastr = datastr.split("-")[1];
-                var theday = Math.round(datastr.split("-")[0]);
-                var today = new Date(theyear, themonth, theday);
-                today.setFullYear(theyear);
-                today.setMonth(themonth);
-                today.setDate(theday);
+                debugger;
+                var today = new Date(data.appointment_time.time);
                 $('#appointment_time_picker').datetimepicker({
                     locale: 'zh-cn',
                     format: 'YYYY-MM-DD hh:mm',
                     defaultDate: today,
                     enabledDates: [today]
                 });
+                $("#appointment_time").val(today.Format("yyyy-MM-dd hh:mm"));
             }
             if (data.hasOwnProperty("appointment_address"))
                 $("#appointment_address").val(data.appointment_address);

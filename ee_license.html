@@ -53,13 +53,14 @@
 
         function toLoadList(isfinish) {
             var ltype = 0;
-            if (isfinish) {
+            if (!isfinish) {
                 ltype = 1;
                 $("#expressGroup").removeClass("hide");
             } else {
                 $("#expressGroup").addClass("hide");
             }
-
+            if (dropload) me = dropload;
+            doloadlist($("#searchbarTf").val(), 1, ltype, false, me);
         }
         //
         function previewImgWithName(picname, theimg) {
@@ -69,7 +70,7 @@
         $(document).ready(function() {
             var myapi = restapis;
             $('textarea').flexText();
-            $("#submitbtn").on("clilck", function() {
+            $("#submitbtn").on("click", function() {
                 var postobj = {};
                 postobj["id"] = GetRequest()["id"];
                 postobj["receive_name"] = $("#receive_name").val();
@@ -79,7 +80,7 @@
                 myapi.request("updateZZFF.do", "page", JSON.stringify(postobj), function(data) {
                     debugger;
                     console.log("deliver infomation had been record.");
-                    window.location = "ee_eefinish2.html?id=" + GetRequest()["id"];
+                    window.location.replace("ee_progress.html");
                 }, function(e) {}, "POST");
             });
             myapi.request("searchZZFF", null, "id=" + GetRequest()["id"], function(data) {

@@ -122,25 +122,24 @@
         var theimagesid = "";
         function showPic(){
             if ($("qygd_pic1_img").attr("src") == "images/picframe.svg") return;
-            previewImagebyWX($("qygd_pic1_img").attr("src"));
+            previewImagebyWX($("#qygd_pic1_img").attr("src"));
         }
         $(document).ready(function() {
             //showRemoteImg(#qygd_pic1_img');
             var myapi  = restapis;
             myapi.request("ee_u_applynotify",null,"id="+GetRequest()["id"],function(result){
+                debugger;
                 if(result.hasOwnProperty("allow_pic")&&result.allow_pic!=null&&result.allow_pic!="")
-                    getRemotePic(result.allow_pic, $("qygd_pic1_img"));
+                    getRemotePic(result.allow_pic, $("#qygd_pic1_img"));
                 if(result.allow_notice==2){
                     $("submistBtn").addClass("hide");
                 }
             },function(e){alert("获取数据出错");})
             $("#submistBtn").on("click", function(me) {
-                theimagesid = $("qygd_pic1").val();
+                theimagesid = $("#qygd_pic1").val();
                 if(theimagesid!="")
-                    myapi.request("updateAllow_pic",null,"id="+theimagesid+"&allow_pic="+theimagesid,function(result){
-                        if (result == 0) {
-                                window.location= "ee_u_progress.html";
-                            }
+                    myapi.request("updateAllow_pic",null,"id="+GetRequest()["id"]+"&allow_pic="+theimagesid,function(result){
+                        window.location= "ee_u_progress.html";
                     },function(e){alert("提交失败了");});
             });
             $("#uploadBtn").on("click", function(me) {

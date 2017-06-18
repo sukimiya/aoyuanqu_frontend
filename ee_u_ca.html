@@ -29,10 +29,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
     <script type="text/javascript" src="js/jquery.flexText.min.js"></script>
     <script src="https://cdn.bootcss.com/json2/20160511/json2.min.js"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
     <script type="text/javascript" src="js/my.js"></script>
     <script type="text/javascript">
         var isunfinishList = true;
-
+        var mywx = myweixin;
         function switchlisttype() {
             var setl1 = "";
             var setl2 = "";
@@ -55,52 +56,14 @@
 
         function toLoadList(isfinish) {
             var ltype = 0;
-            if (isfinish) {
+            if (!isfinish) {
                 ltype = 1;
                 $("#expressGroup").removeClass("hide");
             } else {
                 $("#expressGroup").addClass("hide");
             }
-
-        }
-
-        function uploadImgWithName(picname, theimg) {
-            var imgpath = "";
-            wx.chooseImage({
-                count: 1,
-                sizeType: ['original', 'compressed'],
-                sourceType: ['album', 'camera'],
-                success: function(res) {
-                    var localIds = res.localIds;
-                    imgpath = localIds;
-                    $(theimg).attr("src", imgpath);
-                    console.log("本地图片id:" + imgpath);
-                    $.ajax({
-                        type: "POST",
-                        url: "json/uploadfiles.json",
-                        dataType: "json",
-                        enctype: 'multipart/form-data',
-                        data: {
-                            file: imgpath
-                        },
-                        success: function(ret) {
-                            if (ret == 0) {
-                                $(picname).val(ret.picid);
-                            }
-                        },
-                        fail: function(e) {
-                            debugger;
-                            console.log("上传失败了");
-                        }
-
-                    });
-                }
-            });
-        }
-        //
-        function previewImgWithName(picname, theimg) {
-            var imgpath = $("#lisenceImg").attr("src");
-            previewImagebyWX(imgpath);
+            if (dropload) me = dropload;
+            doloadlist($("#searchbarTf").val(), 1, ltype, false, me);
         }
         function getShippers() {
             $.ajax({
@@ -180,8 +143,12 @@
                     getRemotePic(getobj.license_pic, $("#lisenceImg"));
                 }
             }, function(e) {});
+            mywx.initial();
         });
-
+        function topreivew(theid){
+            var imgid = $(theid).attr("src");
+            previewImagebyWX(imgid);
+        }
     </script>
 </head>
 
@@ -192,6 +159,7 @@
             <div class="col-xs-12 text-center my-gap-bottom">
                 <!--h3> 企业名称预先核准申请书</h3-->
                 <h1>&nbsp;</h1>
+                <a href="javascript:topreivew('#lisenceImg')"></a>
                 <img id="lisenceImg" class="img-responsive my-gap-top" src="images/picframe.svg">
                 <a href="javascript:uploadImgWithName('#lisence_pic1','#lisenceImg')" id="uploadbtn" class="btn btn-success my-gap-top">上传图片</a>
                 <h3 id="company_name">&nbsp;</h3>

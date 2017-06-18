@@ -160,9 +160,7 @@ QueryString.Initial();
 function getRemotePic(picid, me = null) {
     var myapi = restapis;
     var rsstr = myapi.getRoot() + picid; //remoteaddress+"/"+picid
-    if (me != null) {
-        if (me.nodeName == "img") me.attr("src", rsstr);
-    }
+     me.attr("src", rsstr);
     return rsstr;
 }
 //------------------------------------------------------
@@ -248,15 +246,20 @@ var myweixin = (function () {
             var thewxcode = GetRequest()["code"];
             var openid = localStorage.getItem("wxopenid");
             debugger;
-            if(localStorage.getItem("wxopenid")){
+            if (localStorage.getItem("wxopenid")) {
                 mythis.openid = localStorage.getItem("wxopenid");
                 mythis.webtoken = localStorage.getItem("wxwebtoken");
                 mythis.webrefreshtoken = localStorage.getItem("wxwebrefreshtoken");
                 mythis.webtokenexpires = localStorage.getItem("wxwebtokenexpires");
                 mythis.wxhead_img_url = localStorage.getItem("wxhead_img_url");
-                if (mythis.onOpenid) mythis.onOpenid();
-                if (mythis.onUser) mythis.onUser();
-            }else{
+                if (parseInt(mythis.webtokenexpires) > (new Date().getTime())) {
+                    console.log("web token expired");
+                    mythis.requestCode();
+                } else {
+                    if (mythis.onOpenid) mythis.onOpenid();
+                    if (mythis.onUser) mythis.onUser();
+                }
+            } else {
                 mythis.requestCode();
             }
         }
@@ -296,11 +299,11 @@ var myweixin = (function () {
                 localStorage.setItem("wxopenid", result.openid);
                 localStorage.setItem("wxwebtoken", result.access_token);
                 localStorage.setItem("wxwebrefreshtoken", result.refresh_token);
-                localStorage.setItem("wxwebtokenexpires", (new Date().getTime()) + result.expires_in);
+                localStorage.setItem("wxwebtokenexpires", (new Date().getTime()) + parseInt(result.expires_in));
                 localStorage.setItem("userid", result.username);
                 localStorage.setItem("wxname", result.realname);
                 localStorage.setItem("wxhead_img_url", result.head_img_url);
-                localStorage.setItem("roleid", result.roleid);
+                if(result.hasOwnProperty("roleid")) localStorage.setItem("roleid", result.roleid);
                 window.location.replace(window.location.href.split("?")[0]);
             }, function (req, e, data) {
                 if (myerror && myerror.hasOwnProperty(onWXError)) myerror.onWXError(req, e, data);
@@ -314,7 +317,7 @@ var myweixin = (function () {
         user.wxhead_img_url = localStorage.getItem("wxhead_img_url");
         user.roleid = localStorage.getItem("roleid").split(",");
         user.hasPri = function (pri) {
-            if (user.hasOwnProperty("roleid"))
+            if (user.hasOwnProperty("roleid")&&user.roleid!=undefined)
                 for (var i = 0; i < user.roleid.length; i++) {
                     if (pri == user.roleid[i])
                         return true;
@@ -397,6 +400,7 @@ function uploadImgWithName(picname, theimg) {
     var myuploadRun = function () {
         hidefeild = document.createElement("div");
         hidefeild.classList = ["hide"];
+        hidefeild.width = 500;
         hidefeild.id = "myuploadImgWithNamehidefield";
         document.body.appendChild(hidefeild);
         console.log("myuploadRun");
@@ -411,31 +415,25 @@ function uploadImgWithName(picname, theimg) {
                     var img = document.createElement("img");
                     $(theimg).attr('src', localIds[0]);
                     img.onload = function () {
-                        alert("图片上传中请稍等...");
-                        var data = getBase64Image(img);
-                        var fd = new FormData();
-                        var imgname = sha1.hash((new Data().getTime()).toString());
-                        fd.append("test", data, imgname);
+                        var thebase64ata = getBase64Image(img);
+                        //alert(thebase64ata);
                         $.ajax({
                             type: "POST",
                             url: myapi.getRoot() + "uploadBase64",
-                            dataType: "json",
-                            cache: false,
-                            data: "imgStr=" + data,
+                            data: "imgStr=" +thebase64ata,
                             success: function (ret) {
                                 alert(ret)
-                                if (ret.result == 1) {
+                                //if (ret.result == 1) {
                                     $(picname).val(ret.fileName);
-                                }
+                                //}
                                 console.log("upload success");
-                                alert("upload success");
+                                alert("upload success"+ret.fileName);
+                                getRemotePic(ret.fileName,$(theimg))
                                 document.body.removeChild(hidefeild);
                             },
                             error: function (e) {
                                 console.log("上传失败了");
                             },
-                            processData: false,
-                            contentType: false
                         });
                     };
                     img.src = localIds[0];
@@ -459,7 +457,27 @@ function uploadImgWithName(picname, theimg) {
         myweixin.requestTicket();
     });
 }
-
+// 对Date的扩展，将 Date 转化为指定格式的String
+// 月(M)、日(d)、小时(h)、分(m)、秒(s)、季度(q) 可以用 1-2 个占位符， 
+// 年(y)可以用 1-4 个占位符，毫秒(S)只能用 1 个占位符(是 1-3 位的数字) 
+// 例子： 
+// (new Date()).Format("yyyy-MM-dd hh:mm:ss.S") ==> 2006-07-02 08:09:04.423 
+// (new Date()).Format("yyyy-M-d h:m:s.S")      ==> 2006-7-2 8:9:4.18 
+Date.prototype.Format = function (fmt) { //author: meizz 
+    var o = {
+        "M+": this.getMonth() + 1, //月份 
+        "d+": this.getDate(), //日 
+        "h+": this.getHours(), //小时 
+        "m+": this.getMinutes(), //分 
+        "s+": this.getSeconds(), //秒 
+        "q+": Math.floor((this.getMonth() + 3) / 3), //季度 
+        "S": this.getMilliseconds() //毫秒 
+    };
+    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o)
+    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    return fmt;
+}
 function getBase64Image(img) {
     var canvas = document.createElement("canvas");
     canvas.width = img.width;

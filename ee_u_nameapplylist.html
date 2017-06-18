@@ -59,7 +59,7 @@
 
         function toLoadList(isfinish) {
             var ltype = 0;
-            if (isfinish) {
+            if (!isfinish) {
                 ltype = 1;
             }
             var me = null;
@@ -188,11 +188,11 @@
     </nav>
     <div id="listdatasection" class="section my-topsection listdatasection text-center">
         <div class="container text-center">
-            <div id="listswitchGroup" class="btn-group" data-toggle="buttons" onclick="javascript:switchlisttype()">
+            <div id="listswitchGroup" class="btn-group" data-toggle="buttons">
                 <label id="unfinishlabel" class="btn btn-primary active">
-                    <input type="radio" name="options" value="1"><div style="width:100px;">未完成</div></label>
+                    <input type="radio" name="options" value="1"><div style="width:100px;" onclick="javascript:switchlisttype()">未完成</div></label>
                 <label id="finishlabel" class="btn btn-default">
-                    <input type="radio" name="options" value="2"><div style="width:100px;">已完成</div></label>
+                    <input type="radio" name="options" value="2"><div style="width:100px;" onclick="javascript:switchlisttype()">已完成</div></label>
             </div>
         </div>
         <div class="container">

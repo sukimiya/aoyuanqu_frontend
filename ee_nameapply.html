@@ -278,7 +278,7 @@
             var jsonobj = {};
             
             thebillid = Date.parse(new Date());
-            jsonobj["wx_openid"] = myweixin.requestOpenid();
+            jsonobj["wx_openid"] = myweixin.openid;
             debugger;
             jsonobj["id"] = thebillid;
             jsonobj["apply_name"] = $("#apply_name").val();
@@ -298,7 +298,7 @@
                 if (ainvestor["qygd_jobtitle"] == "法人") {
                     jsonobj["tzfr_name"] = $("#qygd_name").val();
                     jsonobj["tzfr_idnumber"] = $("#qygd_idnumber").val();
-                    jsonobj["tzfr_investment"] = $("#qygd_investment").val();
+                    jsonobj["f_investment"] = $("#qygd_investment").val();
                     jsonobj["tzfr_pic1"] = $("#qygd_pic1").val();
                     jsonobj["tzfr_pic2"] = $("#qygd_pic2").val();
                     jsonobj["tzfr_pic3"] = $("#qygd_pic3").val();

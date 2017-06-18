@@ -61,6 +61,19 @@
                 $("#acceptedBtn").addClass("hidden");
                 $("#btnsGroup").addClass("hidden");
             }
+            if (data.hasOwnProperty("tzfr_name")) {
+                var tzfr = {
+                    qygd_name: data["tzfr_name"],
+                    qygd_idnumber: data["tzfr_idnumber"],
+                    qygd_investment: data["f_investment"],
+                    qygd_pic1: data["tzfr_pic1"],
+                    qygd_pic2: data["tzfr_pic2"],
+                    qygd_pic3: data["tzfr_pic3"],
+                    o2o_id: data["id"],
+                    qygd_jobtitle: "法人"
+                };
+                jsonobj.arr.unshift(tzfr);
+            }
             var liststr = "";
             for (var i = 0; i < jsonobj.arr.length; i++) {
                 var node = jsonobj.arr[i];

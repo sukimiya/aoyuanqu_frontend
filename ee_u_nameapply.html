@@ -75,7 +75,7 @@
             $("#register_name").html("<span style='font-size:18px;'>" + jsonobj["register_name"] + "</span>");
             $("#register_phone").html("<span style='font-size:18px;'>" + jsonobj["register_phone"] + "</span>");
             $("#apply_remark").val(jsonobj["apply_remark"]);
-            if (jsonobj["apply_state"] == 0) {
+            if (jsonobj["apply_state"] == 1) {
                 $("#btnsGroup").removeClass("hide");
                 $("#acceptedBtn").addClass("hide");
                 $("#backedBtn").addClass("hide");
@@ -93,7 +93,7 @@
                 var tzfr = {
                     qygd_name: jsonobj["tzfr_name"],
                     qygd_idnumber: jsonobj["tzfr_idnumber"],
-                    qygd_investment: jsonobj["tzfr_investment"],
+                    qygd_investment: jsonobj["f_investment"],
                     qygd_pic1: jsonobj["tzfr_pic1"],
                     qygd_pic2: jsonobj["tzfr_pic2"],
                     qygd_pic3: jsonobj["tzfr_pic3"],
@@ -124,15 +124,6 @@
             $("#investorlists").append(rsstr);
             investorAry.push(data);
         }
-
-        function uploadImgWithName(picname, theimg) {
-            var imgpath = "";
-            var node = investorAry[curSelectedIndex]
-            wx.previewImage({
-                current: getRemotePic(node[picname]), // 当前显示图片的http链接
-                urls: [getRemotePic(node[picname])] // 需要预览的图片http链接列表
-            });
-        }
         var curSelectedIndex = -1;
 
         function editInvestor(index) {
@@ -160,7 +151,10 @@
             }
             return "0%";
         }
-
+        function topreivew(theid){
+            var imgid = $(theid).attr("src");
+            previewImagebyWX(imgid);
+        }
     </script>
 </head>
 
@@ -266,13 +260,13 @@
                         <label>投资人身份证</label>
                         <div class="container-fluid">
                             <div class="row">
-                                <a class="col-xs-4" href="javascript:uploadImgWithName('qygd_pic1','#qygd_pic1_img')" style="border:0px solid #000">
+                                <a class="col-xs-4" href="javascript:topreivew('qygd_pic1_img')" style="border:0px solid #000">
                                     <img id="qygd_pic1_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
                                 </a>
-                                <a class="col-xs-4" href="javascript:uploadImgWithName('qygd_pic2','#qygd_pic2_img')" style="border:0px solid #000">
+                                <a class="col-xs-4" href="javascript:topreivew('qygd_pic2_img')" style="border:0px solid #000">
                                     <img id="qygd_pic2_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
                                 </a>
-                                <a class="col-xs-4" href="javascript:uploadImgWithName('qygd_pic3','#qygd_pic3_img')" style="border:0px solid #000">
+                                <a class="col-xs-4" href="javascript:topreivew('qygd_pic3_img')" style="border:0px solid #000">
                                     <img id="qygd_pic3_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
                                 </a>
                             </div>

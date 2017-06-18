@@ -82,28 +82,21 @@
             if (data.hasOwnProperty("manage_range")) $("#manage_range").text(data.manage_range);
             if (data.hasOwnProperty("register_money")) $("#register_money").val(data.register_money);
             if (data.hasOwnProperty("register_kind")) $("#register_kind").text(data.register_kind);
-            if (data.hasOwnProperty("appointment_time")) $("#appointment_time").val(data.appointment_time);
             if (data.hasOwnProperty("tzfr_name")) $("#tzfr_name").val(data.tzfr_name);
             for (var i = 0; i < data.arr.length; i++) {
                 data.arr[i]["order"] = i;
                 addAinvestorToList(data.arr[i]);
             }
             if (data.hasOwnProperty("appointment_time")) {
-                var theyear = Math.round(data.appointment_time.split("-")[0]);
-                var datastr = data.appointment_time.split("-")[1];
-                var themonth = Math.round(datastr.split("-")[0]) - 1;
-                datastr = datastr.split("-")[1];
-                var theday = Math.round(datastr.split("-")[0]);
-                var today = new Date(theyear, themonth, theday);
-                today.setFullYear(theyear);
-                today.setMonth(themonth);
-                today.setDate(theday);
+                debugger;
+                var today = new Date(data.appointment_time.time);
                 $('#appointment_time_picker').datetimepicker({
                     locale: 'zh-cn',
                     format: 'YYYY-MM-DD hh:mm',
                     defaultDate: today,
                     enabledDates: [today]
                 });
+                $("#appointment_time").val(today.Format("yyyy-MM-dd hh:mm"));
             }
             if (data.hasOwnProperty("appointment_address"))
                 $("#appointment_address").val(data.appointment_address);
@@ -111,14 +104,14 @@
                 var tzfr = {
                     qygd_name: data["tzfr_name"],
                     qygd_idnumber: data["tzfr_idnumber"],
-                    qygd_investment: data["tzfr_investment"],
+                    qygd_investment: data["f_investment"],
                     qygd_pic1: data["tzfr_pic1"],
                     qygd_pic2: data["tzfr_pic2"],
                     qygd_pic3: data["tzfr_pic3"],
                     o2o_id: data["id"],
                     qygd_jobtitle: "法人"
                 };
-                jsonobj.arr.unshift(tzfr);
+                data.arr.unshift(tzfr);
             }
             if(data.hasOwnProperty("arr")){
                 for(var i=0;i<data.arr.length;i++){
@@ -162,7 +155,7 @@
             rsobj["appointment_time"] = $("#appointment_time").val();
             rsobj["appointment_address"] = $("#appointment_address").val();
             rsobj["zip_code"] = $("#zip_code").val();
-            rsobj["weituo_state"] = $("#weituo_state").val();
+            rsobj["weituo_state"] = $("#weituo_state").val()=="on"?1:0;
             rsobj["qyfr_name"] = $("#qyfr_name").val();
             rsobj["qyfr_telephone"] = $("#qyfr_telephone").val();
             rsobj["qyfr_mobile"] = $("#qyfr_mobile").val();
@@ -173,19 +166,25 @@
             rsobj["qycw_email"] = $("#qycw_email").val();
             rsobj["qycw_pic1"] = $("#qycw_pic1").val();
             rsobj["qycw_pic2"] = $("#qycw_pic2").val();
+            rsobj["qycw_pic3"] = $("#qycw_pic3").val();
+            rsobj["qycw_pic4"] = $("#qycw_pic4").val();
             rsobj["qyjs_name"] = $("#qyjs_name").val();
             rsobj["qyjs_idnumber"] = $("#qyjs_idnumber").val();
             rsobj["qyjs_pic1"] = $("#qyjs_pic1").val();
             rsobj["qyjs_pic2"] = $("#qyjs_pic2").val();
 
-            return rsobj;
+            return JSON.stringify(rsobj);
         }
         $(document).ready(function() {
             $("#thesubmit").on("click", function(events) {
                 var jdata = encodeDatas();
                 var myapi = restapis;
                 myapi.request("updateMQ.do", "page", jdata, function(result) {
-                    if (result.result == 0) {
+                    if(result.code == 0){
+                        if(result.message=="系统异常"){
+                            alert("提交错误,"+result.message);
+                        }
+                    }else{
                         window.location = "ee_progress.html?id=" + GetRequest()["id"];
                     }
                 }, function(e) {
@@ -271,8 +270,8 @@
                         <input id="zip_code" name="zip_code" class="form-control" type="number" maxlength="6">
                     </div>
                     <div class="form-group">
-                        <label for="qycw_name">企业法人姓名</label>
-                        <input id="qyfr_name" name="qycw_name" class="form-control" type="text">
+                        <label for="qyfr_name">企业法人姓名</label>
+                        <input id="qyfr_name" name="qyfr_name" class="form-control" type="text">
                     </div>
                     <div class="form-group">
                         <label for="qycw_telephone">企业法人电话</label>
@@ -318,13 +317,30 @@
                             <a class="col-xs-4" href="javascript:uploadImgWithName('#qycw_pic2','#qycw_pic2_img')" style="border:0px solid #000">
                                 <img id="qycw_pic2_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
                             </a>
+                            
                         </div>
                         <div class="row">
                             <label class="col-xs-4" style="font-size:14px;font-weight:normal">正面</label>
                             <label class="col-xs-4" style="font-size:14px;font-weight:normal">反面</label>
                         </div>
+                        <hr>
+                        <div class="row">
+                            <a class="col-xs-4" href="javascript:uploadImgWithName('#qycw_pic3','#qycw_pic3_img')" style="border:0px solid #000">
+                                <img id="qycw_pic3_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
+                            </a>
+                            <a class="col-xs-4" href="javascript:uploadImgWithName('#qycw_pic4','#qycw_pic4_img')" style="border:0px solid #000">
+                                <img id="qycw_pic4_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
+                            </a>
+                            
+                        </div>
+                        <div class="row">
+                            <label class="col-xs-4" style="font-size:14px;font-weight:normal">财务上岗证正面</label>
+                            <label class="col-xs-4" style="font-size:14px;font-weight:normal">财务上岗证反面</label>
+                        </div>
                         <input type="hidden" id="qycw_pic1">
                         <input type="hidden" id="qycw_pic2">
+                        <input type="hidden" id="qycw_pic3">
+                        <input type="hidden" id="qycw_pic4">
                     </div>
                     <hr>
                     <hr>

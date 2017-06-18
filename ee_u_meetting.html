@@ -95,14 +95,14 @@
                 var tzfr = {
                     qygd_name: data["tzfr_name"],
                     qygd_idnumber: data["tzfr_idnumber"],
-                    qygd_investment: data["tzfr_investment"],
+                    qygd_investment: data["f_investment"],
                     qygd_pic1: data["tzfr_pic1"],
                     qygd_pic2: data["tzfr_pic2"],
                     qygd_pic3: data["tzfr_pic3"],
                     o2o_id: data["id"],
                     qygd_jobtitle: "法人"
                 };
-                jsonobj.arr.unshift(tzfr);
+                data.arr.unshift(tzfr);
             }
             if(data.hasOwnProperty("arr")){
                 for(var i=0;i<data.arr.length;i++){
@@ -111,21 +111,15 @@
                 }
             }
             if (data.hasOwnProperty("appointment_time")) {
-                var theyear = Math.round(data.appointment_time.split("-")[0]);
-                var datastr = data.appointment_time.split("-")[1];
-                var themonth = Math.round(datastr.split("-")[0]) - 1;
-                datastr = datastr.split("-")[1];
-                var theday = Math.round(datastr.split("-")[0]);
-                var today = new Date(theyear, themonth, theday);
-                today.setFullYear(theyear);
-                today.setMonth(themonth);
-                today.setDate(theday);
+                debugger;
+                var today = new Date(data.appointment_time.time);
                 $('#appointment_time_picker').datetimepicker({
                     locale: 'zh-cn',
                     format: 'YYYY-MM-DD hh:mm',
                     defaultDate: today,
                     enabledDates: [today]
                 });
+                $("#appointment_time").val(today.Format("yyyy-MM-dd hh:mm"));
             }
             if (data.hasOwnProperty("appointment_address"))
                 $("#appointment_address").val(data.appointment_address);
@@ -186,7 +180,8 @@
                 var theid = GetRequest()["id"];
                 
                 myapi.request("updateAppointment_state",null,"id="+theid+"&appointment_state=2",function(result){
-                    if(data.result==0){
+                    if(result==1){
+                        debugger;
                             window.location = "ee_u_progress.html";
                         }
                 },function(e){alert("提交失败，请检查网络连接")});
