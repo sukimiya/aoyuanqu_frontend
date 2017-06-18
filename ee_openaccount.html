@@ -2,6 +2,9 @@
 
 <head>
     <meta charset="utf-8">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="0">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta http-equiv="pragma" content="no-cache">
     <meta http-equiv="cache-control" content="no-cache">
@@ -31,7 +34,9 @@
                             "id": GetRequest()["id"],
                             "swsf_license": $("#swsf_license").val(),
                             "account_bank": $("#account_bank").val(),
-                            "account_number": $("#account_number").val()
+                            "account_number": $("#account_number").val(),
+                            "swsf_state":2,
+                            "account_state":2
                         };
                         myapi.request("updateYHKH.do", "page", JSON.stringify(postobj), function(result) {
                             console.log("deliver infomation had been record.");
@@ -60,7 +65,7 @@
             var myapi = restapis;
             if (GetRequest()["id"])
                 myapi.request("searchYHKH", null, "id=" + GetRequest()["id"], function(result) {
-                    initial(data.swsf_state, data);
+                    initial(result.swsf_state, result);
                 }, function(e) {});
         });
         //

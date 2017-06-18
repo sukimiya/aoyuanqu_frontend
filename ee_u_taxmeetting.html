@@ -56,12 +56,12 @@
                     }
                     $('#appointment_time_picker').datetimepicker({
                         locale: 'zh-cn',
-                        format: 'yyyy-mm-dd hh:ii',
+                        format: 'YYYY-MM-DD hh:mm',
                         defaultDate: today,
-                        enabledDates: darry
+                        enabledDates: [today]
                     });
                 } else {
-                    $("#szhd_time").val(data.szhd_time);
+                    $("#appointment_time").val(data.szhd_time);
                     $("#szhd_address").val(data.szhd_address);
                     if (data.szhd_license == null || data.szhd_license) {
                         $("#szhd_license_img").removeClass("hide");
@@ -72,29 +72,31 @@
                     });
                 }
         }
-        $(document).ready(function () {
+        $(document).ready(function() {
             var myapi = restapis;
-            $("#thesubmit").on("click", function (events) {
+            $("#thesubmit").on("click", function(events) {
                 //
+                debugger;
                 if (curDate) {
-                    if (curDate.szhd_state == 1) {
-                        var params = "id=" + GetRequest()["id"] + "&szhd_time=" + $("#szhd_time").val() + "&szhd_address=" + $("#szhd_address").val() + "&szhd_state=2";
-                        myapi.request("updateStartSZHD", null, params, function (result) {
+                    if (curDate.szhd_state != 2) {
+                        var params = "id=" + GetRequest()["id"] + "&szhd_time=" + $("#appointment_time").val() + "&szhd_address=" + $("#appointment_address").val() + "&szhd_state=1";
+                        myapi.request("updateStartSZHD", null, params, function(result) {
                             window.location = "ee_u_progress.html";
-                        }, function () {});
+                        }, function() {});
                     } else {
-                        var params = "id=" + GetRequest()["id"]+"&szhd_license="+$("#szhd_license").val()+"&szhd_state1=2&szhd_state=2";
-                        myapi.request("updateSZHD_state", null, params, function (result) {
+                        var params = "id=" + GetRequest()["id"] + "&szhd_license=" + $("#szhd_license").val() + "&szhd_state1=2&szhd_state=2";
+                        myapi.request("updateSZHD_state", null, params, function(result) {
                             window.location = "ee_u_progress.html";
-                        }, function (e) {});
+                        }, function(e) {});
                     }
                 }
             });
-            myapi.request("searchSZHD", null, "id=" + GetRequest()["id"], function (result) {
+            myapi.request("searchSZHD", null, "id=" + GetRequest()["id"], function(result) {
                 initial(result);
-            }, function (e) {});
+            }, function(e) {});
 
         })
+
     </script>
 </head>
 

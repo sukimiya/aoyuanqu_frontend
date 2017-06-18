@@ -55,16 +55,14 @@
             var ltype = 0;
             if (!isfinish) {
                 ltype = 1;
-                $("#expressGroup").removeClass("hide");
-            } else {
                 $("#expressGroup").addClass("hide");
+            } else {
+                $("#expressGroup").removeClass("hide");
             }
-            if (dropload) me = dropload;
-            doloadlist($("#searchbarTf").val(), 1, ltype, false, me);
         }
         //
         function previewImgWithName(picname, theimg) {
-            var imgpath = $("#lisenceImg").attr("src");
+            var imgpath = $(picname).val();
             previewImagebyWX(imgpath);
         }
         $(document).ready(function() {
@@ -74,57 +72,35 @@
                 var postobj = {};
                 postobj["id"] = GetRequest()["id"];
                 postobj["receive_name"] = $("#receive_name").val();
-                postobj["license_takekind"] = isunfinishList?1:0;
+                postobj["license_takekind"] = isunfinishList ? 1 : 0;
                 postobj["receive_phone"] = $("#receive_phone").val();
-                postobj["express_address"] = $("#express_address").text();
+                postobj["express_address"] = $("#express_address").val();
+                debugger;
                 myapi.request("updateZZFF.do", "page", JSON.stringify(postobj), function(data) {
                     debugger;
                     console.log("deliver infomation had been record.");
-                    window.location.replace("ee_progress.html");
+                    window.location.replace("ee_progress.html?id=" + GetRequest()["id"]);
                 }, function(e) {}, "POST");
             });
             myapi.request("searchZZFF", null, "id=" + GetRequest()["id"], function(data) {
                 var jdata = data;
+                if (jdata.hasOwnProperty("license_pic")) {
+
+                    getRemotePic(jdata.license_pic, $("#lisencePic"));
+                    $("lisencePic1").val(jdata.license_pic);
+                }
+
                 if (jdata.license_state == 2) {
                     //2 已经投递
-                    getRemotePic(jdata.license_pic, $("#lisenceImg"));
                     //$("#my-state-1").addClass("hide");
-                    setFromDisabled("deliverform",true);
+                    setFromDisabled("deliverform", true);
                     if (jdata.license_takekind == 0) {
                         $("#my-state-1").addClass("hide");
                     }
                 } else if (jdata.license_state == 1) {
-                    //0 未发
-                    getRemotePic(jdata.license_pic, $("#lisenceImg"));
-                } else {
-                    //1 已经填写快递信息
-                    $("#my-state-1").addClass("hide");
-                    if (jdata.license_takekind == 2) {
-                        //等待查询显示快递信息
-                    }
+                    //1 未发
                 }
             }, function(e) {});
-            $.ajax({
-                url: "json/ee_eefinish_get.json",
-                dataType: "json",
-                data: "{}",
-                success: function(data) {
-                    var jdata = data;
-                    if (jdata.license_state == 2) {
-                        //2 已经投递
-                        $("#my-state-1").addClass("hide");
-                    } else if (jdata.license_state == 0) {
-                        //0 未发
-
-                    } else {
-                        //1 已经填写快递信息
-                        $("#my-state-1").addClass("hide");
-                        if (jdata.license_takekind == 2) {
-                            //等待查询显示快递信息
-                        }
-                    }
-                }
-            });
             myweixin.initial();
         });
 
@@ -134,11 +110,14 @@
 <body class="my-body">
     <div class="section my-topsection">
         <div class="container text-center">
-            <img id="lisenceImg" class="col-xs-4 col-xs-offset-4 img-responsive my-gap-top" src="images/dfa8c6ef0acedc844c59669f4f24fe1a.png">
+
+            <img class="col-xs-4 col-xs-offset-4 img-responsive my-gap-top" src="images/dfa8c6ef0acedc844c59669f4f24fe1a.png">
             <h1>&nbsp;</h1>
             <h1>&nbsp;</h1>
             <a href="#">
-                <img id="lisencePic" width="200" height="300">
+                <a href="javascript:previewImgWithName('#lisencePic1','#lisencePic')">
+                    <img id="lisencePic" width="200" height="300">
+                </a>
             </a>
             <hr>
         </div>
@@ -166,10 +145,14 @@
                         <textarea id="express_address" name="express_address" class="form-control" required style="font-size:18px;border-color: #5066b4;"></textarea>
                     </div>
                     <input type="hidden" id="license_takekind">
+                    <input type="hidden" id="lisencePic1">
                 </form>
             </div>
         </div>
-        <a id="submitbtn" class="btn btn-primary col-xs-12 my-gap-bottom">提交</a>
+        <div class="container my-gap-bottom my-gap-top">
+            <a id="submitbtn" class="btn btn-primary col-xs-12">提交</a>
+        </div>
+
     </div>
 
 </body>

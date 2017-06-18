@@ -2,6 +2,9 @@
 
 <head>
     <meta charset="utf-8">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="0">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta http-equiv="pragma" content="no-cache">
     <meta http-equiv="cache-control" content="no-cache">
@@ -34,25 +37,6 @@
     <script type="text/javascript">
         var isunfinishList = true;
         var mywx = myweixin;
-        function switchlisttype() {
-            var setl1 = "";
-            var setl2 = "";
-            if (isunfinishList) {
-                setl1 = "#unfinishlabel";
-                setl2 = "#finishlabel";
-            } else {
-                setl1 = "#finishlabel";
-                setl2 = "#unfinishlabel";
-            }
-            $(setl1).removeClass("btn-primary");
-            $(setl1).removeClass("active");
-            $(setl1).addClass("btn-default");
-            $(setl2).removeClass("btn-default")
-            $(setl2).addClass("btn-primary");
-            $(setl2).addClass("active");
-            isunfinishList = !isunfinishList;
-            toLoadList(isunfinishList);
-        }
 
         function toLoadList(isfinish) {
             var ltype = 0;
@@ -65,6 +49,7 @@
             if (dropload) me = dropload;
             doloadlist($("#searchbarTf").val(), 1, ltype, false, me);
         }
+
         function getShippers() {
             $.ajax({
                 url: "json/expressinfo.json",
@@ -83,57 +68,60 @@
         }
         //
         var curlicense_state = 0;
-        var hasexpress=false;
+        var hasexpress = false;
         $(document).ready(function() {
             var myapi = restapis;
             $('textarea').flexText();
-            $("#submitBtn").on("click", function() {
-                debugger;
-                var requestStr = "id="+GetRequest()["id"];
-                var expcode = $("#express_code").val();
-                if(expcode!=undefined&&expcode!=null&&expcode!=""){
-                    requestStr += "?express_number="+expcode;
-                }
-                var expshipper = $("#express_shipper").val();
-                if(expshipper!=undefined&&expshipper!=null&&expshipper!=""){
-                    requestStr += "?express_company="+expshipper;
-                }
-                requestStr += "&license_pic="+$("#lisence_pic1").val();
-                if($("#receive_name").text()!=null||$("#receive_phone").text()!=null||$("#express_address").text()!=null){
-                    if(curlicense_state==1){
-                        requestStr += "&license_state=2";
-                    }else{
-                        requestStr += "&license_state=1";
-                    }
-                }else{
-                    requestStr += "&license_state=1";
-                }
-                myapi.request("updateLicense",null,requestStr,function(data){
-                    debugger;
-                    console.log("deliver infomation had been record.");
-                    window.location = "ee_u_progress.html";
-                },function(e){});
-            });
             getShippers();
-            
+
             myapi.request("searchZZFF", null, "id=" + GetRequest()["id"], function(data) {
                 debugger;
                 var getobj = data;
-                curlicense_state = getobj.license_state;
                 $("#company_name").text(getobj["confirm_name"]);
                 if (getobj.license_state == 1) {
-                    if(getobj.license_takekind==1){
-                        $("#my-state-1").addClass("hide"); 
-                    }else{
-                        $("#receive_name").text(getobj["receive_name"]);
-                        $("#receive_phone").text(getobj["receive_phone"]);
-                        $("#express_address").text(getobj["express_address"]);
-                        $("#my-state-1").removeClass("hide"); 
+                    if (getobj.hasOwnProperty("license_pic")) {
+
+                        $("#uploadbtn").addClass("hide");
+                        debugger;
+                        if (getobj.license_takekind == 1) {
+                            $("#receive_name").val(getobj.receive_name);
+                            $("#receive_phone").val(getobj.receive_phone);
+                            $("#express_address").val(getobj.express_address);
+                            $("#my-state-1").removeClass("hide");
+                        }
+                        getRemotePic(getobj.license_pic, $("#lisenceImg"));
+                        $("#submitBtn").text("审核");
+                        $("#submitBtn").on("click", function() {
+                            var requestStr = "id=" + GetRequest()["id"];
+                            if (getobj.license_takekind == 1) {
+                                requestStr += "&express_number=" + getobj["express_number"];
+                                requestStr += "&express_company=" + getobj["express_company"];
+                            }
+                            requestStr += "&license_pic=" + $("#lisence_pic1").val();
+                            requestStr += "&license_state=2";
+                            myapi.request("updateLicense", null, requestStr, function(data) {
+                                    debugger;
+                                    console.log("deliver infomation had been record.");
+                                    window.location = "ee_u_progress.html";
+                                },
+                                function(e) {});
+                        });
+                    } else {
+                        $("#my-state-1").addClass("hide");
+                        $("#submitBtn").on("click", function() {
+                            var requestStr = "id=" + GetRequest()["id"];
+                            requestStr += "&license_pic=" + $("#lisence_pic1").val();
+                            requestStr += "&license_state=1";
+                            myapi.request("updateLicense", null, requestStr, function(data) {
+                                    debugger;
+                                    console.log("deliver infomation had been record.");
+                                    window.location = "ee_u_progress.html";
+                                },
+                                function(e) {});
+                        });
                     }
                 } else {
-                    $("#my-state-1").addClass("hide");
-                }
-                if (getobj.license_state == 2) {
+                    $("#my-state-1").removeClass("hide");
                     $("#receive_name").text(getobj["receive_name"]);
                     $("#receive_phone").text(getobj["receive_phone"]);
                     $("#express_address").text(getobj["express_address"]);
@@ -145,10 +133,12 @@
             }, function(e) {});
             mywx.initial();
         });
-        function topreivew(theid){
+
+        function topreivew(theid) {
             var imgid = $(theid).attr("src");
             previewImagebyWX(imgid);
         }
+
     </script>
 </head>
 
@@ -165,42 +155,40 @@
                 <h3 id="company_name">&nbsp;</h3>
             </div>
         </div>
-        <div class="container">
 
-            <div id="my-state-1">
-
-                <hr>
-                <form>
-                    <input id="lisence_pic1" type="hidden">
-                    <div class="form-group">
-                        <label>收件人:</label>
-                        <div class="form-control" id="receive_name" />
-                    </div>
-                    <div class="form-group">
-                        <label>联系电话:</label>
-                        <div class="form-control" id="receive_phone" />
-                    </div>
-                    <div class="form-group">
-                        <label>快递地址:</label>
-                        <div class="form-control" id="express_address" />
-                    </div>
-                    <hr>
-                    <div class="form-group">
-                        <label>选择快递公司</label>
-                        <select id="shipper" name="shipper" class="selectpicker mycompany-select">
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>快递单号:</label>
-                        <input class="form-control" id="express_code" required/>
-                    </div>
-
-                </form>
-            </div>
-            <a id="submitBtn" class="btn btn-primary col-xs-12">提交</a>
-        </div>
     </div>
+    <div class="section">
+        <div class="container">
+            <hr>
+            <div id="my-state-1">
+                <input id="lisence_pic1" type="hidden">
+                <div class="form-group">
+                    <label>收件人:</label>
+                    <input type="text" class="form-control" id="receive_name" disabled>
+                </div>
+                <div class="form-group">
+                    <label>联系电话:</label>
+                    <input type="tel" class="form-control" id="receive_phone" disabled>
+                </div>
+                <div class="form-group">
+                    <label>快递地址:</label>
+                    <input type="text" class="form-control" id="express_address" disabled>
+                </div>
+                <hr>
+                <div class="form-group">
+                    <label>选择快递公司</label>
+                    <select id="shipper" name="shipper" class="selectpicker mycompany-select">
+                        </select>
+                </div>
+                <div class="form-group">
+                    <label>快递单号:</label>
+                    <input class="form-control" id="express_code" required/>
+                </div>
+            </div>
+            <a id="submitBtn" class="btn btn-primary col-xs-12">提交</a> &nbsp;
+        </div>
 
+    </div>
 </body>
 
 </html>

@@ -32,15 +32,21 @@
         var isAddMode = true;
 
         function initial(data) {
+            debugger;
             if (data.company_name)
                 $("#companyname").text(data.company_name);
+            if (data.szhd_license == null || data.szhd_license) {
+                $("#szhd_license_img").removeClass("hide");
+                getRemotePic(data.szhd_license, $("#szhd_license_img"));
+            }
+            var today = new Date(data.szhd_time);
+                $("#szhd_time").val(today.Format("yyyy-MM-dd hh:mm"));
             if (data.szhd_state == 2) {
-                var theyear = Math.round(data.szhd_time.split("年")[0]);
-                var datastr = data.szhd_time.split("年")[1];
-                var themonth = Math.round(datastr.split("月")[0]) - 1;
-                datastr = datastr.split("月")[1];
-                var theday = Math.round(datastr.split("日")[0]);
-                var today = new Date(theyear, themonth, theday);
+                myweixin.initial();
+                $("#szhd_address").val(data.szhd_address);
+
+                $("#submitbtn").addClass("hide");
+            } else {
                 $("#szhd_time").attr('min', today);
                 var month = new Date(new Date().setMonth(today.getMonth() + 1));
                 $("#szhd_time").attr('max', month);
@@ -58,31 +64,28 @@
                 }
                 $('#szhd_time_picker').datetimepicker({
                     locale: 'zh-cn',
-                    defaultDate: today,
+                    format: 'YYYY-MM-DD hh:mm',
                     enabledDates: darry
                 });
-            } else {
-                myweixin.initial();
-                $("#szhd_time").val(data.szhd_time);
-                $("#szhd_address").val(data.szhd_address);
-                if (data.szhd_license == null || data.szhd_license) {
-                    $("#szhd_license_img").removeClass("hide");
-                }
+                $("#submitbtn").on("click", function(events) {
+                    var params = "id=" + GetRequest()["id"] + "&szhd_time=" + $("#szhd_time").val() + "&szhd_address=" + $("#szhd_address").val() + "&szhd_state=2";
+                    myapi.request("updateStartSZHD", null, params, function(result) {
+                        window.location = "ee_progress.html?id=" + GetRequest()["id"];
+                    }, function() {});
+                });
             }
         }
         var myapi = restapis;
-        $(document).ready(function () {
-
-            $("#thesubmit").on("click", function (events) {
-                var params = "id=" + GetRequest()["id"] + "&szhd_time=" + $("#szhd_time").val() + "&szhd_address=" + $("#szhd_address").val() + "&szhd_state1=1";
-                myapi.request("updateStartSZHD", null, params, function (result) {
-                    window.location = "ee_progress.html";
-                }, function () {});
-            });
-            myapi.request("searchSZHD", null, "id=" + GetRequest()["id"], function (result) {
+        $(document).ready(function() {
+            myapi.request("searchSZHD", null, "id=" + GetRequest()["id"], function(result) {
                 initial(result);
-            }, function (e) {});
+            }, function(e) {});
         })
+
+        function onpreview() {
+            previewImagebyWX($("#szhd_license_img").attr("src"));
+        }
+
     </script>
 </head>
 
@@ -116,15 +119,17 @@
                     </div>
                     <div class="form-group">
                         <label class="clearfix">面签预约地点</label>
-                        <select id="appointment_address" name="appointment_address" class="selectpicker mycompany-select">
+                        <select id="szhd_address" name="szhd_address" class="selectpicker mycompany-select">
                             <option title="小区总部" value="小区总部"><span style="font-size:12;color:#cccccc">园区小区总部，地址是：上海市XX区XX路233号</span></option>
                             <option title="市区总部" value="市区总部"><span style="font-size:12;color:#cccccc">园区市区总部，地址是：上海市XX区XX路233号</span></option>
                         </select>
                     </div>
                     <div class="text-center">
                         <hr>
-                        <img id="szhd_license_img" class="img-responsive my-gap-top my-gat-bottom hide" src="images/picframe.svg">
+                        <a href="javascript:onpreview()"><img id="szhd_license_img" class="img-responsive my-gap-top my-gat-bottom hide" src="images/picframe.svg"></a>
+
                     </div>
+                    <a id="submitbtn" class="btn btn-primary cal-xs-12 my-gap-top">提交</a>
                 </form>
             </div>
         </div>
