@@ -81,57 +81,61 @@
         }
 
         function doloadlist(skey = "", page = 1, ttype = 0, isappend = true, me = null) {
-            $.ajax({　　
-                type: "GET", //用POST方式传输
-                　　dataType: "json", //数据格式:JSON
-                　　url: 'json/ee_u_ncompanylist.json', //目标地址
-                　　data: JSON.stringify({
-                    page: page,
-                    type: (ttype+1),
-                    key: skey
-                }),
-                　　error: function(XMLHttpRequest, textStatus, errorThrown) {},
-                　　success: function(jsonObj) {
-                    if (!jsonObj.resault) {
-                        tatalPages = jsonObj.totalPage;
+            var myapi = restapis;
+            var requestdata = "allow_notice=" + (ttype+1) + "&page=" + page;
+            if (skey != null && skey != "") {
+                requestdata += "&key=" + skey;
+            }
+            debugger;
+            myapi.request("ee_u_applynotifylist", null, requestdata, function(jsonObj) {
+                if (!jsonObj.resault) {
+                    if (jsonObj.hasOwnProperty("totalPage")) tatalPages = jsonObj.totalPage;
+                    if (jsonObj.hasOwnProperty("curPage")) {
                         curPage = jsonObj.curPage;
-                        if (jsonObj.lists) {
-                            var result = "";
-                            for (var i = 0; i < jsonObj.lists.length; i++) {
-                                var node = jsonObj.lists[i];
-                                result += '<a href="javascript:gotoEE(' +
-                                    node["cid"] +
-                                    ')" class="list-group-item my-list-item" style="text-align: left;">' +
-                                    node["company"] +
-                                    '<span class="badge mytextbadge">&nbsp;<i class="fa fa-angle-right" aria-hidden="true"></i></span></a>';
-                            }
-                            if(curPage==1){
-                                listdata = jsonObj.lists;
-                            }else{
-                                listdata = listdata.concat(jsonObj.lists);
-                            }
-                        } else {
-                            //droplist opration
-                            if (me) {
-                                // 锁定
-                                me.lock();
-                                // 无数据
-                                me.noData();
-                            }
+                    } else {
+                        curPage = page
+                    }
+                    if (jsonObj.arr) {
+                        var result = "";
+                        for (var i = 0; i < jsonObj.arr.length; i++) {
+                            var node = jsonObj.arr[i];
+                            var displayname = node["apply_name"];
+                            if (node.hasOwnProperty("confirm_name")) displayname = node["confirm_name"]
+                            result += '<a href="javascript:gotoEE(' 
+                                +"'"+node["id"]+"'"
+                                +')" class="list-group-item my-list-item" style="text-align: left;">' 
+                                +displayname 
+                                +'<span class="badge mytextbadge">&nbsp;<i class="fa fa-angle-right" aria-hidden="true"></i></span></a>';
                         }
-                        if (isappend) {
-                            $('#mycrews').append(result);
+                        debugger;
+                        if (curPage == 1) {
+                            listdata = jsonObj.arr;
                         } else {
-                            $('#mycrews').html(result);
-                        }
-                        if (me) {
-                            me.resetload();
+                            listdata = listdata.concat(jsonObj.arr);
                         }
                     } else {
-                        debugger;
-                        alert("获取数据错误");
+                        //droplist opration
+                        if (me) {
+                            // 锁定
+                            me.lock();
+                            // 无数据
+                            me.noData();
+                        }
                     }
+                    if (isappend) {
+                        $('#mycrews').append(result);
+                    } else {
+                        $('#mycrews').html(result);
+                    }
+                    if (me) {
+                        me.resetload();
+                    }
+                } else {
+                    debugger;
+                    alert("获取数据错误");
                 }
+            }, function(e) {
+                alert("网络错误，请检查网络连接是否正常")
             });
         }
         var dropload = null;

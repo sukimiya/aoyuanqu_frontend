@@ -48,7 +48,7 @@
                 $("#submitbtn").addClass("hide");
             } else {
                 $("#szhd_time").attr('min', today);
-                var month = new Date(new Date().setMonth(today.getMonth() + 1));
+                var month = new Date(new Date().setMonth(today.getMonth() + 6));
                 $("#szhd_time").attr('max', month);
                 var targatDate = new Date();
                 targatDate.setMonth(targatDate.getMonth() + 6);
@@ -119,7 +119,7 @@
                     </div>
                     <div class="form-group">
                         <label class="clearfix">面签预约地点</label>
-                        <select id="szhd_address" name="szhd_address" class="selectpicker mycompany-select">
+                        <select id="szhd_address" name="szhd_address" class="mycompany-select">
                             <option title="小区总部" value="小区总部"><span style="font-size:12;color:#cccccc">园区小区总部，地址是：上海市XX区XX路233号</span></option>
                             <option title="市区总部" value="市区总部"><span style="font-size:12;color:#cccccc">园区市区总部，地址是：上海市XX区XX路233号</span></option>
                         </select>

@@ -35,8 +35,8 @@
                             "swsf_license": $("#swsf_license").val(),
                             "account_bank": $("#account_bank").val(),
                             "account_number": $("#account_number").val(),
-                            "swsf_state":2,
-                            "account_state":2
+                            "swsf_state": 2,
+                            "account_state": 2
                         };
                         myapi.request("updateYHKH.do", "page", JSON.stringify(postobj), function(result) {
                             console.log("deliver infomation had been record.");
@@ -67,6 +67,15 @@
                 myapi.request("searchYHKH", null, "id=" + GetRequest()["id"], function(result) {
                     initial(result.swsf_state, result);
                 }, function(e) {});
+            $("#file").on("change", function() {
+                onuploadComponentChangeHandler($("#file"), "#swsf_license", function(result) {
+                    $("#uploadlabel").text("上传完毕");
+                    $("#swsf_license").val(result.fileName);
+                    getRemotePic(result.fileName, $("#lisenceImg"));
+                }, function(event) {
+                    alert("上传失败");
+                });
+            });
         });
         //
         function previewImgWithName() {
@@ -111,12 +120,17 @@
                     <span style="font-size:14px">请及时登录<a href="http://www.tax.sh.gov.cn/">上海税务网厅</a>,操作前请在电脑上的相应接口连接上税务的“数字证书”,点击：“我要办事”->“税务登记”->“税库银三方协议签订”进行操作,完成后将协议凭证打印，盖章并上传至下方</span>
                     <div class="text-center">
                         <h3>&nbsp;</h3>
-                        <a href="javascript:previewImagebyWX()"><img id="lisenceImg" class="img-responsive my-gap-top" src="images/picframe.svg">
+                        <a href="javascript:previewImagebyWX()">
+                            <img id="lisenceImg" class="img-responsive my-gap-top" src="images/picframe.svg">
                         </a>
-                        <a href="javascript:uploadImgWithName('#swsf_license','#lisenceImg')" id="uploadbtn" class="btn btn-success my-gap-top">上传图片</a>
+                        <a id="uploadbtn" class="a-upload btn btn-success col-xs-6 col-xs-offset-3 my-gap-top">
+                            <img class="img-responsive">
+                            <canvas></canvas>
+                            <input class="my-caver-upload" type="file" name="file" id="file">
+                            <label id="uploadlabel" class="my-upload-label">拍照上传</label>
+                        </a>
                         <h3>&nbsp;</h3>
                     </div>
-
                 </div>
             </form>
             <a id="submitBtn" class="btn btn-primary col-xs-12 my-gap-bottom">提交</a>

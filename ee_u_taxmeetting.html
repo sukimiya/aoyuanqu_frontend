@@ -91,10 +91,19 @@
                     }
                 }
             });
+            $("#file").on("change", function() {
+                onuploadComponentChangeHandler($("#file"), "#szhd_license", function(result) {
+                    $("#uploadlabel").text("上传完毕");
+                    $("#szhd_license").val(result.fileName);
+                    getRemotePic(result.fileName, $("#szhd_license_img"));
+                }, function(event) {
+                    alert("上传失败");
+                });
+            });
             myapi.request("searchSZHD", null, "id=" + GetRequest()["id"], function(result) {
                 initial(result);
             }, function(e) {});
-
+            
         })
 
     </script>
@@ -130,7 +139,7 @@
                     </div>
                     <div class="form-group">
                         <label class="clearfix">面签预约地点</label>
-                        <select id="appointment_address" name="appointment_address" class="selectpicker mycompany-select">
+                        <select id="appointment_address" name="appointment_address" class="mycompany-select">
                             <option title="小区总部" value="小区总部"><span style="font-size:12;color:#cccccc">园区小区总部，地址是：上海市XX区XX路233号</span></option>
                             <option title="市区总部" value="市区总部"><span style="font-size:12;color:#cccccc">园区市区总部，地址是：上海市XX区XX路233号</span></option>
                         </select>
@@ -138,7 +147,12 @@
                     <div class="text-center">
                         <hr>
                         <img id="szhd_license_img" class="img-responsive my-gap-top my-gat-bottom hide" src="images/picframe.svg">
-                        <a href="javascript:uploadImgWithName('#szhd_license','#szhd_license_img')" id="uploadbtn" class="btn btn-success my-gap-top">上传图片</a>
+                        <a id="imgcon" href="javascript:;" class="a-upload btn btn-success col-xs-6 col-xs-offset-3 my-gap-top">
+                            <img class="img-responsive">
+                            <canvas></canvas>
+                            <input class="my-caver-upload" type="file" name="file" id="file">
+                            <label id="uploadlabel" class="my-upload-label">拍照上传</label>
+                        </a>
                     </div>
                     <input type="hidden" id="szhd_license">
                     <hr>

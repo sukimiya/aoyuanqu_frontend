@@ -71,7 +71,7 @@
                     </div>
                     <div class="form-group my-form-group">
                         <label for="register_kink">注册公司类型</label>
-                        <select id="register_kind" name="register_kind" class="selectpicker mycompany-select">
+                        <select id="register_kind" name="register_kind" class="mycompany-select">
                             <option>有限责任公司</option>
                             <option>非公司企业法人</option>
                             <option>合伙企业</option>
@@ -167,20 +167,24 @@
                         <label>投资人身份证</label>
                         <div class="container-fluid">
                             <div class="row">
-                                <a class="col-xs-4" href="javascript:uploadImgWithName('#qygd_pic1','#qygd_pic1_img')" style="border:0px solid #000">
-                                    <img id="qygd_pic1_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
+                                <a href="javascript:;" class="a-upload my-icon-upload my-gap-left" style="float:left;">
+                                    <img class="img-responsive" src="images/picframe.svg">
+                                    <canvas></canvas>
+                                    <label style="font-size:14px;font-weight:normal">正面</label>
+                                    <input type="file" title="" onchange="uploadImage(this,'#qygd_pic1')">
                                 </a>
-                                <a class="col-xs-4" href="javascript:uploadImgWithName('#qygd_pic2','#qygd_pic2_img')" style="border:0px solid #000">
-                                    <img id="qygd_pic2_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
+                                <a href="javascript:;" class="a-upload my-icon-upload my-gap-left" style="float:left;">
+                                    <img class="img-responsive" src="images/picframe.svg">
+                                    <canvas></canvas>
+                                    <label style="font-size:14px;font-weight:normal">反面</label>
+                                    <input type="file" title="" onchange="uploadImage(this,'#qygd_pic2')">
                                 </a>
-                                <a class="col-xs-4" href="javascript:uploadImgWithName('#qygd_pic3','#qygd_pic3_img')" style="border:0px solid #000">
-                                    <img id="qygd_pic3_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
+                                <a href="javascript:;" class="a-upload my-icon-upload my-gap-left" style="float:left;">
+                                    <img class="img-responsive" src="images/picframe.svg">
+                                    <canvas></canvas>
+                                    <label style="font-size:14px;font-weight:normal">证件照</label>
+                                    <input type="file" title="" onchange="uploadImage(this,'#qygd_pic3')">
                                 </a>
-                            </div>
-                            <div class="row">
-                                <label class="col-xs-4" style="font-size:14px;font-weight:normal">正面</label>
-                                <label class="col-xs-4" style="font-size:14px;font-weight:normal">反面</label>
-                                <label class="col-xs-4" style="font-size:14px;font-weight:normal">证件照</label>
                             </div>
                         </div>
                         <input type="hidden" id="qygd_pic1">
@@ -201,8 +205,10 @@
         var curSelect = null;
         var isAddMode = true;
         var isFormValidator = false;
+
         function addAinvestorToList(data, adddata = true) {
-            var rsstr = '<a href="javascript:editInvestor(' + data["order"] + ')" class="list-group-item my-list-item"><div class="col-xs-3"><span style="font-size:14px;">' +
+            var rsstr = '<a href="javascript:editInvestor(' +
+                data["order"] + ')" class="list-group-item my-list-item"><div class="col-xs-3"><span style="font-size:14px;">' +
                 data["qygd_name"] +
                 '</span></div><div class="col-xs-5"><span style="font-size:14px;">' +
                 data["qygd_idnumber"] +
@@ -231,6 +237,9 @@
                 $("#qygd_idnumber").val(investor["qygd_idnumber"]);
                 $("#qygd_investment").val(investor["qygd_investment"]);
                 $("#qygd_jobtitle").val(investor["qygd_jobtitle"]);
+                $("#qygd_pic1").val(investor["qygd_pic1"]);
+                $("#qygd_pic2").val(investor["qygd_pic2"]);
+                $("#qygd_pic3").val(investor["qygd_pic3"]);
                 $("#qygd_pic1" + "_img").attr("src", getRemotePic(investor["qygd_pic1"]));
                 $("#qygd_pic2" + "_img").attr("src", getRemotePic(investor["qygd_pic2"]));
                 $("#qygd_pic3" + "_img").attr("src", getRemotePic(investor["qygd_pic3"]));
@@ -257,7 +266,7 @@
                 if (curSelect) {
                     curSelect["qygd_name"] = $("#qygd_name").val();
                     curSelect["qygd_idnumber"] = $("#qygd_idnumber").val();
-                    curSelect["qygd_investment"] = $("#qygd_investment").val();
+                    curSelect["qygd_investment"] = parseInt($("#qygd_investment").val());
                     curSelect["qygd_jobtitle"] = $("#qygd_jobtitle").val();
                     curSelect["qygd_pic1"] = $("#qygd_pic1").val();
                     curSelect["qygd_pic2"] = $("#qygd_pic2").val();
@@ -273,10 +282,10 @@
             $("#addinvestorpanel").modal("hide");
         }
         var thebillid = 0;
-        
+
         function getApplyFromJSON() {
             var jsonobj = {};
-            
+
             thebillid = Date.parse(new Date());
             jsonobj["wx_openid"] = myweixin.openid;
             debugger;
@@ -287,7 +296,7 @@
             jsonobj["apply_name4"] = $("#apply_name4").val();
             jsonobj["actual_address"] = $("#actual_address").val();
             jsonobj["manage_range"] = $("#manage_range").val();
-            jsonobj["register_money"] = $("#register_money").val();
+            jsonobj["register_money"] = parseInt($("#register_money").val());
             jsonobj["register_kind"] = $("#register_kind").val();
             jsonobj["register_name"] = $("#register_name").val();
             jsonobj["register_phone"] = $("#register_phone").val();
@@ -298,7 +307,7 @@
                 if (ainvestor["qygd_jobtitle"] == "法人") {
                     jsonobj["tzfr_name"] = $("#qygd_name").val();
                     jsonobj["tzfr_idnumber"] = $("#qygd_idnumber").val();
-                    jsonobj["f_investment"] = $("#qygd_investment").val();
+                    jsonobj["f_investment"] = parseInt($("#qygd_investment").val());
                     jsonobj["tzfr_pic1"] = $("#qygd_pic1").val();
                     jsonobj["tzfr_pic2"] = $("#qygd_pic2").val();
                     jsonobj["tzfr_pic3"] = $("#qygd_pic3").val();
@@ -500,7 +509,7 @@
                     }
                 }, function(e) {
                     alert("提交时发生错误!");
-                },"POST");
+                }, "POST");
                 isFormValidator = true;
             });
             $("#addinvestorBtn").on("click", function() {

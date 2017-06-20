@@ -55,6 +55,7 @@
                 url: "json/expressinfo.json",
                 dataTyle: "json",
                 type: "GET",
+                cache: false,
                 success: function(data) {
                     var jobj = data;
                     for (var i = 0; i < jobj.lists.length; i++) {
@@ -131,6 +132,15 @@
                     getRemotePic(getobj.license_pic, $("#lisenceImg"));
                 }
             }, function(e) {});
+            $("#file").on("change", function() {
+                onuploadComponentChangeHandler($("#file"), "#lisence_pic1", function(result) {
+                    $("#uploadlabel").text("上传完毕");
+                    $("#lisence_pic1").val(result.fileName);
+                    getRemotePic(result.fileName, $("#lisenceImg"));
+                }, function(event) {
+                    alert("上传失败");
+                });
+            });
             mywx.initial();
         });
 
@@ -151,7 +161,12 @@
                 <h1>&nbsp;</h1>
                 <a href="javascript:topreivew('#lisenceImg')"></a>
                 <img id="lisenceImg" class="img-responsive my-gap-top" src="images/picframe.svg">
-                <a href="javascript:uploadImgWithName('#lisence_pic1','#lisenceImg')" id="uploadbtn" class="btn btn-success my-gap-top">上传图片</a>
+                <a id="imgcon" href="javascript:;" class="a-upload btn btn-success col-xs-6 col-xs-offset-3 my-gap-top">
+                    <img class="img-responsive">
+                    <canvas></canvas>
+                    <input class="my-caver-upload" type="file" name="file" id="file">
+                    <label id="uploadlabel" class="my-upload-label">拍照上传</label>
+                </a>
                 <h3 id="company_name">&nbsp;</h3>
             </div>
         </div>
@@ -177,7 +192,7 @@
                 <hr>
                 <div class="form-group">
                     <label>选择快递公司</label>
-                    <select id="shipper" name="shipper" class="selectpicker mycompany-select">
+                    <select id="shipper" name="shipper" class="mycompany-select">
                         </select>
                 </div>
                 <div class="form-group">

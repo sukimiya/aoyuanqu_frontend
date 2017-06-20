@@ -25,12 +25,13 @@
     <script type="text/javascript">
         var investorAry = [];
         $(document).ready(function() {
+            myweixin.initial();
             var myapi = restapis;
             var theid = GetRequest()["id"];
             $('textarea').flexText();
-            myapi.request("searchYCM",null,"id="+theid,function(result){
+            myapi.request("searchYCM", null, "id=" + theid, function(result) {
                 pressJSONData(result);
-            },function(e){
+            }, function(e) {
                 alert("网络错误，请稍后再试");
             });
         });
@@ -61,15 +62,15 @@
                 $("#acceptedBtn").addClass("hidden");
                 $("#btnsGroup").addClass("hidden");
             }
-            if (data.hasOwnProperty("tzfr_name")) {
+            if (jsonobj.hasOwnProperty("tzfr_name")) {
                 var tzfr = {
-                    qygd_name: data["tzfr_name"],
-                    qygd_idnumber: data["tzfr_idnumber"],
-                    qygd_investment: data["f_investment"],
-                    qygd_pic1: data["tzfr_pic1"],
-                    qygd_pic2: data["tzfr_pic2"],
-                    qygd_pic3: data["tzfr_pic3"],
-                    o2o_id: data["id"],
+                    qygd_name: jsonobj["tzfr_name"],
+                    qygd_idnumber: jsonobj["tzfr_idnumber"],
+                    qygd_investment: jsonobj["f_investment"],
+                    qygd_pic1: jsonobj["tzfr_pic1"],
+                    qygd_pic2: jsonobj["tzfr_pic2"],
+                    qygd_pic3: jsonobj["tzfr_pic3"],
+                    o2o_id: jsonobj["id"],
                     qygd_jobtitle: "法人"
                 };
                 jsonobj.arr.unshift(tzfr);
@@ -78,7 +79,8 @@
             for (var i = 0; i < jsonobj.arr.length; i++) {
                 var node = jsonobj.arr[i];
                 node["order"] = i;
-                var rsitem = '<a href="javascript:editInvestor(' + node["order"] + ')" class="list-group-item my-list-item-42"><div class="col-xs-3">' +
+                var rsitem = '<a href="javascript:editInvestor(' + "'" +
+                    node["o2o_id"] + "'" + ')" class="list-group-item my-list-item-42"><div class="col-xs-3">' +
                     node["qygd_name"] +
                     '</div><div class="col-xs-4">' +
                     node["qygd_idnumber"] +
@@ -91,31 +93,31 @@
             }
             $("#investorlists").html(liststr);
         }
-
-        function uploadImgWithName(picname, theimg) {
-            var imgpath = "";
-            var node = investorAry[curSelectedIndex]
-            wx.previewImage({
-                current: getRemotePic(node[picname]), // 当前显示图片的http链接
-                urls: [getRemotePic(node[picname])] // 需要预览的图片http链接列表
-            });
-        }
         var curSelectedIndex = -1;
-        function editInvestor(index) {
-            if (investorAry.length > index) {
-                var investor = investorAry[index];
-                $("#qygd_name").val(investor["qygd_name"]);
-                $("#qygd_idnumber").val(investor["qygd_idnumber"]);
-                $("#qygd_investment").val(investor["qygd_investment"]);
-                $("#qygd_jobtitle").val(investor["qygd_jobtitle"]);
-                $("#qygd_pic1" + "_img").attr("src", getRemotePic(investor["qygd_pic1"]));
-                $("#qygd_pic2" + "_img").attr("src", getRemotePic(investor["qygd_pic2"]));
-                $("#qygd_pic3" + "_img").attr("src", getRemotePic(investor["qygd_pic3"]));
-                //这里需要服务器上图片显示的方法
-                isAddMode = false;
-                $("#addinvestorpanel").modal("toggle");
+
+        function editInvestor(o2o_id) {
+            debugger;
+            if (investorAry.length > 0) {
+                for (var i = 0; i < investorAry.length; i++) {
+                    var ainvestor = investorAry[i];
+                    if (ainvestor.o2o_id == o2o_id) {
+                        $("#qygd_name").val(ainvestor["qygd_name"]);
+                        $("#qygd_idnumber").val(ainvestor["qygd_idnumber"]);
+                        $("#qygd_investment").val(ainvestor["qygd_investment"]);
+                        $("#qygd_jobtitle").val(ainvestor["qygd_jobtitle"]);
+                        $("#qygd_pic1").val(ainvestor["qygd_pic1"]);
+                        $("#qygd_pic2").val(ainvestor["qygd_pic2"]);
+                        $("#qygd_pic3").val(ainvestor["qygd_pic3"]);
+                        $("#qygd_pic1" + "_img").attr("src", getRemotePic(ainvestor["qygd_pic1"]));
+                        $("#qygd_pic2" + "_img").attr("src", getRemotePic(ainvestor["qygd_pic2"]));
+                        $("#qygd_pic3" + "_img").attr("src", getRemotePic(ainvestor["qygd_pic3"]));
+                        curSelectedIndex = i;
+                        isAddMode = false;
+                        $("#addinvestorpanel").modal("toggle");
+                        break;
+                    }
+                }
             }
-            curSelectedIndex = index;
         }
 
         function calculate_qygd_investment(investment) {
@@ -243,20 +245,18 @@
                         <label>投资人身份证</label>
                         <div class="container-fluid">
                             <div class="row">
-                                <a class="col-xs-4" href="javascript:uploadImgWithName('qygd_pic1','#qygd_pic1_img')" style="border:0px solid #000">
+                                <a class="col-xs-4" href="javascript:previewImgWithName('#qygd_pic1','#qygd_pic1_img')" style="border:0px solid #000">
                                     <img id="qygd_pic1_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
+                                    <label style="font-size:14px;font-weight:normal">正面</label>
                                 </a>
-                                <a class="col-xs-4" href="javascript:uploadImgWithName('qygd_pic2','#qygd_pic2_img')" style="border:0px solid #000">
+                                <a class="col-xs-4 clearfix" href="javascript:previewImgWithName('#qygd_pic2','#qygd_pic2_img')" style="border:0px solid #000">
                                     <img id="qygd_pic2_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
+                                    <label style="font-size:14px;font-weight:normal">反面</label>
                                 </a>
-                                <a class="col-xs-4" href="javascript:uploadImgWithName('qygd_pic3','#qygd_pic3_img')" style="border:0px solid #000">
+                                <a class="col-xs-4" href="javascript:previewImgWithName('#qygd_pic3','#qygd_pic3_img')" style="border:0px solid #000">
                                     <img id="qygd_pic3_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
+                                    <label style="font-size:14px;font-weight:normal">投资人证件照</label>
                                 </a>
-                            </div>
-                            <div class="row">
-                                <label class="col-xs-4" style="font-size:14px;font-weight:normal">正面</label>
-                                <label class="col-xs-4" style="font-size:14px;font-weight:normal">反面</label>
-                                <label class="col-xs-4" style="font-size:14px;font-weight:normal">证件照</label>
                             </div>
                         </div>
                         <input type="hidden" id="qygd_pic1">

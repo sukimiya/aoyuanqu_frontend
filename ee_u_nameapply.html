@@ -109,12 +109,12 @@
                     addAinvestorToList(node);
                 }
             }
-            
+
         }
 
         function addAinvestorToList(data) {
-            var rsstr = '<a href="javascript:editInvestor(' +
-                data["order"] + ')" class="list-group-item my-list-item-42"><div class="col-xs-4">' +
+            var rsstr = '<a href="javascript:editInvestor(' + "'" +
+                data["o2o_id"] + "'" + ')" class="list-group-item my-list-item-42"><div class="col-xs-4">' +
                 data["qygd_name"] +
                 '</div><div class="col-xs-4">' +
                 data["qygd_jobtitle"] +
@@ -126,21 +126,28 @@
         }
         var curSelectedIndex = -1;
 
-        function editInvestor(index) {
-            if (investorAry.length > index) {
-                var investor = investorAry[index];
-                $("#qygd_name").val(investor["qygd_name"]);
-                $("#qygd_idnumber").val(investor["qygd_idnumber"]);
-                $("#qygd_investment").val(investor["qygd_investment"]);
-                $("#qygd_jobtitle").val(investor["qygd_jobtitle"]);
-                $("#qygd_pic1" + "_img").attr("src", getRemotePic(investor["qygd_pic1"]));
-                $("#qygd_pic2" + "_img").attr("src", getRemotePic(investor["qygd_pic2"]));
-                $("#qygd_pic3" + "_img").attr("src", getRemotePic(investor["qygd_pic3"]));
-                //这里需要服务器上图片显示的方法
-                isAddMode = false;
-                $("#addinvestorpanel").modal("toggle");
+        function editInvestor(o2o_id) {
+            if (investorAry.length > 0) {
+                for (var i = 0; i < investorAry.length; i++) {
+                    var ainvestor = investorAry[i];
+                    if (ainvestor.o2o_id == o2o_id) {
+                        $("#qygd_name").val(ainvestor["qygd_name"]);
+                        $("#qygd_idnumber").val(ainvestor["qygd_idnumber"]);
+                        $("#qygd_investment").val(ainvestor["qygd_investment"]);
+                        $("#qygd_jobtitle").val(ainvestor["qygd_jobtitle"]);
+                        $("#qygd_pic1").val(ainvestor["qygd_pic1"]);
+                        $("#qygd_pic2").val(ainvestor["qygd_pic2"]);
+                        $("#qygd_pic3").val(ainvestor["qygd_pic3"]);
+                        $("#qygd_pic1" + "_img").attr("src", getRemotePic(ainvestor["qygd_pic1"]));
+                        $("#qygd_pic2" + "_img").attr("src", getRemotePic(ainvestor["qygd_pic2"]));
+                        $("#qygd_pic3" + "_img").attr("src", getRemotePic(ainvestor["qygd_pic3"]));
+                        curSelectedIndex = i;
+                        isAddMode = false;
+                        $("#addinvestorpanel").modal("toggle");
+                        break;
+                    }
+                }
             }
-            curSelectedIndex = index;
         }
 
         function calculate_qygd_investment(investment) {
@@ -151,10 +158,12 @@
             }
             return "0%";
         }
-        function topreivew(theid){
+
+        function topreivew(theid) {
             var imgid = $(theid).attr("src");
             previewImagebyWX(imgid);
         }
+
     </script>
 </head>
 
@@ -171,7 +180,7 @@
                 <form id="naform" class="my-form" role="form" data-toggle="validator">
                     <div class="form-group my-form-group">
                         <label>预查企业名称</label>
-                        <select id="apply_name" name="apply_name" class="selectpicker mycompany-select">
+                        <select id="apply_name" name="apply_name" class="mycompany-select">
                         </select>
                     </div>
                     <div class="form-group my-form-group">
@@ -260,25 +269,23 @@
                         <label>投资人身份证</label>
                         <div class="container-fluid">
                             <div class="row">
-                                <a class="col-xs-4" href="javascript:topreivew('qygd_pic1_img')" style="border:0px solid #000">
+                                <a class="a-upload my-icon-upload col-xs-4" href="javascript:previewImgWithName('#qygd_pic1','#qygd_pic1_img')" style="border:0px solid #000">
                                     <img id="qygd_pic1_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
+                                    <label style="font-size:14px;font-weight:normal">正面</label>
                                 </a>
-                                <a class="col-xs-4" href="javascript:topreivew('qygd_pic2_img')" style="border:0px solid #000">
+                                <a class="a-upload my-icon-upload col-xs-4 clearfix" href="javascript:previewImgWithName('#qygd_pic2','#qygd_pic2_img')" style="border:0px solid #000">
                                     <img id="qygd_pic2_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
+                                    <label style="font-size:14px;font-weight:normal">反面</label>
                                 </a>
-                                <a class="col-xs-4" href="javascript:topreivew('qygd_pic3_img')" style="border:0px solid #000">
+                                <a class="a-upload my-icon-upload col-xs-4" href="javascript:previewImgWithName('#qygd_pic3','#qygd_pic3_img')" style="border:0px solid #000">
                                     <img id="qygd_pic3_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
+                                    <label style="font-size:14px;font-weight:normal">投资人证件照</label>
                                 </a>
-                            </div>
-                            <div class="row">
-                                <label class="col-xs-4" style="font-size:14px;font-weight:normal">正面</label>
-                                <label class="col-xs-4" style="font-size:14px;font-weight:normal">反面</label>
-                                <label class="col-xs-4" style="font-size:14px;font-weight:normal">证件照</label>
                             </div>
                         </div>
-                        <input type="hide" id="qygd_pic1">
-                        <input type="hide" id="qygd_pic2">
-                        <input type="hide" id="qygd_pic3">
+                        <input type="hidden" id="qygd_pic1">
+                        <input type="hidden" id="qygd_pic2">
+                        <input type="hidden" id="qygd_pic3">
                         <div class="container">
                             <a href="javascript:onInvestorOKHandler()" class="btn btn-success col-xs-12 my-gap-top" style="font-size:22px;padding:5px;">确定</a>
                         </div>

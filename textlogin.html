@@ -2,22 +2,116 @@
 
 <head>
     <meta charset="utf-8">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="0">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta http-equiv="pragma" content="no-cache">
     <meta http-equiv="cache-control" content="no-cache">
     <meta http-equiv="expires" content="0">
-    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <title>the ao tess</title>
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.bootcss.com/bootstrap-validator/0.5.3/css/bootstrapValidator.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
+    <link href="css/style.css" rel="stylesheet" type="text/css">
+    <link href="css/my.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
     <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap-validator/0.5.3/js/bootstrapValidator.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript" src="js/jquery.flexText.min.js"></script>
+    <script src="https://cdn.bootcss.com/json2/20160511/json2.min.js"></script>
     <script type="text/javascript" src="js/my.js"></script>
     <script type="text/javascript">
-        $(document).ready(function() {
-            logins(function(ret) {
-                if (ret)
-                    console.log("login success");
-            });
-        });
+        function onuploadComponentChangeHandler(thetarget, targetInput, callback = null, onerrorhandler = null, showprogress = true) {
+            //http://www.cnblogs.com/yanqin/p/5684320.html
+            var typeo = typeof(thetarget);
+            debugger;
+            //initial
+            var tmpFormData = new FormData();
+            tmpFormData.append("file", thetarget.files[0]);
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "cacheimg.php", true);
+            var fillimg = thetarget.parentNode.getElementsByTagName("img")[0];
+            var cav = thetarget.parentNode.getElementsByTagName("canvas")[0];
+            //progress
+            if (showprogress) {
+                var cav2d = cav.getContext("2d");
+                var theheight = cav2d.height = thetarget.parentNode.clientHeight;
+                var thewidth = cav2d.width = thetarget.parentNode.clientWidth;
+                cav2d.fillStyle = "#5066b4";
+                xhr.upload.onprogress = function(event) {
+                    var persently = event.loaded / event.total;
+                    cav2d.fillRect(0, 0, thewidth * persently, theheight);
+                }
+                //onstart
+                xhr.upload.onloadstart = function() { //上传开始执行方法
+                    ot = new Date().getTime(); //设置上传开始时间
+                    oloaded = 0; //设置上传开始时，以上传的文件大小为0
+                };
+            }
+            //onload
+            xhr.onload = function(event) {
+                var jobj = JSON.parse(event.currentTarget.responseText);
+                var theurl = "uploads/" + jobj.fileName;
+                debugger
+                $(".a-upload img").attr("src", theurl);
+                if (xhr.status == 200) {
+                    if (callback) callback();
+                } else {
+                    if (onerrorhandler) onerrorhandler(event);
+                }
+                cav.classList = "hide";
+            };
+            //action send
+            xhr.send(tmpFormData);
+        }
+
     </script>
 </head>
 
-<body></body>
+
+<body>
+
+    <form id="imgform" action="cacheimg.php" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="file">Filename:</label>
+            <a id="imgcon" href="javascript:;" class="a-upload col-xs-6 col-xs-offset-3 my-gap-top">
+                <div>&nbsp;</div>
+
+                <img class="img-responsive" src="images/picframe.svg">
+                <canvas></canvas>
+                <input type="file" alt="" name="file" id="file" onchange="onuploadComponentChangeHandler(this,'#upload_pic')">
+                <label style="font-size:14px;font-weight:normal;" for="frontimg">正面</label>
+            </a>
+            <br />
+            <input type="hidden" id="upload_pic">
+            <a id="submit" class="btn btn-primary">提交</a>
+        </div>
+
+    </form>
+    <div class="container-fluid">
+        <div class="row">
+            <a class="a-upload my-icon-upload col-xs-4" href="javascript:previewImgWithName('#qygd_pic1','#qygd_pic1_img')" style="border:0px solid #000">
+                <img id="qygd_pic1_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
+                <label style="font-size:14px;font-weight:normal">正面</label>
+            </a>
+            <a class="a-upload my-icon-upload col-xs-4 clearfix" href="javascript:previewImgWithName('#qygd_pic2','#qygd_pic2_img')" style="border:0px solid #000">
+                <img id="qygd_pic2_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
+                <label style="font-size:14px;font-weight:normal">反面</label>
+            </a>
+            <a class="a-upload my-icon-upload col-xs-4" href="javascript:previewImgWithName('#qygd_pic3','#qygd_pic3_img')" style="border:0px solid #000">
+                <img id="qygd_pic3_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
+                <label style="font-size:14px;font-weight:normal">投资人证件照</label>
+            </a>
+            <a class="a-upload my-icon-upload" href="javascript:previewImgWithName('#qygd_pic3','#qygd_pic3_img')" style="border:0px solid #000">
+                <img id="qygd_pic3_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
+                <label style="font-size:14px;font-weight:normal">投资人证件照</label>
+            </a>
+        </div>
+    </div>
+</body>
+
 </html>

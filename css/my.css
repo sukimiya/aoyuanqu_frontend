@@ -100,6 +100,97 @@
     border: 1px solid #d3d3d3;
 }
 
+.a-upload {
+    padding: 0px;
+    position: relative;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow: hidden;
+    display: block;
+    *display: inline;
+    *zoom: 1;
+    background-color: #eee;
+    padding-top: -1px;
+    padding-left: -1px;
+    background-repeat: no-repeat;
+}
+
+.a-upload .btn {
+    width: 40%;
+}
+
+.my-caver-upload {
+    height: 40%;
+}
+
+.my-icon-upload {
+    width: 80px;
+    height: 80px;
+}
+
+.my-icon-upload canvas {
+    width: 80px;
+    height: 80px;
+}
+
+.my-icon-upload img {
+    width: 80px;
+    height: 80px;
+}
+.a-upload .my-upload-label {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    position:relative;
+    opacity:1;
+    background-color: #5cb85c;
+    border-color: #4cae4c;
+    pointer-events: none;
+}
+.a-upload label {
+    background-color: transparent;
+    width: 100%;
+    text-align: center;
+    left: 0px;
+    bottom: 0px;
+    box-sizing:content-box;
+    opacity: 0.5;
+    position: absolute;
+    padding-bottom: 3px;
+    margin: 0px;
+}
+.a-upload input {
+    position: absolute;
+    font-size: 100px;
+    right: 0;
+    top: 0;
+    opacity: 0;
+    filter: alpha(opacity=0);
+    cursor: pointer
+}
+
+.a-upload img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.a-upload canvas {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.upload-icon-group {
+    float: left;
+    margin-left: 15px;
+}
+
+.upload-icon-group label {
+    width: 100%;
+    text-align: center;
+}
+
 
 /*------------------------my.html----------------------*/
 
@@ -334,44 +425,54 @@
     font-weight: bold;
     color: #e51c23;
 }
-.my-icon-container{
-    
-}
-.my-icon{
+
+.my-icon-container {}
+
+.my-icon {
     width: 100%;
 }
-.my-icon-text{
+
+.my-icon-text {
     text-align: center;
     font-size: 12px;
     color: #636363;
 }
-.my-nav-group{
-    
-}
-.my-nav-item{
+
+.my-nav-group {}
+
+.my-nav-item {
     border: 0px soild white;
     line-height: 16px;
 }
-.my-nav-group>.btn{
+
+.my-nav-group > .btn {
     border-radius: 0px;
     border: 0px solid transparent;
 }
-.my-nav-group>.btn-default {
+
+.my-nav-group > .btn-default {
     color: #636363;
     background-color: #f8f8f8;
-    border:0px solid transparent;
+    border: 0px solid transparent;
 }
-.my-nav-item span{
+
+.my-nav-item span {
     font-size: 12px;
-    line-height:18px;
+    line-height: 18px;
 }
-.my-nav-item i{
+
+.my-nav-item i {
     font-size: 20px;
 }
-.my-nav-group .disabled{
+
+.my-nav-group .disabled {
     color: #2d3c70;
-    opacity:1;
+    opacity: 1;
 }
+
+
+
+
 /*------------------------mycompanyprofile.html----------------------*/
 
 .mycompany-select {
