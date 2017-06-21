@@ -236,6 +236,7 @@ var myweixin = (function () {
         if (mythis.onError) mythis.onError(res)
     });
     mythis.initial = function () {
+        debugger;
         console.log("微信配置初始化中");
         if (GetRequest()["code"] != null && GetRequest()["code"] != undefined) {
             mythis.code = GetRequest()["code"];
@@ -258,6 +259,8 @@ var myweixin = (function () {
                 } else {
                     if (mythis.onOpenid) mythis.onOpenid();
                     if (mythis.onUser) mythis.onUser();
+                    if (mythis.onConfig) mythis.onConfig();
+                    if (mythis.onInitial) mythis.onInitial();
                 }
             } else {
                 mythis.requestCode();

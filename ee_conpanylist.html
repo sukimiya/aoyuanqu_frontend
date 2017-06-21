@@ -79,7 +79,7 @@
             }
             var me = null;
             if (dropload) me = dropload;
-            doloadlist($("#searchbarTf").val(), 1, thetype, true, me);
+            doloadlist($("#searchbarTf").val(), 1, thetype, false, me);
         }
 
         function doloadlist(skey = "", page = 1, ttype = 0, isappend = true, me = null) {
@@ -169,6 +169,7 @@
         }
         $(document).ready(function() {
             myweixin.onInitial=function(){
+                debugger;
                 initDropload();
             }
             myweixin.initial();

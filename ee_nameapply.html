@@ -196,17 +196,11 @@
                                     <label style="font-size:14px;font-weight:normal">正面</label>
                                     <input type="file" capture="camera" accept="image/*" title="" onchange="uploadImage(this,'#qygd_pic1')">
                                 </a>
-                                <a href="javascript:;" class="a-upload my-icon-upload my-gap-left" style="float:left;">
+                                <a href="javascript:;" class="a-upload my-icon-upload my-gap-left clearfix" style="float:left;">
                                     <img id="qygd_pic2_img" class="img-responsive" src="images/picframe.svg">
                                     <canvas></canvas>
                                     <label style="font-size:14px;font-weight:normal">反面</label>
                                     <input type="file" capture="camera" accept="image/*" title="" onchange="uploadImage(this,'#qygd_pic2')">
-                                </a>
-                                <a href="javascript:;" class="a-upload my-icon-upload my-gap-left" style="float:left;">
-                                    <img id="qygd_pic3_img" class="img-responsive" src="images/picframe.svg">
-                                    <canvas></canvas>
-                                    <label style="font-size:14px;font-weight:normal">证件照</label>
-                                    <input type="file" capture="camera" accept="image/*" title="" onchange="uploadImage(this,'#qygd_pic3')">
                                 </a>
                             </div>
                         </div>
@@ -218,7 +212,14 @@
                             <div class="clearfix" style="text-align:left;font-size:14px;border-color: #5066b4;padding:15px;">
                                 <p>投资人为自然人需提供身份证照片;投资人为企业法人需提供营业执照（副本加盖公章）照片
                                 </p>
+
                             </div>
+                            <a href="javascript:;" class="a-upload my-icon-upload my-gap-left" style="float:left;">
+                                <img id="qygd_pic3_img" class="img-responsive" src="images/picframe.svg">
+                                <canvas></canvas>
+                                <label style="font-size:14px;font-weight:normal">证件照</label>
+                                <input type="file" capture="camera" accept="image/*" title="" onchange="uploadImage(this,'#qygd_pic3')">
+                            </a>
                         </div>
                         <div class="container">
                             <a href="javascript:onInvestorOKHandler()" class="btn btn-success col-xs-12 my-gap-top" style="font-size:22px;padding:5px;">确定</a>
