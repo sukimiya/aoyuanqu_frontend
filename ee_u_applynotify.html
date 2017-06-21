@@ -29,6 +29,7 @@
         }
         $(document).ready(function() {
             //showRemoteImg(#qygd_pic1_img');
+            checkInputFileImg();
             var myapi = restapis;
             myapi.request("ee_u_applynotify", null, "id=" + GetRequest()["id"], function(result) {
                 debugger;
@@ -163,7 +164,7 @@
                 <img class="img-responsive">
                 <canvas></canvas>
                 <label id="uploadlabel" class="my-upload-label">拍照上传</label>
-                <input class="my-caver-upload" type="file" name="file" id="file">
+                <input class="my-caver-upload" type="file" capture="camera" accept="image/*" name="file" id="file">
             </a>
             <h3>&nbsp;</h3>
         </div>

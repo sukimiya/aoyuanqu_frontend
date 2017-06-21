@@ -190,7 +190,7 @@ var restapis = (function () {
     /**
      *function(mothed,module,data,onSeccess,onError,post="GET",dataType="json")
      */
-    mythis.request = function (mothed, module, data, onSeccess, onError, post = "GET", dataType = "json",cacherequest=false) {
+    mythis.request = function (mothed, module, data, onSeccess, onError, post = "GET", dataType = "json", cacherequest = false) {
         var theurl = requestRoot;
         if (module) {
             theurl += module + "/";
@@ -203,7 +203,7 @@ var restapis = (function () {
             dataType: dataType,
             url: theurl,
             data: data,
-            cache:cacherequest,
+            cache: cacherequest,
             contentType: "application/json; charset=utf-8",
             success: onSeccess,
             error: onError
@@ -393,23 +393,25 @@ function previewImagebyWX(theimg) {
         }, 200);
     });
 }
-function uploadImage(thetarget, targetInput){
-    setTimeout(onuploadComponentChangeHandler(thetarget, targetInput,null,null,true,true),50);
+
+function uploadImage(thetarget, targetInput) {
+    setTimeout(onuploadComponentChangeHandler(thetarget, targetInput, null, null, true, true), 50);
 }
-function onuploadComponentChangeHandler(thetarget, targetInput, callback = null, onerrorhandler = null, showprogress = true,isshow=false) {
+
+function onuploadComponentChangeHandler(thetarget, targetInput, callback = null, onerrorhandler = null, showprogress = true, isshow = false) {
     //http://www.cnblogs.com/yanqin/p/5684320.html
     debugger;
     //initial
     var theparent = thetarget.parentNode
-    if(theparent==undefined||theparent==null){
-        if(thetarget.hasOwnProperty("length")&&thetarget.length>0)
+    if (theparent == undefined || theparent == null) {
+        if (thetarget.hasOwnProperty("length") && thetarget.length > 0)
             thetarget = thetarget[0];
         else
-            if(onerrorhandler)onerrorhandler();
+        if (onerrorhandler) onerrorhandler();
     }
     var thefiles = thetarget.files;
-    if(thefiles==undefined||thefiles==null||thefiles.length==0){
-        if(onerrorhandler)onerrorhandler();
+    if (thefiles == undefined || thefiles == null || thefiles.length == 0) {
+        if (onerrorhandler) onerrorhandler();
         throw new Error("fileuploader there no file!");
         return;
     }
@@ -419,6 +421,7 @@ function onuploadComponentChangeHandler(thetarget, targetInput, callback = null,
     xhr.open("POST", "cacheimg.php", true);
     var fillimg = thetarget.parentNode.getElementsByTagName("img")[0];
     var cav = thetarget.parentNode.getElementsByTagName("canvas")[0];
+    cav.classList = [];
     //progress
     if (showprogress) {
         var cav2d = cav.getContext("2d");
@@ -441,8 +444,8 @@ function onuploadComponentChangeHandler(thetarget, targetInput, callback = null,
         var jobj = JSON.parse(event.currentTarget.responseText);
         var theurl = "uploads/" + jobj.fileName;
         if (xhr.status == 200) {
-            if(targetInput)$(targetInput).val(jobj.fileName);
-            if(isshow) fillimg["src"] = getRemotePic(jobj.fileName);
+            if (targetInput) $(targetInput).val(jobj.fileName);
+            if (isshow) fillimg["src"] = getRemotePic(jobj.fileName);
             if (callback) callback(jobj);
         } else {
             if (onerrorhandler) onerrorhandler(event);
@@ -490,6 +493,23 @@ function setFromDisabled(formname, toDisabled) {
                 if (afor[i].hasOwnProperty("removeAttr")) aform[i].removeAttr("disabled");
             }
     }
+}
+
+function checkInputFileImg() {
+    debugger;
+    var inputs = $("input");
+    if (inputs)
+        for (var i = 0; i < inputs.length; i++) {
+            var node = inputs[i];
+            for (var a = 0; a < node.attributes.length; a++) {
+                var attr = node.attributes[a];
+                if (attr.name == "capture") {
+                    if (browser.versions.ios)
+                        node.attributes.removeNamedItem(attr.name);
+                    break;
+                }
+            }
+        }
 }
 /*---------------------------上传文件----------------------*/
 //policy 要经过base64编码， signature 还要进一步处理，可以查阅官方文档

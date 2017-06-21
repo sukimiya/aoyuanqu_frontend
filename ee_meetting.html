@@ -184,6 +184,7 @@
             return JSON.stringify(rsobj);
         }
         $(document).ready(function() {
+            checkInputFileImg();
             $("#thesubmit").on("click", function(events) {
                 var jdata = encodeDatas();
                 var myapi = restapis;
@@ -318,34 +319,34 @@
                             <label for="qycw_email">财务邮箱</label>
                             <input id="qycw_email" name="qycw_email" class="form-control" type="email">
                         </div>
+                        <label style="font-weight:bold">财务身份证照</label>
                         <div class="row">
                             <a href="javascript:;" class="a-upload my-icon-upload my-gap-left" style="float:left;">
                                 <img class="img-responsive" src="images/picframe.svg">
                                 <canvas></canvas>
-                                <input type="file" title="" onchange="uploadImage(this,'#qycw_pic1')">
+                                <input type="file" capture="camera" accept="image/*" title="" onchange="uploadImage(this,'#qycw_pic1')">
                                 <label style="font-size:14px;font-weight:normal">正面</label>
                             </a>
                             <a href="javascript:;" class="a-upload my-icon-upload my-gap-left" style="float:left;">
                                 <img class="img-responsive" src="images/picframe.svg">
                                 <canvas></canvas>
-                                <input type="file" title="" onchange="uploadImage(this,'#qycw_pic2')">
+                                <input type="file" capture="camera" accept="image/*" title="" onchange="uploadImage(this,'#qycw_pic2')">
                                 <label style="font-size:14px;font-weight:normal">反面</label>
                             </a>
 
                         </div>
-                        <hr>
                         <label style="font-weight:bold">财务上岗证照</label>
                         <div class="row">
                             <a href="javascript:;" class="a-upload my-icon-upload my-gap-left" style="float:left;">
                                 <img class="img-responsive" src="images/picframe.svg">
                                 <canvas></canvas>
-                                <input type="file" title="" onchange="uploadImage(this,'#qycw_pic3')">
+                                <input type="file" capture="camera" accept="image/*" title="" onchange="uploadImage(this,'#qycw_pic3')">
                                 <label style="font-size:14px;font-weight:normal">正面</label>
                             </a>
                             <a href="javascript:;" class="a-upload my-icon-upload my-gap-left" style="float:left;">
                                 <img class="img-responsive" src="images/picframe.svg">
                                 <canvas></canvas>
-                                <input type="file" title="" onchange="uploadImage(this,'#qycw_pic4')">
+                                <input type="file" capture="camera" accept="image/*" title="" onchange="uploadImage(this,'#qycw_pic4')">
                                 <label style="font-size:14px;font-weight:normal">反面</label>
                             </a>
                         </div>
@@ -367,34 +368,30 @@
                     <hr class="my-gap-top">
                     <div class="form-group">
                         <label for="qyjs_name">企业监事姓名</label>
-                        <input id="qyjs_name" name="qyjs_name" type="text" required>
+                        <input id="qyjs_name" class="form-control" name="qyjs_name" type="text" required>
                     </div>
                     <div class="form-group">
                         <label for="qyjs_idnumber">监事证件号码</label>
-                        <input id="qyjs_idnumber" name="qyjs_idnumber" type="tel" required>
+                        <input id="qyjs_idnumber" class="form-control" name="qyjs_idnumber" type="tel" required>
                     </div>
                     <label style="font-weight:bold">监事证件照</label>
                     <div class="row">
                         <a href="javascript:;" class="a-upload my-icon-upload my-gap-left" style="float:left;">
                             <img class="img-responsive" src="images/picframe.svg">
                             <canvas></canvas>
-                            <input type="file" title="" onchange="uploadImage(this,'#qyjs_pic1')">
+                            <input type="file" capture="camera" accept="image/*" title="" onchange="uploadImage(this,'#qyjs_pic1')">
                             <label style="font-size:14px;font-weight:normal">正面</label>
                         </a>
                         <a href="javascript:;" class="a-upload my-icon-upload my-gap-left" style="float:left;">
                             <img class="img-responsive" src="images/picframe.svg">
                             <canvas></canvas>
-                            <input type="file" title="" onchange="uploadImage(this,'#qyjs_pic2')">
+                            <input type="file" capture="camera" accept="image/*" title="" onchange="uploadImage(this,'#qyjs_pic2')">
                             <label style="font-size:14px;font-weight:normal">反面</label>
                         </a>
                     </div>
-                    <div class="row">
-                        <label class="col-xs-4" style="font-size:14px;font-weight:normal">正面</label>
-                        <label class="col-xs-4" style="font-size:14px;font-weight:normal">反面</label>
-                    </div>
                     <input type="hidden" id="qyjs_pic1">
                     <input type="hidden" id="qyjs_pic2">
-                    <button id="thesubmit" class="btn btn-primary form-control" type="button">提交</button>
+                    <button id="thesubmit" class="btn btn-primary col-xs-12 my-gap-top" type="button" style="font-size:20px;padding-bottom:7px">提交</button>
                 </form>
             </div>
         </div>

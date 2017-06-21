@@ -27,7 +27,6 @@
         $(document).ready(function() {
             var myapi = restapis;
             var theid = GetRequest()["id"];
-            $('textarea').flexText();
             myapi.request("searchYCM", null, "id=" + theid, function(result) {
                 pressJSONData(result);
             }, function(e) {
@@ -35,8 +34,8 @@
             });
             var theid = GetRequest()["id"];
             $("#sendbackBtn").on("click", function() {
-                var thedata = "id=" + theid + "&apply_name=" + $("#apply_name").val();
-                myapi.request("YCMCheck.do", "page", thedata + "&apply_state=1", function(result) {
+                var thedata = "id=" + theid + "&apply_name=" + $("#apply_name").val()+"&manage_range="+$("#manage_range").val();
+                myapi.request("YCMCheck.do", "page", thedata + "&apply_state=0", function(result) {
                     if (result == 1) {
                         window.location = "ee_u_progress.html"
                     }
@@ -44,8 +43,8 @@
                     alert("提交出错")
                 })
             });
-            $("#acceptBtn").on("click", function() {
-                var thedata = "id=" + theid + "&apply_name=" + $("#apply_name").val();
+            $("#acceptBtn").on("click", function() {manage_range
+                var thedata = "id=" + theid + "&apply_name=" + $("#apply_name").val()+"&manage_range="+$("#manage_range").val();
                 debugger;
                 myapi.request("YCMCheck.do", "page", thedata + "&apply_state=2", function(result) {
                     if (result == 1) {
@@ -70,6 +69,7 @@
             $("#apply_name").selectpicker('refresh');
             $("#actual_address").html("<span style='font-size:18px;'>" + jsonobj["actual_address"] + "</span>");
             $("#manage_range").val(jsonobj["manage_range"]);
+            $("#manage_range_d").text(jsonobj["manage_range"]);
             $("#register_money").val(jsonobj["register_money"]);
             $("#register_kind").html("<span style='font-size:18px;'>" + jsonobj["register_kind"] + "</span>");
             $("#register_name").html("<span style='font-size:18px;'>" + jsonobj["register_name"] + "</span>");
@@ -187,10 +187,32 @@
                         <label>实际经营地址</label>
                         <div id="actual_address" style="font-size:16px;"></div>
                     </div>
-                    <div class="form-group my-form-group wrap">
-                        <label for="manage_range">经营范围</label>
-                        <textarea id="manage_range" name="manage_range" class="form-control" required style="font-size:18px;border-color: #5066b4;"></textarea>
+                    <label for="manage_range_d">经营范围</label>
+                    <a id="openmarngGroupbtn" class="btn btn-defualt" onclick="openmarngGroup()">编辑</a>
+                    <div id="manage_range_d" class="col-xs-12 container" style="word-wrap:break-word">&nbsp;</div>
+                    <div id="marangGroup" class="form-group my-form-group wrap hide">
+                        <div class="row">
+                            <textarea id="manage_range" name="manage_range" class="col-xs-12 form-control" maxlength="120" style="height:280px;font-size:18px"></textarea>
+                            <a class="btn btn-success col-xs-6 col-xs-offset-3 my-gap-top" onclick="hidemarangGroup()">保存</a>
+                        </div>
                     </div>
+                    <script type="text/javascript">
+                        function hidemarangGroup() {
+                            $("#manage_range_d").text($("#manage_range").val());
+                            $("#marangGroup").addClass("hide");
+                            $("#openmarngGroupbtn").removeClass("hide");
+                            $("#manage_range_d").removeClass("hide");
+                        }
+
+                        function openmarngGroup() {
+                            $("#manage_range").val($("#manage_range_d").text());
+                            $("#marangGroup").removeClass("hide");
+                            $("#openmarngGroupbtn").addClass("hide");
+                            $("#manage_range_d").addClass("hide");
+                        }
+
+                    </script>
+                    <hr>
                     <label for="register_money">注册资金</label>
                     <div class="input-group my-form-group">
                         <input type="number" id="register_money" disabled="yes" name="register_money" class="form-control my-input">

@@ -316,11 +316,11 @@
                         if (thevalue == 2) {
                             mylink.attr("href", "javascript:gotoNamePriview()");
                             myelement.text("已办");
-                        } else if (thevalue == 1) {
-                            mylink.attr("href", "javascript:gotoNamePriview()");
+                        } else if (thevalue == 0) {
+                            mylink.attr("href", "javascript:gotoNameApply()");
                             myelement.text("退回");
                         } else {
-                            mylink.attr("href", "javascript:gotoNameApply()");
+                            mylink.attr("href", "javascript:gotoNamePriview()");
                             myelement.text("待办");
                             myparent.removeClass("pgdided");
                             myparent.addClass("invers");

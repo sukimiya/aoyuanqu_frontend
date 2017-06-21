@@ -58,10 +58,33 @@
                         <label for="actual_address">实际经营地址</label>
                         <textarea id="actual_address" name="actual_address" class="form-control" style="font-size:18px;border-color: #5066b4;"></textarea>
                     </div>
-                    <div class="form-group my-form-group wrap">
-                        <label for="manage_range">经营范围</label>
-                        <textarea id="manage_range" name="manage_range" class="form-control" style="font-size:18px;border-color: #5066b4;"></textarea>
+                    <label for="manage_range_d">经营范围</label>
+                    <a id="openmarngGroupbtn" class="btn btn-defualt" onclick="openmarngGroup()">编辑</a>
+                    <div id="manage_range_d" class="col-xs-12 container" style="word-wrap:break-word">&nbsp;</div>
+                    <div id="marangGroup" class="form-group my-form-group wrap hide">
+                        <div class="row">
+                            <textarea id="manage_range" name="manage_range" class="col-xs-12 form-control" maxlength="130" style="height:280px;font-size:18px"></textarea>
+                            <a class="btn btn-success col-xs-6 col-xs-offset-3 my-gap-top" onclick="hidemarangGroup()">保存</a>
+                        </div>
                     </div>
+                    <script type="text/javascript">
+                        function hidemarangGroup() {
+                            $("#manage_range_d").text($("#manage_range").val());
+                            $("#marangGroup").addClass("hide");
+                            $("#openmarngGroupbtn").removeClass("hide");
+                            $("#manage_range_d").removeClass("hide");
+                        }
+
+                        function openmarngGroup() {
+                            $("#manage_range").val($("#manage_range_d").text());
+                            $("#marangGroup").removeClass("hide");
+                            $("#openmarngGroupbtn").addClass("hide");
+                            $("#manage_range_d").addClass("hide");
+                        }
+
+                    </script>
+                    <hr>
+
                     <div class="form-group">
                         <label for="register_money">注册资本</label>
                         <div class="input-group my-form-group">
@@ -168,28 +191,35 @@
                         <div class="container-fluid">
                             <div class="row">
                                 <a href="javascript:;" class="a-upload my-icon-upload my-gap-left" style="float:left;">
-                                    <img class="img-responsive" src="images/picframe.svg">
+                                    <img id="qygd_pic1_img" class="img-responsive" src="images/picframe.svg">
                                     <canvas></canvas>
                                     <label style="font-size:14px;font-weight:normal">正面</label>
-                                    <input type="file" title="" onchange="uploadImage(this,'#qygd_pic1')">
+                                    <input type="file" capture="camera" accept="image/*" title="" onchange="uploadImage(this,'#qygd_pic1')">
                                 </a>
                                 <a href="javascript:;" class="a-upload my-icon-upload my-gap-left" style="float:left;">
-                                    <img class="img-responsive" src="images/picframe.svg">
+                                    <img id="qygd_pic2_img" class="img-responsive" src="images/picframe.svg">
                                     <canvas></canvas>
                                     <label style="font-size:14px;font-weight:normal">反面</label>
-                                    <input type="file" title="" onchange="uploadImage(this,'#qygd_pic2')">
+                                    <input type="file" capture="camera" accept="image/*" title="" onchange="uploadImage(this,'#qygd_pic2')">
                                 </a>
                                 <a href="javascript:;" class="a-upload my-icon-upload my-gap-left" style="float:left;">
-                                    <img class="img-responsive" src="images/picframe.svg">
+                                    <img id="qygd_pic3_img" class="img-responsive" src="images/picframe.svg">
                                     <canvas></canvas>
                                     <label style="font-size:14px;font-weight:normal">证件照</label>
-                                    <input type="file" title="" onchange="uploadImage(this,'#qygd_pic3')">
+                                    <input type="file" capture="camera" accept="image/*" title="" onchange="uploadImage(this,'#qygd_pic3')">
                                 </a>
                             </div>
                         </div>
                         <input type="hidden" id="qygd_pic1">
                         <input type="hidden" id="qygd_pic2">
                         <input type="hidden" id="qygd_pic3">
+                        <div class="text-center">
+                            <span style="color:red;"><h3>重要提示</h3></span>
+                            <div class="clearfix" style="text-align:left;font-size:14px;border-color: #5066b4;padding:15px;">
+                                <p>投资人为自然人需提供身份证照片;投资人为企业法人需提供营业执照（副本加盖公章）照片
+                                </p>
+                            </div>
+                        </div>
                         <div class="container">
                             <a href="javascript:onInvestorOKHandler()" class="btn btn-success col-xs-12 my-gap-top" style="font-size:22px;padding:5px;">确定</a>
                         </div>
@@ -279,13 +309,15 @@
                     }
                 }
             }
+            $("#qygd_pic1" + "_img").attr("src", "images/picframe.svg");
+            $("#qygd_pic2" + "_img").attr("src", "images/picframe.svg");
+            $("#qygd_pic3" + "_img").attr("src", "images/picframe.svg");
             $("#addinvestorpanel").modal("hide");
         }
         var thebillid = 0;
 
         function getApplyFromJSON() {
             var jsonobj = {};
-
             thebillid = Date.parse(new Date());
             jsonobj["wx_openid"] = myweixin.openid;
             debugger;
@@ -305,12 +337,13 @@
             for (var i = 0; i < investorAry.length; i++) {
                 var ainvestor = investorAry[i];
                 if (ainvestor["qygd_jobtitle"] == "法人") {
-                    jsonobj["tzfr_name"] = $("#qygd_name").val();
-                    jsonobj["tzfr_idnumber"] = $("#qygd_idnumber").val();
-                    jsonobj["f_investment"] = parseInt($("#qygd_investment").val());
-                    jsonobj["tzfr_pic1"] = $("#qygd_pic1").val();
-                    jsonobj["tzfr_pic2"] = $("#qygd_pic2").val();
-                    jsonobj["tzfr_pic3"] = $("#qygd_pic3").val();
+                    jsonobj["tzfr_name"] = ainvestor.qygd_name;
+                    jsonobj["tzfr_idnumber"] = ainvestor.qygd_idnumber;
+                    debugger;
+                    jsonobj["f_investment"] = parseInt(ainvestor.qygd_investment);
+                    jsonobj["tzfr_pic1"] = ainvestor.qygd_pic1;
+                    jsonobj["tzfr_pic2"] = ainvestor.qygd_pic2;
+                    jsonobj["tzfr_pic3"] = ainvestor.qygd_pic3;
                 } else {
                     jsonobj["arr"].push(ainvestor);
                 }
@@ -322,7 +355,8 @@
         }
         var myvalidator = null;
         $(document).ready(function() {
-            $('textarea').flexText();
+            //$('textarea').flexText();
+            checkInputFileImg();
             var myapi = restapis;
             //Reference from http://www.cnblogs.com/hwaggLee/p/6565604.html
             myvalidator = $('#naform').bootstrapValidator({
@@ -455,8 +489,8 @@
                             },
                             stringLength: {
                                 min: 12,
-                                max: 120,
-                                message: '经营范围不得超过120字'
+                                max: 130,
+                                message: '经营范围不得超过130字,最少12个字'
                             }
                         }
                     }

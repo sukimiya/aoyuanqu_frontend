@@ -62,6 +62,7 @@
             }
         }
         $(document).ready(function() {
+            checkInputFileImg();
             var myapi = restapis;
             if (GetRequest()["id"])
                 myapi.request("searchYHKH", null, "id=" + GetRequest()["id"], function(result) {
@@ -126,7 +127,7 @@
                         <a id="uploadbtn" class="a-upload btn btn-success col-xs-6 col-xs-offset-3 my-gap-top">
                             <img class="img-responsive">
                             <canvas></canvas>
-                            <input class="my-caver-upload" type="file" name="file" id="file">
+                            <input class="my-caver-upload" capture="camera" accept="image/*" type="file" name="file" id="file">
                             <label id="uploadlabel" class="my-upload-label">拍照上传</label>
                         </a>
                         <h3>&nbsp;</h3>

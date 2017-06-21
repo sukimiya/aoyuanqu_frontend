@@ -25,48 +25,30 @@
     <script src="https://cdn.bootcss.com/json2/20160511/json2.min.js"></script>
     <script type="text/javascript" src="js/my.js"></script>
     <script type="text/javascript">
-        function onuploadComponentChangeHandler(thetarget, targetInput, callback = null, onerrorhandler = null, showprogress = true) {
-            //http://www.cnblogs.com/yanqin/p/5684320.html
-            var typeo = typeof(thetarget);
-            debugger;
-            //initial
-            var tmpFormData = new FormData();
-            tmpFormData.append("file", thetarget.files[0]);
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "cacheimg.php", true);
-            var fillimg = thetarget.parentNode.getElementsByTagName("img")[0];
-            var cav = thetarget.parentNode.getElementsByTagName("canvas")[0];
-            //progress
-            if (showprogress) {
-                var cav2d = cav.getContext("2d");
-                var theheight = cav2d.height = thetarget.parentNode.clientHeight;
-                var thewidth = cav2d.width = thetarget.parentNode.clientWidth;
-                cav2d.fillStyle = "#5066b4";
-                xhr.upload.onprogress = function(event) {
-                    var persently = event.loaded / event.total;
-                    cav2d.fillRect(0, 0, thewidth * persently, theheight);
-                }
-                //onstart
-                xhr.upload.onloadstart = function() { //上传开始执行方法
-                    ot = new Date().getTime(); //设置上传开始时间
-                    oloaded = 0; //设置上传开始时，以上传的文件大小为0
-                };
+        $(document).ready(function() {
+            var opstr = "";
+            for (var i = 0; i < 120; i++) {
+                opstr += "驽";
             }
-            //onload
-            xhr.onload = function(event) {
-                var jobj = JSON.parse(event.currentTarget.responseText);
-                var theurl = "uploads/" + jobj.fileName;
-                debugger
-                $(".a-upload img").attr("src", theurl);
-                if (xhr.status == 200) {
-                    if (callback) callback();
-                } else {
-                    if (onerrorhandler) onerrorhandler(event);
+            $("#manage_range").text(opstr);
+            checkInputFileImg();
+        });
+
+        function checkInputFileImg() {
+            debugger;
+            var inputs = $("input");
+            if (inputs)
+                for (var i = 0; i < inputs.length; i++) {
+                    var node = inputs[i];
+                    for (var a = 0; a < node.attributes.length; a++) {
+                        var attr = node.attributes[a];
+                        if (attr.name == "capture") {
+                            if (browser.versions.ios)
+                                node.attributes.removeNamedItem(attr.name);
+                            break;
+                        }
+                    }
                 }
-                cav.classList = "hide";
-            };
-            //action send
-            xhr.send(tmpFormData);
         }
 
     </script>
@@ -74,44 +56,60 @@
 
 
 <body>
+    <form>
+        <a id="openmarngGroupbtn" class="btn btn-defualt" onclick="openmarngGroup()">编辑</a>
+        <div dir="manage_range_d"></div>
+        <div id="marangGroup" class="container-fluid hide">
+            <div class="row">
+                <textarea id="manage_range" name="manage_range" class="col-xs-12 form-control" maxlength="120" style="height:280px;font-size:18px"></textarea>
+                <a class="btn btn-success col-xs-6 col-xs-offset-3 my-gap-top" onclick="hidemarangGroup()">保存</a>
 
-    <form id="imgform" action="cacheimg.php" method="post" enctype="multipart/form-data">
-        <div class="form-group">
-            <label for="file">Filename:</label>
-            <a id="imgcon" href="javascript:;" class="a-upload col-xs-6 col-xs-offset-3 my-gap-top">
-                <div>&nbsp;</div>
-
-                <img class="img-responsive" src="images/picframe.svg">
-                <canvas></canvas>
-                <input type="file" alt="" name="file" id="file" onchange="onuploadComponentChangeHandler(this,'#upload_pic')">
-                <label style="font-size:14px;font-weight:normal;" for="frontimg">正面</label>
-            </a>
-            <br />
-            <input type="hidden" id="upload_pic">
-            <a id="submit" class="btn btn-primary">提交</a>
+            </div>
         </div>
+        <script type="text/javascript">
+            function hidemarangGroup() {
+                $("#manage_range_d").text($("#manage_range").text());
+                $("#marangGroup").addClass("hide");
+                $("#openmarngGroupbtn").removeClass("hide");
+                $("#manage_range_d").removeClass("hide");
+            }
 
+            function openmarngGroup() {
+                $("#marangGroup").removeClass("hide");
+                $("#openmarngGroupbtn").addClass("hide");
+                $("#manage_range_d").addClass("hide");
+            }
+
+        </script>
+        <hr>
+        <div class="container-fluid">
+            <div class="row">
+                <label>投资人身份证</label>
+                <div class="container-fluid">
+                    <div class="row">
+                        <a href="javascript:;" class="a-upload my-icon-upload my-gap-left" style="float:left;">
+                            <img id="qygd_pic1_img" class="img-responsive" src="images/picframe.svg">
+                            <canvas></canvas>
+                            <label style="font-size:14px;font-weight:normal">正面</label>
+                            <input type="file" capture="camera" accept="image/*" title="" onchange="uploadImage(this,'#qygd_pic1')">
+                        </a>
+                        <a href="javascript:;" class="a-upload my-icon-upload my-gap-left" style="float:left;">
+                            <img id="qygd_pic2_img" class="img-responsive" src="images/picframe.svg">
+                            <canvas></canvas>
+                            <label style="font-size:14px;font-weight:normal">反面</label>
+                            <input type="file" capture="camera" accept="image/*" title="" onchange="uploadImage(this,'#qygd_pic2')">
+                        </a>
+                        <a href="javascript:;" class="a-upload my-icon-upload my-gap-left" style="float:left;">
+                            <img id="qygd_pic3_img" class="img-responsive" src="images/picframe.svg">
+                            <canvas></canvas>
+                            <label style="font-size:14px;font-weight:normal">证件照</label>
+                            <input type="file" capture="camera" accept="image/*" title="" onchange="uploadImage(this,'#qygd_pic3')">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </form>
-    <div class="container-fluid">
-        <div class="row">
-            <a class="a-upload my-icon-upload col-xs-4" href="javascript:previewImgWithName('#qygd_pic1','#qygd_pic1_img')" style="border:0px solid #000">
-                <img id="qygd_pic1_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
-                <label style="font-size:14px;font-weight:normal">正面</label>
-            </a>
-            <a class="a-upload my-icon-upload col-xs-4 clearfix" href="javascript:previewImgWithName('#qygd_pic2','#qygd_pic2_img')" style="border:0px solid #000">
-                <img id="qygd_pic2_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
-                <label style="font-size:14px;font-weight:normal">反面</label>
-            </a>
-            <a class="a-upload my-icon-upload col-xs-4" href="javascript:previewImgWithName('#qygd_pic3','#qygd_pic3_img')" style="border:0px solid #000">
-                <img id="qygd_pic3_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
-                <label style="font-size:14px;font-weight:normal">投资人证件照</label>
-            </a>
-            <a class="a-upload my-icon-upload" href="javascript:previewImgWithName('#qygd_pic3','#qygd_pic3_img')" style="border:0px solid #000">
-                <img id="qygd_pic3_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
-                <label style="font-size:14px;font-weight:normal">投资人证件照</label>
-            </a>
-        </div>
-    </div>
 </body>
 
 </html>

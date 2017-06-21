@@ -43,7 +43,7 @@
         function pressJSONData(jsonobj) {
             $("#apply_name").text(jsonobj["apply_name"]);
             $("#actual_address").html("<span style='font-size:18px;'>" + jsonobj["actual_address"] + "</span>");
-            $("#manage_range").val(jsonobj["manage_range"]);
+            $("#manage_range").text(jsonobj["manage_range"]);
             $("#register_money").val(jsonobj["register_money"]);
             $("#register_kind").html("<span style='font-size:18px;'>" + jsonobj["register_kind"] + "</span>");
             $("#register_name").html("<span style='font-size:18px;'>" + jsonobj["register_name"] + "</span>");
@@ -154,7 +154,7 @@
                     </div>
                     <div class="form-group my-form-group wrap">
                         <label for="manage_range">经营范围</label>
-                        <textarea id="manage_range" disabled name="manage_range" class="form-control" required style="font-size:18px;border-color: #5066b4;"></textarea>
+                        <div id="manage_range" class="col-xs-12 container" style="word-wrap:break-word">&nbsp;</div>
                     </div>
                     <label for="register_money">注册资金</label>
                     <div class="input-group my-form-group">

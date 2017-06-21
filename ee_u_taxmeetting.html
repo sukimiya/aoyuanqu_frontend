@@ -73,6 +73,7 @@
                 }
         }
         $(document).ready(function() {
+            checkInputFileImg();
             var myapi = restapis;
             $("#thesubmit").on("click", function(events) {
                 //
@@ -150,7 +151,7 @@
                         <a id="imgcon" href="javascript:;" class="a-upload btn btn-success col-xs-6 col-xs-offset-3 my-gap-top">
                             <img class="img-responsive">
                             <canvas></canvas>
-                            <input class="my-caver-upload" type="file" name="file" id="file">
+                            <input class="my-caver-upload" type="file" capture="camera" accept="image/*" name="file" id="file">
                             <label id="uploadlabel" class="my-upload-label">拍照上传</label>
                         </a>
                     </div>
