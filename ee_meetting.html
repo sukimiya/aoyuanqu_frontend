@@ -13,7 +13,6 @@
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="https://cdn.bootcss.com/bootstrap-validator/0.5.3/css/bootstrapValidator.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
-    <link href="https://cdn.bootcss.com/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
     <link href="https://cdn.bootcss.com/bootstrap-switch/3.3.4/css/bootstrap3/bootstrap-switch.min.css" rel="stylesheet">
     <link href="css/highlight.css" rel="stylesheet" type="text/css">
     <link href="css/main.css" rel="stylesheet" type="text/css">
@@ -36,7 +35,6 @@
     <script src="https://cdn.bootcss.com/json2/20160511/json2.min.js"></script>
     <script src="https://cdn.bootcss.com/moment.js/2.18.0/moment.min.js"></script>
     <script src="https://cdn.bootcss.com/moment.js/2.18.0/locale/zh-cn.js"></script>
-    <script src="https://cdn.bootcss.com/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
     <script src="js/highlight.js"></script>
     <script src="js/bootstrap-switch.js"></script>
     <script src="js/main.js"></script>
@@ -90,13 +88,11 @@
             if (data.hasOwnProperty("appointment_time")) {
                 debugger;
                 var today = new Date(data.appointment_time.time);
-                $('#appointment_time_picker').datetimepicker({
-                    locale: 'zh-cn',
-                    format: 'YYYY-MM-DD hh:mm',
-                    defaultDate: today,
-                    enabledDates: [today]
-                });
-                $("#appointment_time").val(today.Format("yyyy-MM-dd hh:mm"));
+                var lastday = new Date(today);
+                lastday.setDate(lastday.getDate()+60);
+                $("#appointment_time").val(today.Formaat());
+                $("#appointment_time").attr("min",today.Format("yyyy/MM/dd hh:mm"))
+                $("#appointment_time").attr("max",lastday.Format("yyyy/MM/dd hh:mm"))
             }
             if (data.hasOwnProperty("appointment_address"))
                 $("#appointment_address").val(data.appointment_address);
@@ -160,7 +156,7 @@
             rsobj["id"] = GetRequest()["id"];
             rsobj["wx_openid"] = myweixin.openid;
             rsobj["appointment_state"] = 1;
-            rsobj["appointment_time"] = $("#appointment_time").val();
+            rsobj["appointment_time"] = $("#appointment_time").val().replace("/","-");
             rsobj["appointment_address"] = $("#appointment_address").val();
             rsobj["zip_code"] = $("#zip_code").val();
             rsobj["weituo_state"] = $("#weituo_state").val() == "on" ? 1 : 0;
@@ -258,14 +254,7 @@
                 <form id="bookform">
                     <div class="form-group">
                         <label class="clearfix">面签预约时间</label>
-                        <div class="form-group">
-                            <div class='input-group date' id='appointment_time_picker'>
-                                <input id="appointment_time" type='text' class="form-control" name="appointment_time" />
-                                <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-calendar"></span>
-                                </span>
-                            </div>
-                        </div>
+                        <input id="appointment_time" class="my-selector my-date form-control" type="datetime-local">
                     </div>
                     <div class="form-group">
                         <label class="clearfix">面签预约地点</label>

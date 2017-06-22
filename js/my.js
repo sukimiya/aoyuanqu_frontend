@@ -501,18 +501,42 @@ function setFromDisabled(formname, toDisabled) {
 function checkInputFileImg() {
     debugger;
     var inputs = $("input");
-    if (inputs)
+    if (inputs) {
         for (var i = 0; i < inputs.length; i++) {
             var node = inputs[i];
-            for (var a = 0; a < node.attributes.length; a++) {
-                var attr = node.attributes[a];
-                if (attr.name == "capture") {
-                    if (browser.versions.ios)
-                        node.attributes.removeNamedItem(attr.name);
-                    break;
-                }
+            if ($(node).attr("capture")) {
+                if (browser.versions.ios)
+                    $(node).removeAttr("capture");
+            } else if ($(node).attr("type") == "date" ||
+                $(node).attr("type") == "month" ||
+                $(node).attr("type") == "week" ||
+                $(node).attr("type") == "time" ||
+                $(node).attr("type") == "datetime" ||
+                $(node).attr("type") == "datetime-local") {
+                $(node).on("change", function () {
+                    debugger;
+                    var mindate = new Date($(node).attr("min"));
+                    var maxdate = new Date($(node).attr("max"));
+                    var thisdate = this.valueAsDate;
+                    if (mindate > thisdate) {
+                        console.log("date low");
+                        if (this.curSelectDate) this.value = this.curSelectDate;
+                        this.style.borderColor = "#ff0000";
+                        return;
+                    } else if (maxdate < thisdate) {
+                        console.log("date height");
+                        if (this.curSelectDate) this.value = this.curSelectDate;
+                        this.style.borderColor = "#ff0000";
+                        return;
+                    } else {
+                        this.style.borderColor = "";
+                        this.curSelectDate = this.value;
+                    }
+                    debugger;
+                });
             }
         }
+    }
 }
 /*---------------------------上传文件----------------------*/
 //policy 要经过base64编码， signature 还要进一步处理，可以查阅官方文档

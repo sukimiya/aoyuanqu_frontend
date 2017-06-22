@@ -13,7 +13,6 @@
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="https://cdn.bootcss.com/bootstrap-validator/0.5.3/css/bootstrapValidator.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
-    <link href="https://cdn.bootcss.com/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet" type="text/css">
     <link href="css/my.css" rel="stylesheet" type="text/css">
     <style type="text/css">
@@ -35,7 +34,6 @@
     <script src="https://cdn.bootcss.com/json2/20160511/json2.min.js"></script>
     <script src="https://cdn.bootcss.com/moment.js/2.18.0/moment.min.js"></script>
     <script src="https://cdn.bootcss.com/moment.js/2.18.0/locale/zh-cn.js"></script>
-    <script src="https://cdn.bootcss.com/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
     <script type="text/javascript" src="js/my.js"></script>
     <script type="text/javascript">
         var investorAry = [];
@@ -127,7 +125,7 @@
                     defaultDate: today,
                     enabledDates: [today]
                 });
-                $("#appointment_time").val(today.Format("yyyy-MM-dd hh:mm"));
+                $("#appointment_time").val(today.Format("yyyy/MM/dd hh:mm"));
             }
             if (data.hasOwnProperty("appointment_address"))
                 $("#appointment_address").val(data.appointment_address);
@@ -254,12 +252,7 @@
                     <div class="form-group">
                         <label class="clearfix">面签预约时间</label>
                         <div class="form-group">
-                            <div class='input-group date' id='appointment_time_picker'>
-                                <input id="appointment_time" type='text' class="form-control" name="appointment_time" />
-                                <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-calendar"></span>
-                                </span>
-                            </div>
+                            <input id="appointment_time" type='text' class="form-control" name="appointment_time">
                         </div>
                     </div>
                     <div class="form-group">
