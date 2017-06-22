@@ -119,13 +119,7 @@
             if (data.hasOwnProperty("appointment_time")) {
                 debugger;
                 var today = new Date(data.appointment_time.time);
-                $('#appointment_time_picker').datetimepicker({
-                    locale: 'zh-cn',
-                    format: 'YYYY-MM-DD hh:mm',
-                    defaultDate: today,
-                    enabledDates: [today]
-                });
-                $("#appointment_time").val(today.Format("yyyy/MM/dd hh:mm"));
+                $("#appointment_time").val(today.Format("yyyy-MM-ddThh:mm"));
             }
             if (data.hasOwnProperty("appointment_address"))
                 $("#appointment_address").val(data.appointment_address);
@@ -153,6 +147,7 @@
                 $("#qycw_pic2").val(data.qycw_pic2);
                 getRemotePic(data.qycw_pic2, "#qyjs_pic2_img");
             }
+            checkInputFileImg();
         }
 
         function getmeetingdata() {

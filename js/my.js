@@ -504,20 +504,23 @@ function checkInputFileImg() {
     if (inputs) {
         for (var i = 0; i < inputs.length; i++) {
             var node = inputs[i];
+            var nodetype = node.type;
             if ($(node).attr("capture")) {
                 if (browser.versions.ios)
                     $(node).removeAttr("capture");
-            } else if ($(node).attr("type") == "date" ||
-                $(node).attr("type") == "month" ||
-                $(node).attr("type") == "week" ||
-                $(node).attr("type") == "time" ||
-                $(node).attr("type") == "datetime" ||
-                $(node).attr("type") == "datetime-local") {
-                $(node).on("change", function () {
+            } else if (nodetype == "date" ||
+                nodetype == "month" ||
+                nodetype == "week" ||
+                nodetype == "time" ||
+                nodetype == "datetime" ||
+                nodetype == "datetime-local") {
+                debugger;
+                node.curSelectDate = node.value;
+                $("#"+node.id).on("change", function () {
                     debugger;
-                    var mindate = new Date($(node).attr("min"));
-                    var maxdate = new Date($(node).attr("max"));
-                    var thisdate = this.valueAsDate;
+                    var mindate = new Date($(this).attr("min"));
+                    var maxdate = new Date($(this).attr("max"));
+                    var thisdate = new Date(this.valueAsNumber);
                     if (mindate > thisdate) {
                         console.log("date low");
                         if (this.curSelectDate) this.value = this.curSelectDate;

@@ -38,29 +38,12 @@
             if (data.hasOwnProperty("szhd_state"))
                 if (data.szhd_state1 == 1) {
                     var today = new Date();
-                    $("#appointment_time").attr('min', today);
-                    var month = new Date(new Date().setMonth(today.getMonth() + 1));
-                    $("#appointment_time").attr('max', month);
-                    var targatDate = new Date();
-                    targatDate.setMonth(targatDate.getMonth() + 6);
-                    targatDate.getDate() - today.getDate();
-                    var maxDateTo = targatDate.getTime() - today.getTime();
-                    maxDateTo = maxDateTo / (1000 * 60 * 60 * 24);
-                    var darry = [];
-                    for (var i = 0; i < maxDateTo; i++) {
-                        var adate = new Date();
-                        adate.setDate(adate.getDate() + i);
-                        darry.push(adate);
-                        //console.log("add a date:"+adate.toDateString());
-                    }
-                    $('#appointment_time_picker').datetimepicker({
-                        locale: 'zh-cn',
-                        format: 'YYYY-MM-DD hh:mm',
-                        defaultDate: today,
-                        enabledDates: [today]
-                    });
+                    $("#appointment_time").attr('min', today.Format("yyyy-MM-ddThh:mm"));
+                    var month = new Date(new Date().setMonth(today.getMonth() + 6));
+                    $("#appointment_time").attr('max', month.Format("yyyy-MM-ddThh:mm"));
+                    
                 } else {
-                    $("#appointment_time").val(data.szhd_time);
+                    $("#appointment_time").val(new Date(data.szhd_time.time).Format("yyyy-MM-ddThh:mm"));
                     $("#szhd_address").val(data.szhd_address);
                     if (data.szhd_license == null || data.szhd_license) {
                         $("#szhd_license_img").removeClass("hide");
@@ -70,9 +53,9 @@
                         format: 'yyyy-mm-dd hh:ii'
                     });
                 }
+            checkInputFileImg();
         }
         $(document).ready(function() {
-            checkInputFileImg();
             var myapi = restapis;
             $("#thesubmit").on("click", function(events) {
                 //
