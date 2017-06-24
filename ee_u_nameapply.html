@@ -43,7 +43,7 @@
                     alert("提交出错")
                 })
             });
-            $("#acceptBtn").on("click", function() {manage_range
+            $("#acceptBtn").on("click", function() {
                 var thedata = "id=" + theid + "&apply_name=" + $("#apply_name").val()+"&manage_range="+$("#manage_range").val();
                 debugger;
                 myapi.request("YCMCheck.do", "page", thedata + "&apply_state=2", function(result) {
@@ -194,7 +194,7 @@
                     <div id="manage_range_d" class="col-xs-12 container" style="word-wrap:break-word">&nbsp;</div>
                     <div id="marangGroup" class="form-group my-form-group wrap hide">
                         <div class="row">
-                            <textarea id="manage_range" name="manage_range" class="col-xs-12 form-control" maxlength="120" style="height:280px;font-size:18px"></textarea>
+                            <textarea id="manage_range" name="manage_range" class="col-xs-12 form-control" maxlength="130" style="height:280px;font-size:18px"></textarea>
                             <a class="btn btn-success col-xs-6 col-xs-offset-3 my-gap-top" onclick="hidemarangGroup()">保存</a>
                         </div>
                     </div>

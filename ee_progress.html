@@ -366,6 +366,7 @@
                         mylink.attr("href", "javascript:gotoCheckTax()");
                     } else if (thevalue == 2) {
                         myelement.text("已传");
+                        mylink.attr("href", "javascript:gotoCheckTax2()");
                     } else {
                         myelement.text("待传");
                     }
@@ -429,6 +430,9 @@
         }
 
         function gotoCheckTax() {
+            window.location = "ee_openaccount.html?id=" + GetRequest()['id'];
+        }
+        function gotoCheckTax2() {
             window.location = "ee_openaccount.html?id=" + GetRequest()['id'];
         }
 

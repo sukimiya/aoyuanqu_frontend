@@ -92,13 +92,9 @@
 
                 if (jdata.license_state == 2) {
                     //2 已经投递
-                    //$("#my-state-1").addClass("hide");
                     setFromDisabled("deliverform", true);
-                    if (jdata.license_takekind == 0) {
-                        $("#my-state-1").addClass("hide");
-                        
-                    }
-                    $("#expressGroup").append('<div class="well well-lg">快递公司:'+getobj["express_company"]+'<p>'+getobj["express_number"]+'</p></div>');
+                    $("#my-state-1").addClass("hide");
+                    $("#expressGroup").append('<div class="well well-lg">快递公司:'+jdata["express_company"]+'<p>'+jdata["express_number"]+'</p></div>');
                 } else if (jdata.license_state == 1) {
                     //1 未发
                 }

@@ -97,7 +97,6 @@
             if (data.hasOwnProperty("manage_range")) $("#manage_range").text(data.manage_range);
             if (data.hasOwnProperty("register_money")) $("#register_money").text(data.register_money);
             if (data.hasOwnProperty("register_kind")) $("#register_kind").text(data.register_kind);
-            if (data.hasOwnProperty("appointment_time")) $("#appointment_time").val(data.appointment_time);
             if (data.hasOwnProperty("tzfr_name")) $("#tzfr_name").val(data.tzfr_name);
             if (data.hasOwnProperty("tzfr_name")) {
                 var tzfr = {
@@ -121,7 +120,7 @@
             if (data.hasOwnProperty("appointment_time")) {
                 debugger;
                 var today = new Date(data.appointment_time.time);
-                $("#appointment_time").val(today.Format("yyyy-MM-ddThh:mm"));
+                $("#appointment_time").val(today.Format("yyyy-MM-dd hh:mm"));
             }
             if (data.hasOwnProperty("appointment_address"))
                 $("#appointment_address").val(data.appointment_address);
@@ -227,12 +226,12 @@
                 </div>
                 <div class="form-group">
                     <label for="actual_address">实际经营地址</label>
-                    <div id="actual_address" class="form-control col-xs-12 my-form-label text-left">&nbsp;
+                    <div id="actual_address" class="well well-lg">&nbsp;
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="manage_range">企业经营范围</label>
-                    <div id="manage_range" class="form-control col-xs-12 my-form-label text-left">&nbsp;
+                    <label class="clearfix">企业经营范围</label>
+                    <div id="manage_range" class="well well-lg">&nbsp;
                     </div>
                 </div>
                 <div class="form-group">
