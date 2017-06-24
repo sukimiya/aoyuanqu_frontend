@@ -157,9 +157,9 @@ QueryString = {
 }
 QueryString.Initial();
 
-function getRemotePic(picid, me = null) {
+function getRemotePic(picid, meimg = null) {
     var rsstr = "uploads/" + picid; //remoteaddress+"/"+picid
-    if (me) me.attr("src", rsstr);
+    if (meimg) meimg.attr("src", rsstr);
     return rsstr;
 }
 //------------------------------------------------------

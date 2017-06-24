@@ -39,21 +39,20 @@
         var investorAry = [];
         var isAddMode = true;
 
-        function addAinvestorToList(data) {
+        function addAinvestorToList(data, adddata = true) {
             var rsstr = '<a href="javascript:editInvestor(' + "'" +
-                data["o2o_id"] + "'" + ')" class="list-group-item my-list-item-42"><div class="col-xs-4">' +
-                data["qygd_name"] +
-                '</div><div class="col-xs-4">' +
-                data["qygd_jobtitle"] +
-                '</div><div class="col-xs-4">' + data["qygd_investment"] + "万元 "
-            calculate_qygd_investment(data["qygd_investment"]) +
-                '</div></a>';
+                data["id"] + "'" + ')" class="list-group-item col-xs-12 my-list-item-52"><div class="col-xs-8 my-label" nobr>' +
+                data["qygd_name"] + '</div><div class="col-xs-4 clearfix text-right my-description" nobr>金额:' +
+                data["qygd_investment"] + '万元</div><div class="col-xs-8 my-description" nobr>职位:' +
+                data["qygd_jobtitle"] + '</div><div class="col-xs-4 clearfix text-right my-description" nobr>' +
+                calculate_qygd_investment(data["qygd_investment"]) + '</div></a>';
             $("#investorlists").append(rsstr);
-            investorAry.push(data);
+            if(adddata)
+                investorAry.push(data);
         }
 
         function calculate_qygd_investment(investment) {
-            var totalInvestment = Number($("#register_money").val());
+            var totalInvestment = Number($("#register_money").text());
             if (Number(investment)) {
                 var rsstr = Math.floor(investment / totalInvestment * 10000) / 100;
                 return rsstr + "%";
@@ -64,11 +63,11 @@
 
         var curSelectedIndex = -1;
 
-        function editInvestor(o2o_id) {
+        function editInvestor(id) {
             if (investorAry.length > 0) {
                 for (var i = 0; i < investorAry.length; i++) {
                     var ainvestor = investorAry[i];
-                    if (ainvestor.o2o_id == o2o_id) {
+                    if (ainvestor.id == id) {
                         $("#qygd_name").val(ainvestor["qygd_name"]);
                         $("#qygd_idnumber").val(ainvestor["qygd_idnumber"]);
                         $("#qygd_investment").val(ainvestor["qygd_investment"]);
@@ -76,9 +75,12 @@
                         $("#qygd_pic1").val(ainvestor["qygd_pic1"]);
                         $("#qygd_pic2").val(ainvestor["qygd_pic2"]);
                         $("#qygd_pic3").val(ainvestor["qygd_pic3"]);
-                        $("#qygd_pic1" + "_img").attr("src", getRemotePic(ainvestor["qygd_pic1"]));
-                        $("#qygd_pic2" + "_img").attr("src", getRemotePic(ainvestor["qygd_pic2"]));
-                        $("#qygd_pic3" + "_img").attr("src", getRemotePic(ainvestor["qygd_pic3"]));
+                        $("#qygd_pic1" + "_img").attr("src", "images/picframe.svg");
+                        $("#qygd_pic2" + "_img").attr("src", "images/picframe.svg");
+                        $("#qygd_pic3" + "_img").attr("src", "images/picframe.svg");
+                        if(ainvestor["qygd_pic1"]) $("#qygd_pic1" + "_img").attr("src", getRemotePic(ainvestor["qygd_pic1"]));
+                        if(ainvestor["qygd_pic2"]) $("#qygd_pic2" + "_img").attr("src", getRemotePic(ainvestor["qygd_pic2"]));
+                        if(ainvestor["qygd_pic3"]) $("#qygd_pic3" + "_img").attr("src", getRemotePic(ainvestor["qygd_pic3"]));
                         curSelectedIndex = i;
                         isAddMode = false;
                         $("#addinvestorpanel").modal("toggle");
@@ -93,7 +95,7 @@
             if (data.hasOwnProperty("apply_name")) $("#companyname").text(data.apply_name);
             if (data.hasOwnProperty("actual_address")) $("#actual_address").text(data.actual_address);
             if (data.hasOwnProperty("manage_range")) $("#manage_range").text(data.manage_range);
-            if (data.hasOwnProperty("register_money")) $("#register_money").val(data.register_money);
+            if (data.hasOwnProperty("register_money")) $("#register_money").text(data.register_money);
             if (data.hasOwnProperty("register_kind")) $("#register_kind").text(data.register_kind);
             if (data.hasOwnProperty("appointment_time")) $("#appointment_time").val(data.appointment_time);
             if (data.hasOwnProperty("tzfr_name")) $("#tzfr_name").val(data.tzfr_name);
@@ -105,7 +107,7 @@
                     qygd_pic1: data["tzfr_pic1"],
                     qygd_pic2: data["tzfr_pic2"],
                     qygd_pic3: data["tzfr_pic3"],
-                    o2o_id: data["id"],
+                    id: data["id"],
                     qygd_jobtitle: "法人"
                 };
                 data.arr.unshift(tzfr);
@@ -119,13 +121,7 @@
             if (data.hasOwnProperty("appointment_time")) {
                 debugger;
                 var today = new Date(data.appointment_time.time);
-                $('#appointment_time_picker').datetimepicker({
-                    locale: 'zh-cn',
-                    format: 'YYYY-MM-DD hh:mm',
-                    defaultDate: today,
-                    enabledDates: [today]
-                });
-                $("#appointment_time").val(today.Format("yyyy/MM/dd hh:mm"));
+                $("#appointment_time").val(today.Format("yyyy-MM-ddThh:mm"));
             }
             if (data.hasOwnProperty("appointment_address"))
                 $("#appointment_address").val(data.appointment_address);
@@ -134,24 +130,49 @@
             if (data.hasOwnProperty("qyfr_telephone")) $("#qyfr_telephone").val(data.qyfr_telephone);
             if (data.hasOwnProperty("qyfr_email")) $("#qyfr_email").val(data.qyfr_email);
             if (data.hasOwnProperty("qyfr_mobile")) $("#qyfr_mobile").val(data.qyfr_mobile);
+            if (data.hasOwnProperty("qyjs_idnumber")) $("#qyjs_idnumber").val(data.qyjs_idnumber);
+            if (data.hasOwnProperty("qyjs_name")) $("#qyjs_name").val(data.qyjs_name);
+            debugger;
             if (data.hasOwnProperty("weituo_state")) {
                 if (data.weituo_state == 1) {
                     $("weituo_state").attr("checked", 1);
+                    $("#aainfogroup").addClass("hide");
                 } else {
                     $("weituo_state").removeAttr("checked");
+                    $("#aainfogroup").removeClass("hide");
                 }
             }
             if (data.hasOwnProperty("qycw_name")) $("#qycw_name").val(data.qycw_name);
             if (data.hasOwnProperty("qycw_telephone")) $("#qycw_telephone").val(data.qycw_telephone);
             if (data.hasOwnProperty("qycw_email")) $("#qycw_email").val(data.qycw_email);
             if (data.hasOwnProperty("qycw_mobile")) $("#qycw_mobile").val(data.qycw_mobile);
+            debugger;
+            if (data.hasOwnProperty("qyjs_pic1")) {
+                $("#qyjs_pic1").val(data.qyjs_pic1);
+                getRemotePic(data.qyjs_pic1, $("#qyjs_pic1_img"));
+            }
+            if (data.hasOwnProperty("qyjs_pic2")) {
+                $("#qyjs_pic2").val(data.qyjs_pic2);
+                getRemotePic(data.qyjs_pic2, $("#qyjs_pic2_img"));
+            }
             if (data.hasOwnProperty("qycw_pic1")) {
                 $("#qycw_pic1").val(data.qycw_pic1);
-                getRemotePic(data.qycw_pic1, "#qyjs_pic1_img");
+                getRemotePic(data.qycw_pic1, $("#qycw_pic1_img"));
             }
+            
             if (data.hasOwnProperty("qycw_pic2")) {
                 $("#qycw_pic2").val(data.qycw_pic2);
-                getRemotePic(data.qycw_pic2, "#qyjs_pic2_img");
+                getRemotePic(data.qycw_pic2, $("#qycw_pic2_img"));
+            }
+            
+            if (data.hasOwnProperty("qycw_pic3")) {
+                $("#qycw_pic3").val(data.qycw_pic3);
+                getRemotePic(data.qycw_pic3, $("#qycw_pic3_img"));
+            }
+            
+            if (data.hasOwnProperty("qycw_pic4")) {
+                $("#qycw_pic4").val(data.qycw_pic4);
+                getRemotePic(data.qycw_pic4, $("#qycw_pic4_img"));
             }
         }
 
@@ -168,20 +189,6 @@
             $("#appointment_time").attr('min', today);
             var month = new Date(new Date().setMonth(today.getMonth() + 1));
             $("#appointment_time").attr('max', month);
-            var maxDateTo = 90;
-            var darry = [];
-            for (var i = 0; i < maxDateTo; i++) {
-                var adate = new Date();
-                adate.setDate(adate.getDate() + i);
-                darry.push(adate);
-                console.log("add a date:" + adate.toDateString());
-
-            }
-            $('#appointment_time_picker').datetimepicker({
-                locale: 'zh-cn',
-                defaultDate: today,
-                enabledDates: darry
-            });
             $("#thesubmit").on("click", function(events) {
                 var myapi = restapis;
                 var theid = GetRequest()["id"];
@@ -194,17 +201,6 @@
                 }, function(e) {
                     alert("提交失败，请检查网络连接")
                 });
-            });
-            $('#weituo_state').on('switchChange.bootstrapSwitch', function(e, data) {
-                var $el = e,
-                    value = data;
-                if (value) {
-                    $("#aainfogroup").addClass("hidden");
-                } else {
-                    $("#aainfogroup").removeClass("hidden");
-                }
-
-                console.log(e, $el, value);
             });
             getmeetingdata();
         })
@@ -252,7 +248,7 @@
                     <div class="form-group">
                         <label class="clearfix">面签预约时间</label>
                         <div class="form-group">
-                            <input id="appointment_time" type='text' class="form-control" name="appointment_time">
+                            <input id="appointment_time" type='text' class="form-control" name="appointment_time" disabled>
                         </div>
                     </div>
                     <div class="form-group">
@@ -264,33 +260,29 @@
                     </div>
                     <div class="form-group">
                         <label for="zip_code">区域邮政编码</label>
-                        <input id="zip_code" name="zip_code" class="form-control" type="number" maxlength="6">
+                        <input id="zip_code" name="zip_code" class="form-control" type="number" maxlength="6" disabled>
                     </div>
                     <div class="form-group">
                         <label for="qycw_name">企业法人姓名</label>
-                        <input id="qyfr_name" name="qycw_name" class="form-control" type="text">
+                        <input id="qyfr_name" name="qycw_name" class="form-control" type="text" disabled>
                     </div>
                     <div class="form-group">
                         <label for="qycw_telephone">企业法人电话</label>
-                        <input id="qyfr_telephone" name="qycw_telephone" class="form-control" type="tel">
+                        <input id="qyfr_telephone" name="qycw_telephone" class="form-control" type="tel" disabled>
                     </div>
                     <div class="form-group">
                         <label for="qycw_mobile">企业法人手机</label>
-                        <input id="qyfr_mobile" name="qycw_mobile" class="form-control" type="tel">
+                        <input id="qyfr_mobile" name="qycw_mobile" class="form-control" type="tel" disabled>
                     </div>
                     <div class="form-group">
                         <label for="qycw_email">企业法人邮箱</label>
-                        <input id="qyfr_email" name="qycw_email" class="form-control" type="email">
+                        <input id="qyfr_email" name="qycw_email" class="form-control" type="email" disabled>
                     </div>
                     <div class="form-group text-left">
                         <label class="col-xs-7">我想委托代理记账</label>
-                        <div class="input-group col-xs-5 text-right">
-                            <div class="switch">
-                                <input id="weituo_state" name="weituo_state" type="checkbox" data-on-text="是" data-off-text="不" checked />
-                            </div>
-                        </div>
+                        <input type="checkbox" id="weituo_state" name="weituo_state" disabled>
                     </div>
-                    <div id="aainfogroup" class="hidden">
+                    <div id="aainfogroup" class="hide">
                         <div class="form-group">
                             <label for="qycw_name">财务姓名</label>
                             <input id="qycw_name" name="qycw_name" class="form-control" type="text" disabled>
@@ -315,17 +307,25 @@
                                 <img id="qycw_pic2_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
                             </a>
                         </div>
+                        <div class="row">
+                            <a class="col-xs-4" href="javascript:previewImagebyWX('#qycw_pic3','#qycw_pic3_img')" style="border:0px solid #000">
+                                <img id="qycw_pic3_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
+                            </a>
+                            <a class="col-xs-4" href="javascript:previewImagebyWX('#qycw_pic4','#qycw_pic4_img')" style="border:0px solid #000">
+                                <img id="qycw_pic4_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
+                            </a>
+                        </div>
                         <input type="hidden" id="qycw_pic1">
                         <input type="hidden" id="qycw_pic2">
+                        <input type="hidden" id="qycw_pic3">
+                        <input type="hidden" id="qycw_pic4">
                     </div>
                     <hr>
                     <hr>
                     <label class="my-gap-bottom">投资人信息</label>
-                    <div class="row">
-                        <div class="col-xs-4" style="font-size:14px;">名称</div>
-                        <div class="col-xs-4" style="font-size:14px;">职务</div>
-                        <div class="col-xs-4" style="font-size:14px;">金额</div>
-
+                    <div class="row" style="font-size:14px;">
+                        <div class="col-xs-8">名称职务</div>
+                        <div class="col-xs-4">投资金额</div>
                     </div>
                     <div id="investorlists" class="list-group my-list" style="padding-left:0px;padding-right:0px;marging-left:0px;marging-right:0px;">
                     </div>

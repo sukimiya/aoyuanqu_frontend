@@ -294,102 +294,105 @@
         }
 
         //}
-        function setItemState(thename,thevalue,i){
+        function setItemState(thename, thevalue, i) {
             var myelement = $("#item" + (i + 1) + "_label");
-                var mylink = $("#item" + (i + 1) + " div .bobble-box");
-                var myparent = $("#item" + (i + 1));
+            var mylink = $("#item" + (i + 1) + " div .bobble-box");
+            var myparent = $("#item" + (i + 1));
             if (thevalue == 0) {
-                    //还未处理的状态默认灰色
-                    myparent.removeClass("invers");
-                    myparent.removeClass("pgdided");
-                } else if (thevalue == 1) {
-                    //正在进行中的状态
-                    myparent.removeClass("pgdided");
-                    myparent.addClass("invers");
-                } else if(thevalue==2){
-                    //完成态
-                    myparent.removeClass("invers");
-                    myparent.addClass("pgdided");
-                }
+                //还未处理的状态默认灰色
+                myparent.removeClass("invers");
+                myparent.removeClass("pgdided");
+            } else if (thevalue == 1) {
+                //正在进行中的状态
+                myparent.removeClass("pgdided");
+                myparent.addClass("invers");
+            } else if (thevalue == 2) {
+                //完成态
+                myparent.removeClass("invers");
+                myparent.addClass("pgdided");
+            }
             switch (thename) {
-                    case "apply_state":
-                        if (thevalue == 2) {
-                            mylink.attr("href", "javascript:gotoNamePriview()");
-                            myelement.text("已办");
-                        } else if (thevalue == 0) {
-                            mylink.attr("href", "javascript:gotoNameApply()");
-                            myelement.text("退回");
-                        } else {
-                            mylink.attr("href", "javascript:gotoNamePriview()");
-                            myelement.text("待办");
-                            myparent.removeClass("pgdided");
-                            myparent.addClass("invers");
-                        }
-                        break;
-                    case "allow_notice":
-                        if (thevalue == 2) {
-                            myelement.text("已办");
-                            mylink.attr("href", "javascript:gotoApplyNotify()");
-                        } else if (thevalue == 1) {
-                            myelement.text("待办");
-                        } else {
-                            myelement.text("待办");
-                        }
-                        break;
-                    case "appointment_state":
-                        if (thevalue == 1) {
-                            myelement.text("待完善信息");
-                            mylink.attr("href", "javascript:gotoMeetting()");
-                        } else if (thevalue == 2) {
-                            myelement.text("面签预约成功");
-                            mylink.attr("href", "javascript:gotoMeettingPriview()");
-                        } else {
-                            myelement.text("待审");
-                        }
-                        break;
-                    case "license_state":
-                        if (thevalue == 1) {
-                            myelement.text("已发放");
-                            mylink.attr("href", "javascript:gotoCAPriview()");
-                        } else if (thevalue == 2) {
-                            mylink.attr("href", "javascript:gotoCA()");
-                            myelement.text("已发放");
-                        } else {
-                            myelement.text("待签");
-                        }
-                        break;
-                    case "account_state":
-                        if (thevalue == 1) {
-                            myelement.text("待传");
-                            mylink.attr("href", "javascript:gotoCheckTax()");
-                        } else if (thevalue == 2) {
-                            myelement.text("已传");
-                        } else {
-                            myelement.text("待传");
-                        }
-                        break;
-                    case "szhd_state":
-                        if (thevalue == 1) {
-                            myelement.text("待预约");
-                            mylink.attr("href", "javascript:gotoEEFinish()");
-                        } else if (thevalue == 2) {
-                            myelement.text("已完成");
-                            mylink.attr("href", "javascript:gotoEEFinish2()");
-                        } else {
-                            myelement.text("待预约");
-                        }
-                        break;
-                }
+                case "apply_state":
+                    if (thevalue == 2) {
+                        mylink.attr("href", "javascript:gotoNamePriview()");
+                        myelement.text("已办");
+                    } else if (thevalue == 0) {
+                        mylink.attr("href", "javascript:gotoNameApply()");
+                        myelement.text("退回");
+                        myparent.removeClass("pgdided");
+                        myparent.addClass("invers");
+                    } else {
+                        mylink.attr("href", "javascript:gotoNamePriview()");
+                        myelement.text("待办");
+                        myparent.removeClass("pgdided");
+                        myparent.addClass("invers");
+                    }
+                    break;
+                case "allow_notice":
+                    if (thevalue == 2) {
+                        myelement.text("已办");
+                        mylink.attr("href", "javascript:gotoApplyNotify()");
+                    } else if (thevalue == 1) {
+                        myelement.text("待办");
+                    } else {
+                        myelement.text("待办");
+                    }
+                    break;
+                case "appointment_state":
+                    if (thevalue == 1) {
+                        myelement.text("待完善信息");
+                        mylink.attr("href", "javascript:gotoMeetting()");
+                    } else if (thevalue == 2) {
+                        myelement.text("面签预约成功");
+                        mylink.attr("href", "javascript:gotoMeettingPriview()");
+                    } else {
+                        myelement.text("待审");
+                    }
+                    break;
+                case "license_state":
+                    if (thevalue == 1) {
+                        myelement.text("已发放");
+                        mylink.attr("href", "javascript:gotoCAPriview()");
+                    } else if (thevalue == 2) {
+                        mylink.attr("href", "javascript:gotoCA()");
+                        myelement.text("已发放");
+                    } else {
+                        myelement.text("待签");
+                    }
+                    break;
+                case "account_state":
+                    if (thevalue == 1) {
+                        myelement.text("待传");
+                        mylink.attr("href", "javascript:gotoCheckTax()");
+                    } else if (thevalue == 2) {
+                        myelement.text("已传");
+                    } else {
+                        myelement.text("待传");
+                    }
+                    break;
+                case "szhd_state":
+                    if (thevalue == 1) {
+                        myelement.text("待预约");
+                        mylink.attr("href", "javascript:gotoEEFinish()");
+                    } else if (thevalue == 2) {
+                        myelement.text("已完成");
+                        mylink.attr("href", "javascript:gotoEEFinish2()");
+                    } else {
+                        myelement.text("待预约");
+                    }
+                    break;
+            }
         }
+
         function onDataHandler(data) {
             var statelist = data;
             var i = 0;
-            var stateary = ["apply_state","allow_notice","appointment_state","license_state","account_state","szhd_state"];
+            var stateary = ["apply_state", "allow_notice", "appointment_state", "license_state", "account_state", "szhd_state"];
             for (var a in statelist) {
-                for(var l=0;l<stateary.length;l++){
-                    if(stateary[l] == a){
-                        setItemState(a,statelist[a],l);
-                        console.log(a+":"+statelist[a]+":"+l);
+                for (var l = 0; l < stateary.length; l++) {
+                    if (stateary[l] == a) {
+                        setItemState(a, statelist[a], l);
+                        console.log(a + ":" + statelist[a] + ":" + l);
                         i++;
                     }
                 }

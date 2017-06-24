@@ -96,7 +96,9 @@
                     setFromDisabled("deliverform", true);
                     if (jdata.license_takekind == 0) {
                         $("#my-state-1").addClass("hide");
+                        
                     }
+                    $("#expressGroup").append('<div class="well well-lg">快递公司:'+getobj["express_company"]+'<p>'+getobj["express_number"]+'</p></div>');
                 } else if (jdata.license_state == 1) {
                     //1 未发
                 }
@@ -120,6 +122,7 @@
                 </a>
             </a>
             <hr>
+            <div id="expressGroup"></div>
         </div>
         <div id="my-state-1">
             <div class="container text-center">

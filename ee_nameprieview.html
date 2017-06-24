@@ -39,9 +39,20 @@
         function onInvestorOKHandler() {
             $("#addinvestorpanel").modal("hide");
         }
-
+        function addAinvestorToList(data, adddata = true) {
+            var rsstr = '<a href="javascript:editInvestor(' + "'" +
+                data["id"] + "'" + ')" class="list-group-item col-xs-12 my-list-item-52"><div class="col-xs-8 my-label" nobr>' +
+                data["qygd_name"] + '</div><div class="col-xs-4 clearfix text-right my-description" nobr>金额:' +
+                data["qygd_investment"] + '万元</div><div class="col-xs-8 my-description" nobr>职位:' +
+                data["qygd_jobtitle"] + '</div><div class="col-xs-4 clearfix text-right my-description" nobr>' +
+                calculate_qygd_investment(data["qygd_investment"]) + '</div></a>';
+            $("#investorlists").append(rsstr);
+            if(adddata)
+                investorAry.push(data);
+        }
         function pressJSONData(jsonobj) {
             $("#apply_name").text(jsonobj["apply_name"]);
+            $("#apply_name2").html(jsonobj["apply_name2"]+"<br>"+jsonobj["apply_name3"]+"<br>"+jsonobj["apply_name4"]);
             $("#actual_address").html("<span style='font-size:18px;'>" + jsonobj["actual_address"] + "</span>");
             $("#manage_range").text(jsonobj["manage_range"]);
             $("#register_money").val(jsonobj["register_money"]);
@@ -70,37 +81,28 @@
                     qygd_pic1: jsonobj["tzfr_pic1"],
                     qygd_pic2: jsonobj["tzfr_pic2"],
                     qygd_pic3: jsonobj["tzfr_pic3"],
-                    o2o_id: jsonobj["id"],
+                    id: jsonobj["id"],
                     qygd_jobtitle: "法人"
                 };
                 jsonobj.arr.unshift(tzfr);
             }
             var liststr = "";
+            $("#investorlists").html(liststr);
             for (var i = 0; i < jsonobj.arr.length; i++) {
                 var node = jsonobj.arr[i];
                 node["order"] = i;
-                var rsitem = '<a href="javascript:editInvestor(' + "'" +
-                    node["o2o_id"] + "'" + ')" class="list-group-item my-list-item-42"><div class="col-xs-3">' +
-                    node["qygd_name"] +
-                    '</div><div class="col-xs-4">' +
-                    node["qygd_idnumber"] +
-                    '</div><div class="col-xs-3 text-center">' +
-                    calculate_qygd_investment(node["qygd_investment"]) +
-                    '</div><div class="col-xs-2 text-center">' +
-                    node["qygd_jobtitle"] + '</div></a>';
-                liststr += rsitem;
-                investorAry.push(node);
+                addAinvestorToList(node);
             }
-            $("#investorlists").html(liststr);
+            debugger;
         }
         var curSelectedIndex = -1;
 
-        function editInvestor(o2o_id) {
+        function editInvestor(id) {
             debugger;
             if (investorAry.length > 0) {
                 for (var i = 0; i < investorAry.length; i++) {
                     var ainvestor = investorAry[i];
-                    if (ainvestor.o2o_id == o2o_id) {
+                    if (ainvestor.id == id) {
                         $("#qygd_name").val(ainvestor["qygd_name"]);
                         $("#qygd_idnumber").val(ainvestor["qygd_idnumber"]);
                         $("#qygd_investment").val(ainvestor["qygd_investment"]);
@@ -108,9 +110,12 @@
                         $("#qygd_pic1").val(ainvestor["qygd_pic1"]);
                         $("#qygd_pic2").val(ainvestor["qygd_pic2"]);
                         $("#qygd_pic3").val(ainvestor["qygd_pic3"]);
-                        $("#qygd_pic1" + "_img").attr("src", getRemotePic(ainvestor["qygd_pic1"]));
-                        $("#qygd_pic2" + "_img").attr("src", getRemotePic(ainvestor["qygd_pic2"]));
-                        $("#qygd_pic3" + "_img").attr("src", getRemotePic(ainvestor["qygd_pic3"]));
+                        $("#qygd_pic1" + "_img").attr("src", "images/picframe.svg");
+                        $("#qygd_pic2" + "_img").attr("src", "images/picframe.svg");
+                        $("#qygd_pic3" + "_img").attr("src", "images/picframe.svg");
+                        if(ainvestor["qygd_pic1"]) $("#qygd_pic1" + "_img").attr("src", getRemotePic(ainvestor["qygd_pic1"]));
+                        if(ainvestor["qygd_pic2"]) $("#qygd_pic2" + "_img").attr("src", getRemotePic(ainvestor["qygd_pic2"]));
+                        if(ainvestor["qygd_pic3"]) $("#qygd_pic3" + "_img").attr("src", getRemotePic(ainvestor["qygd_pic3"]));
                         curSelectedIndex = i;
                         isAddMode = false;
                         $("#addinvestorpanel").modal("toggle");
@@ -149,6 +154,11 @@
                         </div>
                     </div>
                     <div class="form-group my-form-group">
+                        <label class="clearfix">备选企业名称</label>
+                        <div id="apply_name2" name="apply_name2" style="font-size:16px;">
+                        </div>
+                    </div>
+                    <div class="form-group my-form-group">
                         <label>实际经营地址</label>
                         <div id="actual_address" style="font-size:16px;"></div>
                     </div>
@@ -167,11 +177,9 @@
                     </div>
                     <hr>
                     <label class="my-gap-bottom">投资人信息</label>
-                    <div class="row">
-                        <div class="col-xs-3" style="font-size:14px;">名称</div>
-                        <div class="col-xs-4" style="font-size:14px;">证件号码</div>
-                        <div class="col-xs-3" style="font-size:14px;">金额</div>
-                        <div class="col-xs-2" style="font-size:14px;">职务</div>
+                    <div class="row" style="font-size:14px;">
+                        <div class="col-xs-8">名称职务</div>
+                        <div class="col-xs-4">投资金额</div>
                     </div>
                     <div id="investorlists" class="list-group my-list" style="padding-left:0px;padding-right:0px;marging-left:0px;marging-right:0px;">
                         <a class="list-group-item my-list-item-42">

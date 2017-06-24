@@ -138,27 +138,30 @@
     width: 80px;
     height: 80px;
 }
+
 .a-upload .my-upload-label {
     padding-top: 10px;
     padding-bottom: 10px;
-    position:relative;
-    opacity:1;
+    position: relative;
+    opacity: 1;
     background-color: #5cb85c;
     border-color: #4cae4c;
     pointer-events: none;
 }
+
 .a-upload label {
     background-color: transparent;
     width: 100%;
     text-align: center;
     left: 0px;
     bottom: 0px;
-    box-sizing:content-box;
+    box-sizing: content-box;
     opacity: 0.5;
     position: absolute;
     padding-bottom: 3px;
     margin: 0px;
 }
+
 .a-upload input {
     position: absolute;
     font-size: 100px;
@@ -190,6 +193,7 @@
     width: 100%;
     text-align: center;
 }
+
 
 
 /*------------------------my.html----------------------*/
@@ -346,6 +350,42 @@
     border-bottom: 0px none #FFF;
 }
 
+.my-list-item-52 {
+    padding: 10px;
+    font-size: 12px;
+    display: block;
+    border: 1px solid #bbbbbb;
+    border-left-width: 0px;
+    border-right-width: 0px;
+    border-top-width: 0px;
+    margin: 0px;
+    height: auto;
+}
+.my-list-item-52:first-child {
+    border-top-right-radius: 0px;
+    border-top-left-radius: 0px;
+    border-top: 0px none #FFF;
+}
+
+.my-list-item-52:last-child {
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+    border-bottom: 0px none #FFF;
+}
+.my-list-item-52 .my-label {
+    font-weight:bold;
+    font-size:14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.my-list-item-52 .my-description {
+    font-weight:bold;
+    font-size:12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color:#ccc
+}
+
 .my-list-item-heading {
     font-size: 18px;
     color: #444444;
@@ -469,6 +509,7 @@
     color: #2d3c70;
     opacity: 1;
 }
+
 
 
 

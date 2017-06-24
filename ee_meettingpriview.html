@@ -1,0 +1,400 @@
+<!--Reference from-->
+<!--http://www.jq22.com/jquery-info13300-->
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="0">
+    <title>面签预约</title>
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.bootcss.com/bootstrap-validator/0.5.3/css/bootstrapValidator.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
+    <link href="css/style.css" rel="stylesheet" type="text/css">
+    <link href="css/my.css" rel="stylesheet" type="text/css">
+    <style type="text/css">
+        .my-form-h1 {}
+
+        .my-form-label {
+            font-size: 16px;
+            font-weight: bold;
+            color: #e51c23;
+        }
+
+    </style>
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
+    <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap-validator/0.5.3/js/bootstrapValidator.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript" src="js/jquery.flexText.min.js"></script>
+    <script src="https://cdn.bootcss.com/json2/20160511/json2.min.js"></script>
+    <script src="https://cdn.bootcss.com/moment.js/2.18.0/moment.min.js"></script>
+    <script src="https://cdn.bootcss.com/moment.js/2.18.0/locale/zh-cn.js"></script>
+    <script type="text/javascript" src="js/my.js"></script>
+    <script type="text/javascript">
+        var investorAry = [];
+        var isAddMode = true;
+
+        function addAinvestorToList(data, adddata = true) {
+            var rsstr = '<a href="javascript:editInvestor(' + "'" +
+                data["id"] + "'" + ')" class="list-group-item col-xs-12 my-list-item-52"><div class="col-xs-8 my-label" nobr>' +
+                data["qygd_name"] + '</div><div class="col-xs-4 clearfix text-right my-description" nobr>金额:' +
+                data["qygd_investment"] + '万元</div><div class="col-xs-8 my-description" nobr>职位:' +
+                data["qygd_jobtitle"] + '</div><div class="col-xs-4 clearfix text-right my-description" nobr>' +
+                calculate_qygd_investment(data["qygd_investment"]) + '</div></a>';
+            $("#investorlists").append(rsstr);
+            if(adddata)
+                investorAry.push(data);
+        }
+
+        function calculate_qygd_investment(investment) {
+            var totalInvestment = Number($("#register_money").text());
+            if (Number(investment)) {
+                var rsstr = Math.floor(investment / totalInvestment * 10000) / 100;
+                return rsstr + "%";
+            }
+            return "0%";
+        }
+
+
+        var curSelectedIndex = -1;
+
+        function editInvestor(id) {
+            if (investorAry.length > 0) {
+                for (var i = 0; i < investorAry.length; i++) {
+                    var ainvestor = investorAry[i];
+                    if (ainvestor.id == id) {
+                        $("#qygd_name").val(ainvestor["qygd_name"]);
+                        $("#qygd_idnumber").val(ainvestor["qygd_idnumber"]);
+                        $("#qygd_investment").val(ainvestor["qygd_investment"]);
+                        $("#qygd_jobtitle").val(ainvestor["qygd_jobtitle"]);
+                        $("#qygd_pic1").val(ainvestor["qygd_pic1"]);
+                        $("#qygd_pic2").val(ainvestor["qygd_pic2"]);
+                        $("#qygd_pic3").val(ainvestor["qygd_pic3"]);
+                        $("#qygd_pic1" + "_img").attr("src", "images/picframe.svg");
+                        $("#qygd_pic2" + "_img").attr("src", "images/picframe.svg");
+                        $("#qygd_pic3" + "_img").attr("src", "images/picframe.svg");
+                        if(ainvestor["qygd_pic1"]) $("#qygd_pic1" + "_img").attr("src", getRemotePic(ainvestor["qygd_pic1"]));
+                        if(ainvestor["qygd_pic2"]) $("#qygd_pic2" + "_img").attr("src", getRemotePic(ainvestor["qygd_pic2"]));
+                        if(ainvestor["qygd_pic3"]) $("#qygd_pic3" + "_img").attr("src", getRemotePic(ainvestor["qygd_pic3"]));
+                        curSelectedIndex = i;
+                        isAddMode = false;
+                        $("#addinvestorpanel").modal("toggle");
+                        break;
+                    }
+                }
+            }
+        }
+
+        function pressData(data) {
+            debugger;
+            if (data.hasOwnProperty("apply_name")) $("#companyname").text(data.apply_name);
+            if (data.hasOwnProperty("actual_address")) $("#actual_address").text(data.actual_address);
+            if (data.hasOwnProperty("manage_range")) $("#manage_range").text(data.manage_range);
+            if (data.hasOwnProperty("register_money")) $("#register_money").text(data.register_money);
+            if (data.hasOwnProperty("register_kind")) $("#register_kind").text(data.register_kind);
+            if (data.hasOwnProperty("appointment_time")) $("#appointment_time").val(data.appointment_time);
+            if (data.hasOwnProperty("tzfr_name")) $("#tzfr_name").val(data.tzfr_name);
+            if (data.hasOwnProperty("tzfr_name")) {
+                var tzfr = {
+                    qygd_name: data["tzfr_name"],
+                    qygd_idnumber: data["tzfr_idnumber"],
+                    qygd_investment: data["f_investment"],
+                    qygd_pic1: data["tzfr_pic1"],
+                    qygd_pic2: data["tzfr_pic2"],
+                    qygd_pic3: data["tzfr_pic3"],
+                    id: data["id"],
+                    qygd_jobtitle: "法人"
+                };
+                data.arr.unshift(tzfr);
+            }
+            if (data.hasOwnProperty("arr")) {
+                for (var i = 0; i < data.arr.length; i++) {
+                    var node = data.arr[i];
+                    addAinvestorToList(node);
+                }
+            }
+            if (data.hasOwnProperty("appointment_time")) {
+                debugger;
+                var today = new Date(data.appointment_time.time);
+                $("#appointment_time").val(today.Format("yyyy-MM-ddThh:mm"));
+            }
+            if (data.hasOwnProperty("appointment_address"))
+                $("#appointment_address").val(data.appointment_address);
+            if (data.hasOwnProperty("zip_code")) $("#zip_code").val(data.zip_code);
+            if (data.hasOwnProperty("qyfr_name")) $("#qyfr_name").val(data.qyfr_name);
+            if (data.hasOwnProperty("qyfr_telephone")) $("#qyfr_telephone").val(data.qyfr_telephone);
+            if (data.hasOwnProperty("qyfr_email")) $("#qyfr_email").val(data.qyfr_email);
+            if (data.hasOwnProperty("qyfr_mobile")) $("#qyfr_mobile").val(data.qyfr_mobile);
+            if (data.hasOwnProperty("qyjs_idnumber")) $("#qyjs_idnumber").val(data.qyjs_idnumber);
+            if (data.hasOwnProperty("qyjs_name")) $("#qyjs_name").val(data.qyjs_name);
+            if (data.hasOwnProperty("weituo_state")) {
+                if (data.weituo_state == 1) {
+                    $("weituo_state").attr("checked", 1);
+                } else {
+                    $("weituo_state").removeAttr("checked");
+                }
+            }
+            if (data.hasOwnProperty("qycw_name")) $("#qycw_name").val(data.qycw_name);
+            if (data.hasOwnProperty("qycw_telephone")) $("#qycw_telephone").val(data.qycw_telephone);
+            if (data.hasOwnProperty("qycw_email")) $("#qycw_email").val(data.qycw_email);
+            if (data.hasOwnProperty("qycw_mobile")) $("#qycw_mobile").val(data.qycw_mobile);
+            debugger;
+            if (data.hasOwnProperty("qyjs_pic1")) {
+                $("#qyjs_pic1").val(data.qyjs_pic1);
+                getRemotePic(data.qyjs_pic1, $("#qyjs_pic1_img"));
+            }
+            if (data.hasOwnProperty("qyjs_pic2")) {
+                $("#qyjs_pic2").val(data.qyjs_pic2);
+                getRemotePic(data.qyjs_pic2, $("#qyjs_pic2_img"));
+            }
+            if (data.hasOwnProperty("qycw_pic1")) {
+                $("#qycw_pic1").val(data.qycw_pic1);
+                getRemotePic(data.qycw_pic1, $("#qycw_pic1_img"));
+            }
+            
+            if (data.hasOwnProperty("qycw_pic2")) {
+                $("#qycw_pic2").val(data.qycw_pic2);
+                getRemotePic(data.qycw_pic2, $("#qycw_pic2_img"));
+            }
+            
+            if (data.hasOwnProperty("qycw_pic3")) {
+                $("#qycw_pic3").val(data.qycw_pic3);
+                getRemotePic(data.qycw_pic3, $("#qycw_pic3_img"));
+            }
+            
+            if (data.hasOwnProperty("qycw_pic4")) {
+                $("#qycw_pic4").val(data.qycw_pic4);
+                getRemotePic(data.qycw_pic4, $("#qycw_pic4_img"));
+            }
+        }
+
+        function getmeetingdata() {
+            var theid = GetRequest()["id"];
+            var myapi = restapis;
+            myapi.request("searchYCM", null, "id=" + theid, function(result) {
+                if (result)
+                    pressData(result);
+            }, function(e) {});
+        }
+        $(document).ready(function() {
+            var today = new Date();
+            
+            getmeetingdata();
+        })
+
+    </script>
+</head>
+
+<body class="my-body">
+
+    <div style="padding:0px;marging:0px;background-size: cover;overflow-y:visible;">
+        <img class="col-xs-4 col-xs-offset-4 img-responsive my-gap-top" src="images/dfa8c6ef0acedc844c59669f4f24fe1a.png">
+        <div class="section my-topsection">
+            <div class="container" style="vertical-align:mid;">
+                <div class="col-xs-12 text-center my-gap-bottom">
+                    <!--h3> 企业名称预先核准申请书</h3-->
+                </div>
+            </div>
+            <div class="container">
+                <div class="form-group">
+                    <label for="companyname">登记企业名称</label>
+                    <div id="companyname" class="form-control col-xs-12 my-form-label text-center">&nbsp;
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="actual_address">实际经营地址</label>
+                    <div id="actual_address" class="form-control col-xs-12 my-form-label text-left">&nbsp;
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="manage_range">企业经营范围</label>
+                    <div id="manage_range" class="form-control col-xs-12 my-form-label text-left">&nbsp;
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="register_money">企业注册资本：</label>
+                    <label id="register_money" class="form-control my-form-label text-left">&nbsp;
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label for="register_kind">企业注册类型：</label>
+                    <div id="register_kind" class="form-control my-form-label text-left">&nbsp;
+                    </div>
+                </div>
+                <form id="bookform">
+                    <div class="form-group">
+                        <label class="clearfix">面签预约时间</label>
+                        <div class="form-group">
+                            <input id="appointment_time" type='text' class="form-control" name="appointment_time">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="clearfix">面签预约地点</label>
+                        <select id="appointment_address" name="appointment_address" class="mycompany-select">
+                        <option title="小区总部" value="小区总部"><span style="font-size:12;color:#cccccc">园区小区总部，地址是：上海市XX区XX路233号</span></option>
+                        <option title="市区总部" value="市区总部"><span style="font-size:12;color:#cccccc">园区市区总部，地址是：上海市XX区XX路233号</span></option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="zip_code">区域邮政编码</label>
+                        <input id="zip_code" name="zip_code" class="form-control" type="number" maxlength="6">
+                    </div>
+                    <div class="form-group">
+                        <label for="qycw_name">企业法人姓名</label>
+                        <input id="qyfr_name" name="qycw_name" class="form-control" type="text">
+                    </div>
+                    <div class="form-group">
+                        <label for="qycw_telephone">企业法人电话</label>
+                        <input id="qyfr_telephone" name="qycw_telephone" class="form-control" type="tel">
+                    </div>
+                    <div class="form-group">
+                        <label for="qycw_mobile">企业法人手机</label>
+                        <input id="qyfr_mobile" name="qycw_mobile" class="form-control" type="tel">
+                    </div>
+                    <div class="form-group">
+                        <label for="qycw_email">企业法人邮箱</label>
+                        <input id="qyfr_email" name="qycw_email" class="form-control" type="email">
+                    </div>
+                    <div class="form-group text-left">
+                        <label class="col-xs-7">我想委托代理记账</label>
+                        <div class="input-group col-xs-5 text-right">
+                            <div class="switch">
+                                <input id="weituo_state" name="weituo_state" type="checkbox" data-on-text="是" data-off-text="不" checked />
+                            </div>
+                        </div>
+                    </div>
+                    <div id="aainfogroup" class="hidden">
+                        <div class="form-group">
+                            <label for="qycw_name">财务姓名</label>
+                            <input id="qycw_name" name="qycw_name" class="form-control" type="text" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="qycw_telephone">财务电话</label>
+                            <input id="qycw_telephone" name="qycw_telephone" class="form-control" type="tel" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="qycw_mobile">财务手机</label>
+                            <input id="qycw_mobile" name="qycw_mobile" class="form-control" type="tel" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="qycw_email">财务邮箱</label>
+                            <input id="qycw_email" name="qycw_email" class="form-control" type="email" disabled>
+                        </div>
+                        <div class="row">
+                            <a class="col-xs-4" href="javascript:previewImagebyWX('#qycw_pic1','#qycw_pic1_img')" style="border:0px solid #000">
+                                <img id="qycw_pic1_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
+                            </a>
+                            <a class="col-xs-4" href="javascript:previewImagebyWX('#qycw_pic2','#qycw_pic2_img')" style="border:0px solid #000">
+                                <img id="qycw_pic2_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
+                            </a>
+                        </div>
+                        <input type="hidden" id="qycw_pic1">
+                        <input type="hidden" id="qycw_pic2">
+                    </div>
+                    <hr>
+                    <hr>
+                    <label class="my-gap-bottom">投资人信息</label>
+                    <div class="row" style="font-size:14px;">
+                        <div class="col-xs-8">名称职务</div>
+                        <div class="col-xs-4">投资金额</div>
+                    </div>
+                    <div id="investorlists" class="list-group my-list" style="padding-left:0px;padding-right:0px;marging-left:0px;marging-right:0px;">
+                    </div>
+                    <hr class="my-gap-top">
+                    <div class="form-group">
+                        <label for="qyjs_name">企业监事姓名</label>
+                        <input id="qyjs_name" name="qyjs_name" type="text" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="qyjs_idnumber">监事证件号码</label>
+                        <input id="qyjs_idnumber" name="qyjs_idnumber" type="tel" disabled>
+                    </div>
+                    <div class="row">
+                        <a class="col-xs-4" href="javascript:previewImagebyWX('#qyjs_pic1','#qyjs_pic1_img')" style="border:0px solid #000">
+                            <img id="qyjs_pic1_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
+                        </a>
+                        <a class="col-xs-4" href="javascript:previewImagebyWX('#qyjs_pic2','#qyjs_pic2_img')" style="border:0px solid #000">
+                            <img id="qyjs_pic2_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
+                        </a>
+                    </div>
+                    <div class="row">
+                        <label class="col-xs-4" style="font-size:14px;font-weight:normal">正面</label>
+                        <label class="col-xs-4" style="font-size:14px;font-weight:normal">反面</label>
+                    </div>
+                    <input type="hidden" id="qyjs_pic1">
+                    <input type="hidden" id="qyjs_pic2">
+                    <button id="thesubmit" class="btn btn-primary form-control" type="button">提交</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="addinvestorpanel">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only"></span>
+                    </button>
+                    <h4 id="mysetTitle">投资人</h4>
+
+                </div>
+                <div class="modal-body">
+                    <form class="my-form" role="form">
+                        <div class="form-group my-form-group">
+                            <label for="qygd_name">名称或姓名</label>
+                            <input type="text" name="qygd_name" class="form-control my-input" id="qygd_name" disabled>
+                        </div>
+                        <div class="form-group my-form-group my-gap-bottom" style="font-size:18px;">
+                            <span>职务</span>
+                            <input type="text" disabled id="qygd_jobtitle" name="qygd_jobtitle" class="col-xs-5 form-control" disabled>
+                        </div>
+                        <div class="form-group my-form-group">
+                            <label for="qygd_idnumber">证件号</label>
+                            <input type="text" name="qygd_idnumber" class="form-control my-input" id="qygd_idnumber" disabled>
+                        </div>
+
+                        <div class="form-group my-form-group">
+                            <label for="qygd_investment">投资金额</label>
+                            <input id="qygd_investment" type="number" name="qygd_investment" class="form-control my-input" disabled>
+                            <span>万元</span>
+                        </div>
+                        <label>投资人身份证</label>
+                        <div class="container-fluid">
+                            <div class="row">
+                                <a class="a-upload my-icon-upload" href="javascript:previewImgWithName('#qygd_pic1','#qygd_pic1_img')" style="border:0px solid #000">
+                                    <img id="qygd_pic1_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
+                                    <label style="font-size:14px;font-weight:normal">正面</label>
+                                </a>
+                                <a class="a-upload my-icon-upload clearfix" href="javascript:previewImgWithName('#qygd_pic2','#qygd_pic2_img')" style="border:0px solid #000">
+                                    <img id="qygd_pic2_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
+                                    <label style="font-size:14px;font-weight:normal">反面</label>
+                                </a>
+                                <a class="a-upload my-icon-upload" href="javascript:previewImgWithName('#qygd_pic3','#qygd_pic3_img')" style="border:0px solid #000">
+                                    <img id="qygd_pic3_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
+                                    <label style="font-size:14px;font-weight:normal">投资人证件照</label>
+                                </a>
+                            </div>
+                        </div>
+                        <input type="hidden" id="qygd_pic1">
+                        <input type="hidden" id="qygd_pic2">
+                        <input type="hidden" id="qygd_pic3">
+                        <div class="container">
+                            <a data-dismiss="modal" class="btn btn-success col-xs-12 my-gap-top" style="font-size:22px;padding:5px;">确定</a>
+                        </div>
+
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

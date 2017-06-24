@@ -39,6 +39,57 @@
         var investorAry = [];
         var isAddMode = true;
 
+        function addAinvestorToList(data, adddata = true) {
+            var rsstr = '<a href="javascript:editInvestor(' + "'" +
+                data["id"] + "'" + ')" class="list-group-item col-xs-12 my-list-item-52"><div class="col-xs-8 my-label" nobr>' +
+                data["qygd_name"] + '</div><div class="col-xs-4 clearfix text-right my-description" nobr>金额:' +
+                data["qygd_investment"] + '万元</div><div class="col-xs-8 my-description" nobr>职位:' +
+                data["qygd_jobtitle"] + '</div><div class="col-xs-4 clearfix text-right my-description" nobr>' +
+                calculate_qygd_investment(data["qygd_investment"]) + '</div></a>';
+            $("#investorlists").append(rsstr);
+            if(adddata)
+                investorAry.push(data);
+        }
+
+        function calculate_qygd_investment(investment) {
+            var totalInvestment = Number($("#register_money").text());
+            if (Number(investment)) {
+                var rsstr = Math.floor(investment / totalInvestment * 10000) / 100;
+                return rsstr + "%";
+            }
+            return "0%";
+        }
+
+
+        var curSelectedIndex = -1;
+
+        function editInvestor(id) {
+            if (investorAry.length > 0) {
+                for (var i = 0; i < investorAry.length; i++) {
+                    var ainvestor = investorAry[i];
+                    if (ainvestor.id == id) {
+                        $("#qygd_name").val(ainvestor["qygd_name"]);
+                        $("#qygd_idnumber").val(ainvestor["qygd_idnumber"]);
+                        $("#qygd_investment").val(ainvestor["qygd_investment"]);
+                        $("#qygd_jobtitle").val(ainvestor["qygd_jobtitle"]);
+                        $("#qygd_pic1").val(ainvestor["qygd_pic1"]);
+                        $("#qygd_pic2").val(ainvestor["qygd_pic2"]);
+                        $("#qygd_pic3").val(ainvestor["qygd_pic3"]);
+                        $("#qygd_pic1" + "_img").attr("src", "images/picframe.svg");
+                        $("#qygd_pic2" + "_img").attr("src", "images/picframe.svg");
+                        $("#qygd_pic3" + "_img").attr("src", "images/picframe.svg");
+                        if(ainvestor["qygd_pic1"]) $("#qygd_pic1" + "_img").attr("src", getRemotePic(ainvestor["qygd_pic1"]));
+                        if(ainvestor["qygd_pic2"]) $("#qygd_pic2" + "_img").attr("src", getRemotePic(ainvestor["qygd_pic2"]));
+                        if(ainvestor["qygd_pic3"]) $("#qygd_pic3" + "_img").attr("src", getRemotePic(ainvestor["qygd_pic3"]));
+                        curSelectedIndex = i;
+                        isAddMode = false;
+                        $("#addinvestorpanel").modal("toggle");
+                        break;
+                    }
+                }
+            }
+        }
+
         function getmeetingdata() {
             var theid = GetRequest()["id"];
             var myapi = restapis;
@@ -53,28 +104,47 @@
             if (data.hasOwnProperty("apply_name")) $("#companyname").text(data.apply_name);
             if (data.hasOwnProperty("actual_address")) $("#actual_address").text(data.actual_address);
             if (data.hasOwnProperty("manage_range")) $("#manage_range").text(data.manage_range);
-            if (data.hasOwnProperty("register_money")) $("#register_money").val(data.register_money);
+            if (data.hasOwnProperty("register_money")) $("#register_money").text(data.register_money);
             if (data.hasOwnProperty("register_kind")) $("#register_kind").text(data.register_kind);
             if (data.hasOwnProperty("tzfr_name")) $("#tzfr_name").val(data.tzfr_name);
-            if(data.hasOwnProperty("qyfr_mobile")&&data.qyfr_mobile!=""){
-                window.location.replace("ee_u_meetting.html"+"?id="+GetRequest()["id"]);
+            if (data.hasOwnProperty("qyfr_mobile") && data.qyfr_mobile != "") {
+                window.location.replace("ee_u_meetting.html" + "?id=" + GetRequest()["id"]);
                 return;
             }
-//            for (var i = 0; i < data.arr.length; i++) {
-//                data.arr[i]["order"] = i;
-//                addAinvestorToList(data.arr[i]);
-//            }
+            //            for (var i = 0; i < data.arr.length; i++) {
+            //                data.arr[i]["order"] = i;
+            //                addAinvestorToList(data.arr[i]);
+            //            }
             if (data.hasOwnProperty("appointment_time")) {
                 debugger;
                 var today = new Date(data.appointment_time.time);
                 var lastday = new Date(today);
-                for(var i=0;i<60;i++) lastday.setDate(lastday.getDate()+60);
+                for (var i = 0; i < 60; i++) lastday.setDate(lastday.getDate() + 60);
                 $("#appointment_time").val(today.Format("yyyy/MM/dd hh:mm"));
                 //$("#appointment_time").attr("min",today.Format("yyyy/MM/dd hh:mm"))
                 //$("#appointment_time").attr("max",lastday.Format("yyyy/MM/dd hh:mm"))
             }
             if (data.hasOwnProperty("appointment_address"))
                 $("#appointment_address").val(data.appointment_address);
+            if (data.hasOwnProperty("tzfr_name")) {
+                var tzfr = {
+                    qygd_name: data["tzfr_name"],
+                    qygd_idnumber: data["tzfr_idnumber"],
+                    qygd_investment: data["f_investment"],
+                    qygd_pic1: data["tzfr_pic1"],
+                    qygd_pic2: data["tzfr_pic2"],
+                    qygd_pic3: data["tzfr_pic3"],
+                    id: data["id"],
+                    qygd_jobtitle: "法人"
+                };
+                data.arr.unshift(tzfr);
+            }
+            if (data.hasOwnProperty("arr")) {
+                for (var i = 0; i < data.arr.length; i++) {
+                    var node = data.arr[i];
+                    addAinvestorToList(node);
+                }
+            }
             checkInputFileImg();
         }
 
@@ -87,7 +157,7 @@
                 var myapi = restapis;
                 var theid = GetRequest()["id"];
                 var thetime = $("#appointment_time").val();
-                thetime = thetime.replace("/","-");
+                thetime = thetime.replace("/", "-");
                 var theaddress = $("#appointment_address").val();
                 var theparam = "id=" + theid + "&appointment_time=" + thetime + "&appointment_address=" + theaddress + "&appointment_state=1";
                 debugger;
@@ -132,8 +202,8 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="clearfix">实际经营地址</label>
-                    <div id="actual_address" class="my-form-label text-left clearfix">&nbsp;
+                    <label class="clearfix">企业经营范围</label>
+                    <div id="manage_range" class="my-form-label text-left clearfix">&nbsp;
                     </div>
                 </div>
                 <div class="form-group">
@@ -160,6 +230,15 @@
                         <option title="市区总部" value="市区总部"><span style="font-size:12;color:#cccccc">园区市区总部，地址是：上海市XX区XX路233号</span></option>
                         </select>
                     </div>
+                    <hr>
+                    <label class="my-gap-bottom">投资人信息</label>
+                    <div class="row" style="font-size:14px;">
+                        <div class="col-xs-8">名称职务</div>
+                        <div class="col-xs-4">投资金额</div>
+                    </div>
+                    <div id="investorlists" class="list-group my-list" style="padding-left:0px;padding-right:0px;marging-left:0px;marging-right:0px;">
+                    </div>
+                    <hr class="my-gap-top">
                     <button id="thesubmit" class="btn btn-primary form-control" type="button">提交</button>
                 </form>
             </div>
@@ -177,7 +256,50 @@
 
                 </div>
                 <div class="modal-body">
+                    <form class="my-form" role="form">
+                        <div class="form-group my-form-group">
+                            <label for="qygd_name">名称或姓名</label>
+                            <input type="text" name="qygd_name" class="form-control my-input" id="qygd_name" disabled>
+                        </div>
+                        <div class="form-group my-form-group my-gap-bottom" style="font-size:18px;">
+                            <span>职务</span>
+                            <input type="text" disabled id="qygd_jobtitle" name="qygd_jobtitle" class="col-xs-5 form-control" disabled>
+                        </div>
+                        <div class="form-group my-form-group">
+                            <label for="qygd_idnumber">证件号</label>
+                            <input type="text" name="qygd_idnumber" class="form-control my-input" id="qygd_idnumber" disabled>
+                        </div>
 
+                        <div class="form-group my-form-group">
+                            <label for="qygd_investment">投资金额</label>
+                            <input id="qygd_investment" type="number" name="qygd_investment" class="form-control my-input" disabled>
+                            <span>万元</span>
+                        </div>
+                        <label>投资人身份证</label>
+                        <div class="container-fluid">
+                            <div class="row">
+                                <a class="a-upload my-icon-upload" href="javascript:previewImgWithName('#qygd_pic1','#qygd_pic1_img')" style="border:0px solid #000">
+                                    <img id="qygd_pic1_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
+                                    <label style="font-size:14px;font-weight:normal">正面</label>
+                                </a>
+                                <a class="a-upload my-icon-upload clearfix" href="javascript:previewImgWithName('#qygd_pic2','#qygd_pic2_img')" style="border:0px solid #000">
+                                    <img id="qygd_pic2_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
+                                    <label style="font-size:14px;font-weight:normal">反面</label>
+                                </a>
+                                <a class="a-upload my-icon-upload" href="javascript:previewImgWithName('#qygd_pic3','#qygd_pic3_img')" style="border:0px solid #000">
+                                    <img id="qygd_pic3_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
+                                    <label style="font-size:14px;font-weight:normal">投资人证件照</label>
+                                </a>
+                            </div>
+                        </div>
+                        <input type="hidden" id="qygd_pic1">
+                        <input type="hidden" id="qygd_pic2">
+                        <input type="hidden" id="qygd_pic3">
+                        <div class="container">
+                            <a data-dismiss="modal" class="btn btn-success col-xs-12 my-gap-top" style="font-size:22px;padding:5px;">确定</a>
+                        </div>
+
+                    </form>
                 </div>
 
             </div>

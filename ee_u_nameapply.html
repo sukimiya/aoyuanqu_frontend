@@ -97,7 +97,7 @@
                     qygd_pic1: jsonobj["tzfr_pic1"],
                     qygd_pic2: jsonobj["tzfr_pic2"],
                     qygd_pic3: jsonobj["tzfr_pic3"],
-                    o2o_id: jsonobj["id"],
+                    id: jsonobj["id"],
                     qygd_jobtitle: "法人"
                 };
                 jsonobj.arr.unshift(tzfr);
@@ -112,25 +112,24 @@
 
         }
 
-        function addAinvestorToList(data) {
+        function addAinvestorToList(data, adddata = true) {
             var rsstr = '<a href="javascript:editInvestor(' + "'" +
-                data["o2o_id"] + "'" + ')" class="list-group-item my-list-item-42"><div class="col-xs-4">' +
-                data["qygd_name"] +
-                '</div><div class="col-xs-4">' +
-                data["qygd_jobtitle"] +
-                '</div><div class="col-xs-4">' + data["qygd_investment"] + "万元 "
-            calculate_qygd_investment(data["qygd_investment"]) +
-                '</div></a>';
+                data["id"] + "'" + ')" class="list-group-item col-xs-12 my-list-item-52"><div class="col-xs-8 my-label" nobr>' +
+                data["qygd_name"] + '</div><div class="col-xs-4 clearfix text-right my-description" nobr>金额:' +
+                data["qygd_investment"] + '万元</div><div class="col-xs-8 my-description" nobr>职位:' +
+                data["qygd_jobtitle"] + '</div><div class="col-xs-4 clearfix text-right my-description" nobr>' +
+                calculate_qygd_investment(data["qygd_investment"]) + '</div></a>';
             $("#investorlists").append(rsstr);
-            investorAry.push(data);
+            if(adddata)
+                investorAry.push(data);
         }
         var curSelectedIndex = -1;
 
-        function editInvestor(o2o_id) {
+        function editInvestor(id) {
             if (investorAry.length > 0) {
                 for (var i = 0; i < investorAry.length; i++) {
                     var ainvestor = investorAry[i];
-                    if (ainvestor.o2o_id == o2o_id) {
+                    if (ainvestor.id == id) {
                         $("#qygd_name").val(ainvestor["qygd_name"]);
                         $("#qygd_idnumber").val(ainvestor["qygd_idnumber"]);
                         $("#qygd_investment").val(ainvestor["qygd_investment"]);
@@ -138,9 +137,12 @@
                         $("#qygd_pic1").val(ainvestor["qygd_pic1"]);
                         $("#qygd_pic2").val(ainvestor["qygd_pic2"]);
                         $("#qygd_pic3").val(ainvestor["qygd_pic3"]);
-                        $("#qygd_pic1" + "_img").attr("src", getRemotePic(ainvestor["qygd_pic1"]));
-                        $("#qygd_pic2" + "_img").attr("src", getRemotePic(ainvestor["qygd_pic2"]));
-                        $("#qygd_pic3" + "_img").attr("src", getRemotePic(ainvestor["qygd_pic3"]));
+                        $("#qygd_pic1" + "_img").attr("src", "images/picframe.svg");
+                        $("#qygd_pic2" + "_img").attr("src", "images/picframe.svg");
+                        $("#qygd_pic3" + "_img").attr("src", "images/picframe.svg");
+                        if(ainvestor["qygd_pic1"]) $("#qygd_pic1" + "_img").attr("src", getRemotePic(ainvestor["qygd_pic1"]));
+                        if(ainvestor["qygd_pic2"]) $("#qygd_pic2" + "_img").attr("src", getRemotePic(ainvestor["qygd_pic2"]));
+                        if(ainvestor["qygd_pic3"]) $("#qygd_pic3" + "_img").attr("src", getRemotePic(ainvestor["qygd_pic3"]));
                         curSelectedIndex = i;
                         isAddMode = false;
                         $("#addinvestorpanel").modal("toggle");
@@ -224,11 +226,9 @@
                     </div>
                     <hr>
                     <label class="my-gap-bottom">投资人信息</label>
-                    <div class="row">
-                        <div class="col-xs-4" style="font-size:14px;">名称</div>
-                        <div class="col-xs-4" style="font-size:14px;">职务</div>
-                        <div class="col-xs-4" style="font-size:14px;">金额</div>
-
+                    <div class="row" style="font-size:14px;">
+                        <div class="col-xs-8">名称职务</div>
+                        <div class="col-xs-4">投资金额</div>
                     </div>
                     <div id="investorlists" class="list-group my-list" style="padding-left:0px;padding-right:0px;marging-left:0px;marging-right:0px;">
 

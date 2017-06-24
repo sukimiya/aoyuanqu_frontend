@@ -83,7 +83,8 @@
                 if (getobj.license_state == 1) {
                     if (getobj.hasOwnProperty("license_pic")) {
 
-                        $("#uploadbtn").addClass("hide");
+                        $("#imgcon").addClass("hide");
+                        $("#lisence_pic1").val(getobj["license_pic"]);
                         debugger;
                         if (getobj.license_takekind == 1) {
                             $("#receive_name").val(getobj.receive_name);
@@ -96,8 +97,8 @@
                         $("#submitBtn").on("click", function() {
                             var requestStr = "id=" + GetRequest()["id"];
                             if (getobj.license_takekind == 1) {
-                                requestStr += "&express_number=" + getobj["express_number"];
-                                requestStr += "&express_company=" + getobj["express_company"];
+                                requestStr += "&express_number=" + $("#express_code").val();
+                                requestStr += "&express_company=" + $("#shipper").val();
                             }
                             requestStr += "&license_pic=" + $("#lisence_pic1").val();
                             requestStr += "&license_state=2";
@@ -122,6 +123,14 @@
                                 function(e) {});
                         });
                     }
+                } else if (getobj.license_state == 2) {
+                    $("#my-state-1").addClass("hide");
+                    $("#submitBtn").addClass("hide");
+                    $("#imgcon").addClass("hide");
+                    $("#imgcon").addClass("hide");
+                    $("#lisence_pic1").val(getobj["license_pic"]);
+                    getRemotePic(getobj.license_pic, $("#lisenceImg"));
+                    $(".container").append('<div class="well well-lg">快递公司:'+getobj["express_company"]+'<p>'+getobj["express_number"]+'</p></div>')
                 } else {
                     $("#my-state-1").removeClass("hide");
                     $("#receive_name").text(getobj["receive_name"]);
@@ -129,7 +138,7 @@
                     $("#express_address").text(getobj["express_address"]);
                     $("#lisence_pic1").val(getobj["license_pic"]);
                     $("#my-state-1").removeClass("hide");
-                    $("#uploadbtn").addClass("hide");
+                    $("#imgcon").addClass("hide");
                     getRemotePic(getobj.license_pic, $("#lisenceImg"));
                 }
             }, function(e) {});
@@ -203,7 +212,7 @@
             </div>
             <a id="submitBtn" class="btn btn-primary col-xs-12">提交</a> &nbsp;
         </div>
-
+        
     </div>
 </body>
 
