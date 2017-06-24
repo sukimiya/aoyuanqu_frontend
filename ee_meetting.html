@@ -88,7 +88,7 @@
             if (data.hasOwnProperty("appointment_time")) {
                 debugger;
                 var today = new Date(data.appointment_time.time);
-                var lastday = new Date(today);
+                var lastday = new Date(today.Format("yyyy-MM-dd hh:mm"));
                 lastday.setDate(lastday.getDate()+60);
                 $("#appointment_time").val(today.Format("yyyy-MM-ddThh:mm"));
                 $("#appointment_time").attr("min",today.Format("yyyy-MM-ddThh:mm"))
@@ -115,6 +115,7 @@
                     addAinvestorToList(node);
                 }
             }
+<<<<<<< HEAD
             
             if (data.hasOwnProperty("qyjs_pic1")) {
                 $("#qyjs_pic1").val(data.qycw_pic1);
@@ -124,6 +125,9 @@
                 $("#qyjs_pic2").val(data.qycw_pic2);
                 getRemotePic(data.qycw_pic2, "#qyjs_pic2_img");
             }
+=======
+            checkInputFileImg();
+>>>>>>> f4472318e95c214ea2e0a613664878928a70eb76
         }
         //
         function previewImgWithName(picname, theimg) {
@@ -192,7 +196,6 @@
             return JSON.stringify(rsobj);
         }
         $(document).ready(function() {
-            checkInputFileImg();
             $("#thesubmit").on("click", function(events) {
                 var jdata = encodeDatas();
                 var myapi = restapis;

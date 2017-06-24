@@ -37,34 +37,17 @@
                 $("#szhd_license_img").removeClass("hide");
                 getRemotePic(data.szhd_license, $("#szhd_license_img"));
             }
-            var today = new Date(data.szhd_time);
-                $("#szhd_time").val(today.Format("yyyy/MM/dd hh:mm"));
+            var today = new Date(data.szhd_time)
+                $("#szhd_time").val(today.Format("yyyy-MM-ddThh:mm");
             if (data.szhd_state == 2) {
                 myweixin.initial();
                 $("#szhd_address").val(data.szhd_address);
 
                 $("#submitbtn").addClass("hide");
             } else {
-                $("#szhd_time").attr('min', today);
+                $("#szhd_time").attr('min', today.Format("yyyy-MM-ddThh:mm"));
                 var month = new Date(new Date().setMonth(today.getMonth() + 6));
-                $("#szhd_time").attr('max', month);
-                var targatDate = new Date();
-                targatDate.setMonth(targatDate.getMonth() + 6);
-                targatDate.getDate() - today.getDate();
-                var maxDateTo = targatDate.getTime() - today.getTime();
-                maxDateTo = maxDateTo / (1000 * 60 * 60 * 24);
-                var darry = [];
-                for (var i = 0; i < maxDateTo; i++) {
-                    var adate = new Date();
-                    adate.setDate(adate.getDate() + i);
-                    darry.push(adate);
-                    //console.log("add a date:"+adate.toDateString());
-                }
-                $('#szhd_time_picker').datetimepicker({
-                    locale: 'zh-cn',
-                    format: 'YYYY-MM-DD hh:mm',
-                    enabledDates: darry
-                });
+                $("#szhd_time").attr('max', month.Format("yyyy-MM-ddThh:mm"));
                 $("#submitbtn").on("click", function(events) {
                     var params = "id=" + GetRequest()["id"] + "&szhd_time=" + $("#szhd_time").val().replace("/","-") + "&szhd_address=" + $("#szhd_address").val() + "&szhd_state=2";
                     myapi.request("updateStartSZHD", null, params, function(result) {
@@ -72,6 +55,7 @@
                     }, function() {});
                 });
             }
+            checkInputFileImg();
         }
         var myapi = restapis;
         $(document).ready(function() {
