@@ -385,15 +385,17 @@ var myweixin = (function () {
 
 function previewImagebyWX(theimg) {
     myweixin;
-    myweixin.checkapi(['chooseImage'], function () {
+    var mypreviewRun = function () {
         wx.previewImage({
-            current: theimg, // 当前显示图片的http链接
-            urls: [theimg] // 需要预览的图片http链接列表
+            current: "http://www.aoyuanqu.cn/lily/"+theimg, // 当前显示图片的http链接
+            urls: ["http://www.aoyuanqu.cn/lily/"+theimg] // 需要预览的图片http链接列表
         });
-    }, function () {
-        setTimeout(function () {
-            previewImagebyWX(theimg);
-        }, 200);
+    }
+    myweixin.checkapi(['previewImage'], mypreviewRun, function () {
+        myweixin.onConfig = function(){
+            mypreviewRun();
+        }
+        myweixin.requestTicket();
     });
 }
 

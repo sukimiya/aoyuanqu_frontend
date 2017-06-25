@@ -38,18 +38,18 @@
                 getRemotePic(data.szhd_license, $("#szhd_license_img"));
             }
             var today = new Date(data.szhd_time)
-                $("#szhd_time").val(today.Format("yyyy-MM-ddThh:mm");
+                $("#appointment_time").val(today.Format("yyyy-MM-ddThh:mm"));
             if (data.szhd_state == 2) {
                 myweixin.initial();
                 $("#szhd_address").val(data.szhd_address);
 
                 $("#submitbtn").addClass("hide");
             } else {
-                $("#szhd_time").attr('min', today.Format("yyyy-MM-ddThh:mm"));
+                $("#appointment_time").attr('min', today.Format("yyyy-MM-ddThh:mm"));
                 var month = new Date(new Date().setMonth(today.getMonth() + 6));
-                $("#szhd_time").attr('max', month.Format("yyyy-MM-ddThh:mm"));
+                $("#appointment_time").attr('max', month.Format("yyyy-MM-ddThh:mm"));
                 $("#submitbtn").on("click", function(events) {
-                    var params = "id=" + GetRequest()["id"] + "&szhd_time=" + $("#szhd_time").val().replace("/","-") + "&szhd_address=" + $("#szhd_address").val() + "&szhd_state=2";
+                    var params = "id=" + GetRequest()["id"] + "&szhd_time=" + $("#appointment_time").val().replace("/","-") + "&szhd_address=" + $("#szhd_address").val() + "&szhd_state=2";
                     myapi.request("updateStartSZHD", null, params, function(result) {
                         window.location = "ee_progress.html?id=" + GetRequest()["id"];
                     }, function() {});

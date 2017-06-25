@@ -34,24 +34,25 @@
             curDate = data;
             if (data.company_name)
                 $("#companyname").text(data.company_name);
-            $("#appointment_time").val(data.szhd_state.replace("-","/"));
+
             if (data.hasOwnProperty("szhd_state"))
                 if (data.szhd_state1 == 1) {
+
                     var today = new Date();
                     $("#appointment_time").attr('min', today.Format("yyyy-MM-ddThh:mm"));
                     var month = new Date(new Date().setMonth(today.getMonth() + 6));
                     $("#appointment_time").attr('max', month.Format("yyyy-MM-ddThh:mm"));
-                    
+
                 } else {
-                    $("#appointment_time").val(new Date(data.szhd_time.time).Format("yyyy-MM-ddThh:mm"));
+                    if (data.hasOwnProperty("szhd_time")) {
+                        $("#appointment_time").val(new Date(data.szhd_time.time).Format("yyyy-MM-ddThh:mm"));
+                    }
+
                     $("#szhd_address").val(data.szhd_address);
                     if (data.szhd_license == null || data.szhd_license) {
                         $("#szhd_license_img").removeClass("hide");
                         $("#uploadbtn").removeClass("hide");
                     }
-                    $('#datetimepicker').datetimepicker({
-                        format: 'yyyy-mm-dd hh:ii'
-                    });
                 }
             checkInputFileImg();
         }
@@ -62,7 +63,8 @@
                 debugger;
                 if (curDate) {
                     if (curDate.szhd_state != 2) {
-                        var params = "id=" + GetRequest()["id"] + "&szhd_time=" + $("#appointment_time").val().replace("/","-") + "&szhd_address=" + $("#appointment_address").val() + "&szhd_state=1";
+                        var today = $("#appointment_time").val();
+                        var params = "id=" + GetRequest()["id"] + "&szhd_time=" + today + "&szhd_address=" + $("#appointment_address").val() +"&szhd_license="+$("#szhd_license").val()+ "&szhd_state=1";
                         myapi.request("updateStartSZHD", null, params, function(result) {
                             window.location = "ee_u_progress.html";
                         }, function() {});
@@ -86,7 +88,7 @@
             myapi.request("searchSZHD", null, "id=" + GetRequest()["id"], function(result) {
                 initial(result);
             }, function(e) {});
-            
+
         })
 
     </script>
@@ -124,7 +126,12 @@
                     </div>
                     <div class="text-center">
                         <hr>
-                        <img id="szhd_license_img" class="img-responsive my-gap-top my-gat-bottom hide" src="images/picframe.svg">
+                        <div>
+                            <div class="col-xs-2" style="float:left"></div>
+                            <a href="javascript:showPic()" class="col-xs-8" style="float: left">
+                                <img id="szhd_license_img" src="images/picframe.svg" class="img-responsive" style="height:60%;border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;padding:0px;margin:0px;">
+                            </a>
+                        </div>
                         <a id="imgcon" href="javascript:;" class="a-upload btn btn-success col-xs-6 col-xs-offset-3 my-gap-top">
                             <img class="img-responsive">
                             <canvas></canvas>
