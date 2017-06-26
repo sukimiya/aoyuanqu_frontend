@@ -63,7 +63,7 @@
                     for (var i = 0; i < investorAry.length; i++) {
                         var investor = investorAry[i];
                         if (investor.order == curSelect.order) {
-                            investorAry.splice(i);
+                            investorAry.splice(i,1);
                             //
                             var htmlstr = "";
                             $("#investorlists").html(htmlstr);

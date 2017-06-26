@@ -383,7 +383,15 @@ var myweixin = (function () {
     //
     return mythis;
 }());
-
+function previewImgWithName(tagName,imgTagName){
+    previewImageWithHidden(tagName,imgTagName);
+}
+function previewImageWithHidden(tagName,imgTagName){
+    if(tagName)
+    previewImagebyWX( getRemotePic($(tagName).val()) );
+    else
+        previewImagebyWX( $(imgTagName).attr("src"));
+}
 function previewImagebyWX(theimg) {
     myweixin;
     var mypreviewRun = function () {

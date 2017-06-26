@@ -73,7 +73,7 @@
         }
 
         function pressData(data) {
-            if (data.hasOwnProperty("apply_name")) $("#companyname").text(data.apply_name);
+            if (data.hasOwnProperty("confirm_name")) $("#companyname").text(data.confirm_name);
             if (data.hasOwnProperty("actual_address")) $("#actual_address").text(data.actual_address);
             if (data.hasOwnProperty("manage_range")) $("#manage_range").text(data.manage_range);
             if (data.hasOwnProperty("register_money")) $("#register_money").val(data.register_money);
@@ -159,15 +159,18 @@
                 $("#qycw_pic4_img").attr("src",getRemotePic(data.qycw_pic4));
             }
             checkInputFileImg();
+            if (data.hasOwnProperty("qyfr_mobile")&&data){
+                $("#thesubmit").addClass("disabled");
+                $("#thesubmit").attr("disabled",true);
+                $(".a-upload input").addClass("disabled");
+                $(".a-upload input").attr("disabled",true);
+                $(".a-upload").attr("href","javascript:previewImgWithSelf(this)");
+            }else{
+                
+            }
         }
-        //
-        function previewImgWithName(picname, theimg) {
-            var imgpath = "";
-            var node = investorAry[curSelectedIndex]
-            wx.previewImage({
-                current: getRemotePic(node[picname]), // 当前显示图片的http链接
-                urls: [getRemotePic(node[picname])] // 需要预览的图片http链接列表
-            });
+        function previewImgWithSelf(targetId){
+            previewImagebyWX(targetId.getElementsByTagName("img")[0].src);
         }
         var curSelectedIndex = -1;
 
@@ -231,13 +234,13 @@
                 var jdata = encodeDatas();
                 var myapi = restapis;
                 myapi.request("updateMQ.do", "page", jdata, function(result) {
-                    if (result.code == 0) {
-                        if (result.message == "系统异常") {
-                            alert("提交错误," + result.message);
-                        }
-                    } else {
+//                    if (result.code == 0) {
+//                        if (result.message == "系统异常") {
+//                            alert("提交错误," + result.message);
+//                        }
+//                    } else {
                         window.location = "ee_progress.html?id=" + GetRequest()["id"];
-                    }
+//                    }
                 }, function(e) {
                     alert("提交错误,请检查参数")
                 }, "POST");
@@ -357,13 +360,13 @@
                         <label style="font-weight:bold">财务身份证照</label>
                         <div class="row">
                             <a href="javascript:;" class="a-upload my-icon-upload my-gap-left" style="float:left;">
-                                <img class="img-responsive" src="images/picframe.svg">
+                                <img id="qycw_pic1_img" class="img-responsive" src="images/picframe.svg">
                                 <canvas></canvas>
                                 <input type="file" capture="camera" accept="image/*" title="" onchange="uploadImage(this,'#qycw_pic1')">
                                 <label style="font-size:14px;font-weight:normal">正面</label>
                             </a>
                             <a href="javascript:;" class="a-upload my-icon-upload my-gap-left" style="float:left;">
-                                <img class="img-responsive" src="images/picframe.svg">
+                                <img id="qycw_pic2_img" class="img-responsive" src="images/picframe.svg">
                                 <canvas></canvas>
                                 <input type="file" capture="camera" accept="image/*" title="" onchange="uploadImage(this,'#qycw_pic2')">
                                 <label style="font-size:14px;font-weight:normal">反面</label>
@@ -373,13 +376,13 @@
                         <label style="font-weight:bold">财务上岗证照</label>
                         <div class="row">
                             <a href="javascript:;" class="a-upload my-icon-upload my-gap-left" style="float:left;">
-                                <img class="img-responsive" src="images/picframe.svg">
+                                <img id="qycw_pic3_img" class="img-responsive" src="images/picframe.svg">
                                 <canvas></canvas>
                                 <input type="file" capture="camera" accept="image/*" title="" onchange="uploadImage(this,'#qycw_pic3')">
                                 <label style="font-size:14px;font-weight:normal">正面</label>
                             </a>
                             <a href="javascript:;" class="a-upload my-icon-upload my-gap-left" style="float:left;">
-                                <img class="img-responsive" src="images/picframe.svg">
+                                <img id="qycw_pic4_img" class="img-responsive" src="images/picframe.svg">
                                 <canvas></canvas>
                                 <input type="file" capture="camera" accept="image/*" title="" onchange="uploadImage(this,'#qycw_pic4')">
                                 <label style="font-size:14px;font-weight:normal">反面</label>
@@ -410,13 +413,13 @@
                     <label style="font-weight:bold">监事证件照</label>
                     <div class="row">
                         <a href="javascript:;" class="a-upload my-icon-upload my-gap-left" style="float:left;">
-                            <img class="img-responsive" src="images/picframe.svg">
+                            <img id="qyjs_pic1_img" class="img-responsive" src="images/picframe.svg">
                             <canvas></canvas>
                             <input type="file" capture="camera" accept="image/*" title="" onchange="uploadImage(this,'#qyjs_pic1')">
                             <label style="font-size:14px;font-weight:normal">正面</label>
                         </a>
                         <a href="javascript:;" class="a-upload my-icon-upload my-gap-left" style="float:left;">
-                            <img class="img-responsive" src="images/picframe.svg">
+                            <img id="qyjs_pic2_img" class="img-responsive" src="images/picframe.svg">
                             <canvas></canvas>
                             <input type="file" capture="camera" accept="image/*" title="" onchange="uploadImage(this,'#qyjs_pic2')">
                             <label style="font-size:14px;font-weight:normal">反面</label>

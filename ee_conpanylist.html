@@ -34,7 +34,7 @@
     <script type="text/javascript">
         var isunfinishList = true;
         var listdata = [];
-        var curPage = 1;
+        var curPage = 0;
         var totalPage = 1;
         var pageSize=20;
         function switchlisttype() {
@@ -128,7 +128,7 @@
                             me.resetload();
                         }
                     } else {
-                        debugger;
+                        
                         alert("获取数据错误");
                     }
             },function(e){alert("网络错误，请检查网络连接是否正常")});
@@ -170,7 +170,7 @@
         }
         $(document).ready(function() {
             myweixin.onInitial=function(){
-                debugger;
+                
                 initDropload();
             }
             myweixin.initial();

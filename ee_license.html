@@ -94,7 +94,7 @@
                     //2 已经投递
                     setFromDisabled("deliverform", true);
                     $("#my-state-1").addClass("hide");
-                    $("#expressGroup").append('<div class="well well-lg">快递公司:'+jdata["express_company"]+'<p>'+jdata["express_number"]+'</p></div>');
+                    $("#expressInfoGroup").append('<div class="well well-lg">快递公司:'+jdata["express_company"]+'<p>'+jdata["express_number"]+'</p></div>');
                 } else if (jdata.license_state == 1) {
                     //1 未发
                 }
@@ -118,7 +118,7 @@
                 </a>
             </a>
             <hr>
-            <div id="expressGroup"></div>
+            <div id="expressInfoGroup"></div>
         </div>
         <div id="my-state-1">
             <div class="container text-center">

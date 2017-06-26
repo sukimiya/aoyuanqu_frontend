@@ -101,9 +101,14 @@
         }
 
         function pressData(data) {
-            if (data.hasOwnProperty("apply_name")) $("#companyname").text(data.apply_name);
+            $("#apply_name").val(data["apply_name"]);
+            $("#apply_name").append("<option>" + data["apply_name"] + "</option>");
+            $("#apply_name").append("<option>" + data["apply_name2"] + "</option>");
+            $("#apply_name").append("<option>" + data["apply_name3"] + "</option>");
+            $("#apply_name").append("<option>" + data["apply_name4"] + "</option>");
             if (data.hasOwnProperty("actual_address")) $("#actual_address").text(data.actual_address);
             if (data.hasOwnProperty("manage_range")) $("#manage_range").text(data.manage_range);
+            if (data.hasOwnProperty("manage_range")) $("#manage_range_d").text(data["manage_range"]);
             if (data.hasOwnProperty("register_money")) $("#register_money").text(data.register_money);
             if (data.hasOwnProperty("register_kind")) $("#register_kind").text(data.register_kind);
             if (data.hasOwnProperty("tzfr_name")) $("#tzfr_name").val(data.tzfr_name);
@@ -160,7 +165,12 @@
                 var thetime = $("#appointment_time").val();
                 thetime = thetime.replace("/", "-");
                 var theaddress = $("#appointment_address").val();
-                var theparam = "id=" + theid + "&appointment_time=" + thetime + "&appointment_address=" + theaddress + "&appointment_state=1";
+                var theparam = "id=" + theid 
+                + "&appointment_time=" + thetime 
+                + "&appointment_address=" + theaddress 
+                + "&confirm_name=" + $("#apply_name").val()
+                + "&manage_range=" + $("#manage_range").val()
+                + "&appointment_state=1";
                 debugger;
                 myapi.request("startMQ", null, theparam, function(result) {
                     if (result.result == 0) {
@@ -192,21 +202,42 @@
                 </div>
             </div>
             <div class="container">
-                <div class="form-group">
-                    <label class="clearfix">登记企业名称</label>
-                    <label id="companyname" class="my-form-label text-center clearfix">&nbsp;
-                    </label>
+                <div class="form-group my-form-group">
+                    <label>企业登记名称</label>
+                    <select id="apply_name" name="apply_name" class="mycompany-select">
+                        </select>
                 </div>
                 <div class="form-group">
                     <label class="clearfix">实际经营地址</label>
                     <div id="actual_address" class="well well-lg">&nbsp;
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="clearfix">企业经营范围</label>
-                    <div id="manage_range" class="well well-lg">&nbsp;
+                <label for="manage_range_d">企业经营范围</label>
+                <a id="openmarngGroupbtn" class="btn btn-defualt" onclick="openmarngGroup()">编辑</a>
+                <div id="manage_range_d" class="col-xs-12 container" style="word-wrap:break-word">&nbsp;</div>
+                <div id="marangGroup" class="form-group my-form-group wrap hide">
+                    <div class="row">
+                        <textarea id="manage_range" name="manage_range" class="col-xs-12 form-control" maxlength="130" style="height:280px;font-size:18px"></textarea>
+                        <a class="btn btn-success col-xs-6 col-xs-offset-3 my-gap-top" onclick="hidemarangGroup()">保存</a>
                     </div>
                 </div>
+                <script type="text/javascript">
+                        function hidemarangGroup() {
+                            $("#manage_range_d").text($("#manage_range").val());
+                            $("#marangGroup").addClass("hide");
+                            $("#openmarngGroupbtn").removeClass("hide");
+                            $("#manage_range_d").removeClass("hide");
+                        }
+
+                        function openmarngGroup() {
+                            $("#manage_range").val($("#manage_range_d").text());
+                            $("#marangGroup").removeClass("hide");
+                            $("#openmarngGroupbtn").addClass("hide");
+                            $("#manage_range_d").addClass("hide");
+                        }
+
+                    </script>
+                    <hr>
                 <div class="form-group">
                     <label>企业注册资本：</label>
                     <label id="register_money" class="my-form-label text-left clearfix">&nbsp;

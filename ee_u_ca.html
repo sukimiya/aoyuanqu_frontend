@@ -127,10 +127,9 @@
                     $("#my-state-1").addClass("hide");
                     $("#submitBtn").addClass("hide");
                     $("#imgcon").addClass("hide");
-                    $("#imgcon").addClass("hide");
                     $("#lisence_pic1").val(getobj["license_pic"]);
                     getRemotePic(getobj.license_pic, $("#lisenceImg"));
-                    $(".container").append('<div class="well well-lg">快递公司:'+getobj["express_company"]+'<p>'+getobj["express_number"]+'</p></div>')
+                    $("#expressInfoGroup").append('<div class="well well-lg">快递公司:'+getobj["express_company"]+'<p>'+getobj["express_number"]+'</p></div>')
                 } else {
                     $("#my-state-1").removeClass("hide");
                     $("#receive_name").text(getobj["receive_name"]);
@@ -169,8 +168,10 @@
             <div class="col-xs-12 text-center my-gap-bottom">
                 <!--h3> 企业名称预先核准申请书</h3-->
                 <h1>&nbsp;</h1>
-                <a href="javascript:topreivew('#lisenceImg')"></a>
-                <img id="lisenceImg" class="img-responsive my-gap-top" src="images/picframe.svg">
+                <a href="javascript:topreivew('#lisenceImg')">
+                    <img id="lisenceImg" class="img-responsive my-gap-top" src="images/picframe.svg">
+                </a>
+                
                 <a id="imgcon" href="javascript:;" class="a-upload btn btn-success col-xs-6 col-xs-offset-3 my-gap-top">
                     <img class="img-responsive">
                     <canvas></canvas>
@@ -180,7 +181,7 @@
                 <h3 id="company_name">&nbsp;</h3>
             </div>
         </div>
-
+        <div id="expressInfoGroup"></div>
     </div>
     <div class="section">
         <div class="container">
