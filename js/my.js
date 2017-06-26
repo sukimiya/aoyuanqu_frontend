@@ -159,6 +159,7 @@ QueryString.Initial();
 
 function getRemotePic(picid, meimg = null) {
     var rsstr = "uploads/" + picid; //remoteaddress+"/"+picid
+    debugger;
     if (meimg) meimg.attr("src", rsstr);
     return rsstr;
 }

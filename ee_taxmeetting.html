@@ -31,29 +31,40 @@
 
         function initial(data) {
             debugger;
-            if (data.company_name)
-                $("#companyname").text(data.company_name);
-            if (data.szhd_license == null || data.szhd_license) {
-                $("#szhd_license_img").removeClass("hide");
-                getRemotePic(data.szhd_license, $("#szhd_license_img"));
-            }
+            if (data.confirm_name)
+                $("#confirm_name").text(data.confirm_name);
             var today = new Date(data.szhd_time)
-                $("#appointment_time").val(today.Format("yyyy-MM-ddThh:mm"));
-            if (data.szhd_state == 2) {
+            $("#appointment_time").val(today.Format("yyyy-MM-ddThh:mm"));
+            if(data.hasOwnProperty("szhd_address"))$("#szhd_address").val(data.szhd_address);
+            if (data.szhd_state1 == 2) {
+                //已完成
                 myweixin.initial();
-                $("#szhd_address").val(data.szhd_address);
-
+                if (data.szhd_license == null || data.szhd_license) {
+                    $("#photoGroup").removeClass("hide");
+                    getRemotePic(data.szhd_license, $("#szhd_license_img"));
+                }
                 $("#submitbtn").addClass("hide");
+                $("#appointment_time").attr("disabled", "yes");
+                $("#szhd_address").attr("disabled", "yes");
             } else {
-                $("#appointment_time").attr('min', today.Format("yyyy-MM-ddThh:mm"));
-                var month = new Date(new Date().setMonth(today.getMonth() + 6));
-                $("#appointment_time").attr('max', month.Format("yyyy-MM-ddThh:mm"));
-                $("#submitbtn").on("click", function(events) {
-                    var params = "id=" + GetRequest()["id"] + "&szhd_time=" + $("#appointment_time").val().replace("/","-") + "&szhd_address=" + $("#szhd_address").val() + "&szhd_state=2";
-                    myapi.request("updateStartSZHD", null, params, function(result) {
-                        window.location = "ee_progress.html?id=" + GetRequest()["id"];
-                    }, function() {});
-                });
+                //未完成
+                if (data.szhd_state == 2) {
+                    //已经提交
+                    $("#submitbtn").addClass("hide");
+
+                } else {
+                    //未提交
+                     myweixin.initial();
+                    $("#appointment_time").attr('min', today.Format("yyyy-MM-ddThh:mm"));
+                    var month = new Date(new Date().setMonth(today.getMonth() + 6));
+                    $("#appointment_time").attr('max', month.Format("yyyy-MM-ddThh:mm"));
+                    $("#submitbtn").on("click", function(events) {
+                        var params = "id=" + GetRequest()["id"] + "&szhd_time=" + $("#appointment_time").val().replace("/", "-") + "&szhd_address=" + $("#szhd_address").val() + "&szhd_state=2";
+                        myapi.request("updateStartSZHD", null, params, function(result) {
+                            window.location = "ee_progress.html?id=" + GetRequest()["id"];
+                        }, function() {});
+                    });
+                }
             }
             checkInputFileImg();
         }
@@ -84,7 +95,7 @@
             <div class="container">
                 <div class="form-group">
                     <label class="clearfix">登记企业名称</label>
-                    <label id="companyname" class="my-form-label text-center clearfix">&nbsp;
+                    <label id="confirm_name" class="my-form-label text-center clearfix">&nbsp;
                     </label>
                 </div>
                 <form id="bookform">
@@ -101,9 +112,9 @@
                             <option title="市区总部" value="市区总部"><span style="font-size:12;color:#cccccc">园区市区总部，地址是：上海市XX区XX路233号</span></option>
                         </select>
                     </div>
-                    <div class="text-center">
+                    <div id="photoGroup" class="text-center hide">
                         <hr>
-                        <a href="javascript:onpreview()"><img id="szhd_license_img" class="img-responsive my-gap-top my-gat-bottom hide" src="images/picframe.svg"></a>
+                        <a href="javascript:onpreview()"><img id="szhd_license_img" class="img-responsive my-gap-top my-gat-bottom" src="images/picframe.svg"></a>
 
                     </div>
                     <a id="submitbtn" class="btn btn-primary cal-xs-12 my-gap-top">提交</a>

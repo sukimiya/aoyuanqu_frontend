@@ -81,12 +81,9 @@
             if (data.hasOwnProperty("tzfr_name")){
                 $("#qyfr_name").val(data.tzfr_name);
             }
-            for (var i = 0; i < data.arr.length; i++) {
-                data.arr[i]["order"] = i;
-                addAinvestorToList(data.arr[i]);
-            }
+            
             if (data.hasOwnProperty("appointment_time")) {
-                debugger;
+                
                 var today = new Date(data.appointment_time.time);
                 var lastday = new Date(today.Format("yyyy-MM-dd hh:mm"));
                 lastday.setDate(lastday.getDate()+60);
@@ -109,20 +106,57 @@
                 };
                 data.arr.unshift(tzfr);
             }
-            if (data.hasOwnProperty("arr")) {
-                for (var i = 0; i < data.arr.length; i++) {
-                    var node = data.arr[i];
-                    addAinvestorToList(node);
+            for (var i = 0; i < data.arr.length; i++) {
+                data.arr[i]["order"] = i;
+                addAinvestorToList(data.arr[i]);
+            }
+            if (data.hasOwnProperty("zip_code")) $("#zip_code").val(data.zip_code);
+            if (data.hasOwnProperty("qyfr_name")) $("#qyfr_name").val(data.qyfr_name);
+            if (data.hasOwnProperty("qyfr_telephone")) $("#qyfr_telephone").val(data.qyfr_telephone);
+            if (data.hasOwnProperty("qyfr_email")) $("#qyfr_email").val(data.qyfr_email);
+            if (data.hasOwnProperty("qyfr_mobile")) $("#qyfr_mobile").val(data.qyfr_mobile);
+            if (data.hasOwnProperty("qyjs_idnumber")) $("#qyjs_idnumber").val(data.qyjs_idnumber);
+            if (data.hasOwnProperty("qyjs_name")) $("#qyjs_name").val(data.qyjs_name);
+            if (data.hasOwnProperty("weituo_state")) {
+                debugger;
+                if (data.weituo_state == 1) {
+                    $('#weituo_state').bootstrapSwitch('state', false);
+                    $("#aainfogroup").removeClass("hide");
+                } else {
+                    $('#weituo_state').bootstrapSwitch('state', true);
+                    $("#aainfogroup").addClass("hide");
                 }
             }
-            
+            if (data.hasOwnProperty("qycw_name")) $("#qycw_name").val(data.qycw_name);
+            if (data.hasOwnProperty("qycw_telephone")) $("#qycw_telephone").val(data.qycw_telephone);
+            if (data.hasOwnProperty("qycw_email")) $("#qycw_email").val(data.qycw_email);
+            if (data.hasOwnProperty("qycw_mobile")) $("#qycw_mobile").val(data.qycw_mobile);
             if (data.hasOwnProperty("qyjs_pic1")) {
-                $("#qyjs_pic1").val(data.qycw_pic1);
-                getRemotePic(data.qycw_pic1, "#qyjs_pic1_img");
+                $("#qyjs_pic1").val(data.qyjs_pic1);
+                $("#qyjs_pic1_img").attr("src",getRemotePic(data.qyjs_pic1));
             }
             if (data.hasOwnProperty("qyjs_pic2")) {
-                $("#qyjs_pic2").val(data.qycw_pic2);
-                getRemotePic(data.qycw_pic2, "#qyjs_pic2_img");
+                $("#qyjs_pic2").val(data.qyjs_pic2);
+                $("#qyjs_pic2_img").attr("src",getRemotePic(data.qyjs_pic2));
+            }
+            if (data.hasOwnProperty("qycw_pic1")) {
+                $("#qycw_pic1").val(data.qycw_pic1);
+                $("#qycw_pic1_img").attr("src",getRemotePic(data.qycw_pic1));
+            }
+            
+            if (data.hasOwnProperty("qycw_pic2")) {
+                $("#qycw_pic2").val(data.qycw_pic2);
+                $("#qycw_pic2_img").attr("src",getRemotePic(data.qycw_pic2));
+            }
+            
+            if (data.hasOwnProperty("qycw_pic3")) {
+                $("#qycw_pic3").val(data.qycw_pic3);
+                $("#qycw_pic3_img").attr("src",getRemotePic(data.qycw_pic3));
+            }
+            
+            if (data.hasOwnProperty("qycw_pic4")) {
+                $("#qycw_pic4").val(data.qycw_pic4);
+                $("#qycw_pic4_img").attr("src",getRemotePic(data.qycw_pic4));
             }
             checkInputFileImg();
         }
@@ -189,7 +223,7 @@
             rsobj["qyjs_idnumber"] = $("#qyjs_idnumber").val();
             rsobj["qyjs_pic1"] = $("#qyjs_pic1").val();
             rsobj["qyjs_pic2"] = $("#qyjs_pic2").val();
-
+            
             return JSON.stringify(rsobj);
         }
         $(document).ready(function() {

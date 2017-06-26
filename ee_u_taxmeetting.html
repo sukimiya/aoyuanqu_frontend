@@ -29,30 +29,55 @@
         var investorAry = [];
         var isAddMode = true;
         var curDate;
-
+        function formatDateTo(dstr){
+            var result = "2017-06-30 10:00:00.0";
+            if(result.indexOf(" ")!=-1){
+                var thedatearr = result.split(" ");
+                var timearr = thedatearr[1].split(":");
+                result = thedatearr[0] +" " + timearr[0]+":"+timearr[1];
+                return result;
+            }
+        }
         function initial(data) {
             curDate = data;
-            if (data.company_name)
-                $("#companyname").text(data.company_name);
+            debugger;
+            if (data.confirm_name)
+                $("#confirm_name").text(data.confirm_name);
 
             if (data.hasOwnProperty("szhd_state"))
                 if (data.szhd_state1 == 1) {
-
-                    var today = new Date();
-                    $("#appointment_time").attr('min', today.Format("yyyy-MM-ddThh:mm"));
-                    var month = new Date(new Date().setMonth(today.getMonth() + 6));
-                    $("#appointment_time").attr('max', month.Format("yyyy-MM-ddThh:mm"));
-
+                    if (data.hasOwnProperty("szhd_address"))
+                        $("#szhd_address").val(data.szhd_address);
+                    if (data.szhd_state == 2) {
+                        $("#appointment_time").val(data.szhd_time.replace(" ","T"));
+                        $("#appointment_time").attr("disabled", "yes");
+                        $("#szhd_address").attr("disabled", "yes");
+                        $("#photoGroup").removeClass("hide");
+                    } else {
+                        if (data.hasOwnProperty("szhd_time")) {
+                            $("#appointment_time").val(data.szhd_time.replace(" ","T"));
+                        } else {
+                            var today = new Date();
+                            $("#appointment_time").attr('min', today.Format("yyyy-MM-ddThh:mm"));
+                            var month = new Date(new Date().setMonth(today.getMonth() + 6));
+                            $("#appointment_time").attr('max', month.Format("yyyy-MM-ddThh:mm"));
+                        }
+                        if (data.hasOwnProperty("szhd_address")) $("#szhd_address").val(data.szhd_address);
+                        if(data.szhd_state==1){
+                            $("#thesubmit").attr("disabled", "yes");
+                        }
+                    }
                 } else {
                     if (data.hasOwnProperty("szhd_time")) {
-                        $("#appointment_time").val(new Date(data.szhd_time.time).Format("yyyy-MM-ddThh:mm"));
+                        $("#appointment_time").val(data.szhd_time.replace(" ","T"));
                     }
-
                     $("#szhd_address").val(data.szhd_address);
                     if (data.szhd_license == null || data.szhd_license) {
-                        $("#szhd_license_img").removeClass("hide");
-                        $("#uploadbtn").removeClass("hide");
+                        $("#szhd_license_img").attr("src", getRemotePic(data.szhd_license));
                     }
+                    $("#imgcon").addClass("hide");
+                    $("#photoGroup").removeClass("hide");
+                    $("#thesubmit").attr("disabled", "yes");
                 }
             checkInputFileImg();
         }
@@ -62,15 +87,17 @@
                 //
                 debugger;
                 if (curDate) {
+                    var today = $("#appointment_time").val();
                     if (curDate.szhd_state != 2) {
-                        var today = $("#appointment_time").val();
-                        var params = "id=" + GetRequest()["id"] + "&szhd_time=" + today + "&szhd_address=" + $("#appointment_address").val() +"&szhd_license="+$("#szhd_license").val()+ "&szhd_state=1";
+
+                        var params = "id=" + GetRequest()["id"] + "&szhd_time=" + today + "&szhd_address=" + $("#appointment_address").val() + "&szhd_license=null&szhd_state=1";
                         myapi.request("updateStartSZHD", null, params, function(result) {
                             window.location = "ee_u_progress.html";
                         }, function() {});
                     } else {
                         var params = "id=" + GetRequest()["id"] + "&szhd_license=" + $("#szhd_license").val() + "&szhd_state1=2&szhd_state=2";
                         myapi.request("updateSZHD_state", null, params, function(result) {
+                            debugger;
                             window.location = "ee_u_progress.html";
                         }, function(e) {});
                     }
@@ -107,7 +134,7 @@
             <div class="container">
                 <div class="form-group">
                     <label class="clearfix">登记企业名称</label>
-                    <label id="companyname" class="my-form-label text-center clearfix">&nbsp;
+                    <label id="confirm_name" class="my-form-label text-center clearfix">&nbsp;
                     </label>
                 </div>
                 <form id="bookform">
@@ -124,7 +151,7 @@
                             <option title="市区总部" value="市区总部"><span style="font-size:12;color:#cccccc">园区市区总部，地址是：上海市XX区XX路233号</span></option>
                         </select>
                     </div>
-                    <div class="text-center">
+                    <div id="photoGroup" class="text-center hide">
                         <hr>
                         <div>
                             <div class="col-xs-2" style="float:left"></div>

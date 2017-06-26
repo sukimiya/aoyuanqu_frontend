@@ -186,7 +186,10 @@
             
             getmeetingdata();
         })
-
+        
+        function previewImage(imgData,targetTag){
+            myweixin.previewImagebyWX(getRemotePic($("imgData").val()));
+        }
     </script>
 </head>
 
@@ -286,10 +289,10 @@
                             <input id="qycw_email" name="qycw_email" class="form-control" type="email" disabled>
                         </div>
                         <div class="row">
-                            <a class="col-xs-4" href="javascript:previewImagebyWX('#qycw_pic1','#qycw_pic1_img')" style="border:0px solid #000">
+                            <a class="col-xs-4" href="javascript:previewImage('#qycw_pic1','#qycw_pic1_img')" style="border:0px solid #000">
                                 <img id="qycw_pic1_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
                             </a>
-                            <a class="col-xs-4" href="javascript:previewImagebyWX('#qycw_pic2','#qycw_pic2_img')" style="border:0px solid #000">
+                            <a class="col-xs-4" href="javascript:previewImage('#qycw_pic2','#qycw_pic2_img')" style="border:0px solid #000">
                                 <img id="qycw_pic2_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
                             </a>
                         </div>
@@ -315,10 +318,10 @@
                         <input id="qyjs_idnumber" name="qyjs_idnumber" type="tel" disabled>
                     </div>
                     <div class="row">
-                        <a class="col-xs-4" href="javascript:previewImagebyWX('#qyjs_pic1','#qyjs_pic1_img')" style="border:0px solid #000">
+                        <a class="col-xs-4" href="javascript:previewImage('#qyjs_pic1','#qyjs_pic1_img')" style="border:0px solid #000">
                             <img id="qyjs_pic1_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
                         </a>
-                        <a class="col-xs-4" href="javascript:previewImagebyWX('#qyjs_pic2','#qyjs_pic2_img')" style="border:0px solid #000">
+                        <a class="col-xs-4" href="javascript:previewImage('#qyjs_pic2','#qyjs_pic2_img')" style="border:0px solid #000">
                             <img id="qyjs_pic2_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
                         </a>
                     </div>

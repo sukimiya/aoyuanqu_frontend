@@ -294,7 +294,7 @@
         }
 
         //}
-        function setItemState(thename, thevalue, i) {
+        function setItemState(thename, thevalue, i,data) {
             var myelement = $("#item" + (i + 1) + "_label");
             var mylink = $("#item" + (i + 1) + " div .bobble-box");
             var myparent = $("#item" + (i + 1));
@@ -372,8 +372,12 @@
                     }
                     break;
                 case "szhd_state":
+                    if(data["szhd_state1"]==1){
+                        myparent.removeClass("pgdided");
+                        myparent.addClass("invers");
+                    }
                     if (thevalue == 1) {
-                        myelement.text("待预约");
+                        myelement.text("去预约");
                         mylink.attr("href", "javascript:gotoEEFinish()");
                     } else if (thevalue == 2) {
                         myelement.text("已完成");
@@ -392,7 +396,7 @@
             for (var a in statelist) {
                 for (var l = 0; l < stateary.length; l++) {
                     if (stateary[l] == a) {
-                        setItemState(a, statelist[a], l);
+                        setItemState(a, statelist[a], l,data);
                         console.log(a + ":" + statelist[a] + ":" + l);
                         i++;
                     }
