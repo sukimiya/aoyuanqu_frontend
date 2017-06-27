@@ -89,12 +89,23 @@
                     getRemotePic(jdata.license_pic, $("#lisencePic"));
                     $("lisencePic1").val(jdata.license_pic);
                 }
-
+                isunfinishList = true;
+                if(jdata.license_takekind==0){
+                    switchlisttype();
+                    $("#listswitchGroup").attr("disabled",true);
+                }else if(jdata.license_takekind==1){
+                    $("#listswitchGroup").attr("disabled",true);
+                }
                 if (jdata.license_state == 2) {
                     //2 已经投递
                     setFromDisabled("deliverform", true);
                     $("#my-state-1").addClass("hide");
-                    $("#expressInfoGroup").append('<div class="well well-lg">快递公司:'+jdata["express_company"]+'<p>'+jdata["express_number"]+'</p></div>');
+                    if(jdata.hasOwnProperty("express_company")){
+                        $("#expressInfoGroup").append('<div class="well well-lg">快递公司:'+jdata["express_company"]+'<p>'+jdata["express_number"]+'</p></div>');
+                    }else{
+                        $("#expressInfoGroup").append('<div class="well well-lg">未投递</div>');
+                    }
+                    
                 } else if (jdata.license_state == 1) {
                     //1 未发
                 }
@@ -122,7 +133,7 @@
         </div>
         <div id="my-state-1">
             <div class="container text-center">
-                <div id="listswitchGroup" class="btn-group" data-toggle="buttons" onclick="javascript:switchlisttype()">
+                <div id="listswitchGroup" class="btn-group" data-toggle="buttons" onchange="javascript:switchlisttype()">
                     <label id="unfinishlabel" class="btn btn-primary active">
                     <input type="radio" name="options" value="1"><div style="width:100px;">快递</div></label>
                     <label id="finishlabel" class="btn btn-default">

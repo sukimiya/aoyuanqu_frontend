@@ -68,6 +68,7 @@
                             var htmlstr = "";
                             $("#investorlists").html(htmlstr);
                             for (var n = 0; n < investorAry.length; n++) {
+                                investorAry[n].order = n;
                                 addAinvestorToList(investorAry[n], false);
                             }
                             $("#addinvestorpanel").modal("hide");
