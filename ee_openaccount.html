@@ -70,7 +70,7 @@
                     initial(result.swsf_state, result);
                 }, function(e) {});
             $("#file").on("change", function() {
-                onuploadComponentChangeHandler($("#file"), "#swsf_license", function(result) {
+                UploadCompressedImage($("#file"), "#swsf_license", function(result) {
                     $("#uploadlabel").text("上传完毕");
                     $("#swsf_license").val(result.fileName);
                     getRemotePic(result.fileName, $("#lisenceImg"));

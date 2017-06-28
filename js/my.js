@@ -200,7 +200,7 @@ var restapis = (function () {
             theurl += mothed
         }
         var contentType = "text/plain";
-        if(dataType == "json") contentType = "application/json; charset=utf-8"
+        if (dataType == "json") contentType = "application/json; charset=utf-8"
         $.ajax({
             type: post,
             dataType: dataType,
@@ -417,6 +417,10 @@ function uploadImage(thetarget, targetInput) {
     setTimeout(onuploadComponentChangeHandler(thetarget, targetInput, null, null, true, true), 50);
 }
 
+function uploadSmallImage(thetarget, targetInput) {
+    UploadCompressedImage(thetarget, targetInput, null, null, true, true);
+}
+
 function onuploadComponentChangeHandler(thetarget, targetInput, callback = null, onerrorhandler = null, showprogress = true, isshow = false) {
     //http://www.cnblogs.com/yanqin/p/5684320.html
     debugger;
@@ -486,7 +490,8 @@ var queny = function (fnaction) {
 };
 
 function UploadCompressedImage(thetarget, targetInput, callback = null, onerrorhandler = null, showprogress = true, isshow = false, quality = 80) {
-
+    var maxWidth = 750;
+    var maxHeight = 1136;
     var files = thetarget.files;
     for (var i = 0, f; i < files.length; i++) {
         f = files[i];
@@ -496,10 +501,22 @@ function UploadCompressedImage(thetarget, targetInput, callback = null, onerrorh
         }
         debugger;
         queny(function () {
+            var fillimg = thetarget.parentNode.getElementsByTagName("img")[i];
+            var cav = thetarget.parentNode.getElementsByTagName("canvas")[i];
+            var theheight = cav.height = thetarget.parentNode.clientHeight;
+            var thewidth = cav.width = thetarget.parentNode.clientWidth;
+            var target = thetarget;
+            var theinput = targetInput;
+            var thecallback = callback;
+            var theerror = onerrorhandler;
+            var isprogress = showprogress;
+            var show = isshow;
+            var ql = quality;
+            cav.classList = [];
             var reader = new FileReader();
             var jmyimg = document.createElement("img");
-            jmyimg.setAttribute("maxWidth", 750);
-            jmyimg.setAttribute("maxHeight", 1136);
+            jmyimg.setAttribute("maxWidth", maxWidth);
+            jmyimg.setAttribute("maxHeight", maxHeight);
             jmyimg.maxHeight = 1136;
             var canvas = document.createElement("canvas");
             var ctx = canvas.getContext('2d');
@@ -508,25 +525,57 @@ function UploadCompressedImage(thetarget, targetInput, callback = null, onerrorh
             jmyimg.onload = function () {
                 var w = jmyimg.naturalWidth,
                     h = jmyimg.naturalHeight;
-                if (w > 750) {
-                    var rate = jmyimg.naturalWidth / 750;
+                if (w > maxWidth) {
+                    var rate = jmyimg.naturalWidth / maxWidth;
+                } else if (h > maxHeight) {
+                    var rate = jmyimg.naturalHeight / maxHeight;
                 }
-                canvas.width = w;
-                canvas.height = h;
-                ctx.drawImage(jmyimg, 0, 0, w, h, 0, 0, w, h);
+                canvas.width = w / rate;
+                canvas.height = h / rate;
                 ctx.setTransform(1 / rate, 0, 0, 1 / rate, 0, 0);
-                var data = canvas.toDataURL(f_type, quality * 2);
+                ctx.drawImage(jmyimg, 0, 0, w, h, 0, 0, w, h);
+                console.log("compress w[" + w / rate + "] h[" + h / rate + "]");
+                var data = canvas.toDataURL(f_type, ql * 2);
                 var myapi = restapis;
-                var requestData = data.split(",")[1];
+                var darr = data.split(",");
+                var requestData = darr[1];
+                var filetype = darr[0].split(":")[1].split(";")[0];
                 debugger;
-                myapi.request("uploadBase", null, {imgStr:requestData}, function (result) {
-                    jmyimg.onload = null;
-                    jmyimg.src = "/"+result.fileName;
-                    document.body.appendChild(jmyimg);
+                jmyimg.onload = null
+                jmyimg.src = data;
+                document.body.appendChild(jmyimg);
+                var tmpFormData = new FormData();
+                tmpFormData.append("fileType", filetype);
+                tmpFormData.append("fileData", requestData);
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "cacheImgBase64.php", true);
+                xhr.upload.onprogress = function (event) {
+                    var persently = event.loaded / event.total;
+                    cav2d.fillStyle = "#5066b4";
+                    cav2d.fillRect(0, 0, thewidth * persently, theheight);
+                    cav2d.fillStyle = "#FFFFFF";
+                    cav2d.fillText(persently * 100 + "%", thewidth / 2 - 18, theheight / 2 - 7);
+                }
+                //onload
+                xhr.onload = function (event) {
                     debugger;
-                }, function (e) {
-                    
-                },"POST","text");
+                    var result = JSON.parse(event.currentTarget.responseText);
+                    var theurl = "uploads/" + result.fileName;
+                    if (xhr.status == 200) {
+                        if (theinput) $(theinput).val(result.fileName);
+                        if (show) fillimg["src"] = getRemotePic(result.fileName);
+                        if (thecallback) thecallback(result);
+                    } else {
+                        if (theerror) theerror(event);
+                    }
+                    cav.classList = ["hide"];
+                };
+                if (isprogress) {
+                    var cav2d = cav.getContext("2d");
+                    cav2d.font = "14px Arial";
+                }
+                //action send
+                xhr.send(tmpFormData);
             }
             reader.onload = function (event) {
                 jmyimg.src = this.result;

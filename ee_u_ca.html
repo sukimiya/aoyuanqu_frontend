@@ -142,7 +142,7 @@
                 }
             }, function(e) {});
             $("#file").on("change", function() {
-                onuploadComponentChangeHandler($("#file"), "#lisence_pic1", function(result) {
+                UploadCompressedImage($("#file"), "#lisence_pic1", function(result) {
                     $("#uploadlabel").text("上传完毕");
                     $("#lisence_pic1").val(result.fileName);
                     getRemotePic(result.fileName, $("#lisenceImg"));

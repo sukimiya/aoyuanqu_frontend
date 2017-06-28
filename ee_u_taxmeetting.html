@@ -104,7 +104,7 @@
                 }
             });
             $("#file").on("change", function() {
-                onuploadComponentChangeHandler($("#file"), "#szhd_license", function(result) {
+                UploadCompressedImage($("#file"), "#szhd_license", function(result) {
                     $("#uploadlabel").text("上传完毕");
                     $("#szhd_license").val(result.fileName);
                     getRemotePic(result.fileName, $("#szhd_license_img"));
