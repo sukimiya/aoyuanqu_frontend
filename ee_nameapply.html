@@ -63,7 +63,7 @@
                     for (var i = 0; i < investorAry.length; i++) {
                         var investor = investorAry[i];
                         if (investor.order == curSelect.order) {
-                            investorAry.splice(i,1);
+                            investorAry.splice(i, 1);
                             //
                             var htmlstr = "";
                             $("#investorlists").html(htmlstr);
@@ -105,6 +105,31 @@
         }
 
         function onInvestorOKHandler() {
+            if (!$("#qygd_name").val() || $("#qygd_name").val() == "") {
+                alert("请填写投资人名字")
+                return;
+            }
+            if (!$("#qygd_idnumber").val() || $("#qygd_idnumber").val() == "") {
+                alert("请填写证件号码")
+                return;
+            }
+            if (!$("#qygd_investment").val() || $("#qygd_investment").val() == "") {
+                alert("请填写投资金额")
+                return;
+            }
+            if (!$("#qygd_pic1").val() || $("#qygd_pic1").val() == "") {
+                if (!$("#qygd_pic3").val() || $("#qygd_pic3").val() == "") {
+                    alert("请上传证件照片");
+                    return;
+                }
+            } else if (!$("#qygd_pic2").val() || $("#qygd_pic2").val() == "") {
+                alert("请上传证件照片");
+                return;
+            }
+//            if(!validateIdCard($("#qygd_idnumber").val())){
+//                alert("请填写正确的身份证号码");
+//                return;
+//            }
             if (isAddMode) {
                 var newdata = {};
                 newdata["order"] = investorAry.length;
@@ -140,9 +165,9 @@
             $("#qygd_pic1")[0].value = "";
             $("#qygd_pic2")[0].value = "";
             $("#qygd_pic3")[0].value = "";
-            console.log("clear for model:"+$("#qygd_pic1").val())
-            console.log("clear for model:"+$("#qygd_pic2").val())
-            console.log("clear for model:"+$("#qygd_pic3").val())
+            console.log("clear for model:" + $("#qygd_pic1").val())
+            console.log("clear for model:" + $("#qygd_pic2").val())
+            console.log("clear for model:" + $("#qygd_pic3").val())
             $("#qygd_pic1" + "_img").attr("src", "images/picframe.svg");
             $("#qygd_pic2" + "_img").attr("src", "images/picframe.svg");
             $("#qygd_pic3" + "_img").attr("src", "images/picframe.svg");
@@ -392,16 +417,26 @@
                         return;
                     }
                 }
+                if($("#manage_range").val().length<12){
+                    alert("经营范围不得超过130字,最少12个字");
+                    return;
+                }
                 if (investorAry.length <= 0) {
                     alert("请填写法人和投资人信息");
                     return;
                 } else {
                     var qyfrnum = 0;
+                    var investorSum = 0;
                     for (var i = 0; i < investorAry.length; i++) {
                         var node = investorAry[i];
+                        investorSum+=parseFloat(node.qygd_investment);
                         if (node["qygd_jobtitle"] == "法人") {
                             qyfrnum++;
                         }
+                    }
+                    if (investorSum!=parseFloat($("#register_money").val())){
+                        alert("投资金额和股东投资金额总和不相等");
+                        return;
                     }
                     if (qyfrnum == 0) {
                         alert("请填写法人信息");

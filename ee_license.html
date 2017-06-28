@@ -32,6 +32,9 @@
         var isunfinishList = true;
 
         function switchlisttype() {
+            if($("#listswitchGroup").attr("disabled")){
+                return;
+            }
             var setl1 = "";
             var setl2 = "";
             if (isunfinishList) {
@@ -92,9 +95,9 @@
                 isunfinishList = true;
                 if(jdata.license_takekind==0){
                     switchlisttype();
-                    $("#listswitchGroup").attr("disabled",true);
+                    $("#listswitchGroup").attr("disabled","disabled");
                 }else if(jdata.license_takekind==1){
-                    $("#listswitchGroup").attr("disabled",true);
+                    $("#listswitchGroup").attr("disabled","disabled");
                 }
                 if (jdata.license_state == 2) {
                     //2 已经投递
@@ -103,11 +106,25 @@
                     if(jdata.hasOwnProperty("express_company")){
                         $("#expressInfoGroup").append('<div class="well well-lg">快递公司:'+jdata["express_company"]+'<p>'+jdata["express_number"]+'</p></div>');
                     }else{
-                        $("#expressInfoGroup").append('<div class="well well-lg">未投递</div>');
+                        if(jdata.license_takekind==0){
+                            $("#expressInfoGroup").append('<div class="well well-lg"><span style="font-size:12px">状态:</span><br>已接收</div>');
+                        }
                     }
                     
                 } else if (jdata.license_state == 1) {
                     //1 未发
+                    if(jdata.license_takekind==1)
+                    if(jdata.hasOwnProperty("receive_name")
+                       &&jdata.hasOwnProperty("receive_phone")
+                       &&jdata.hasOwnProperty("express_address")){
+                        $("input").attr("disabled","disabled");
+                        $("textarea").attr("disabled",true);
+                        $("#submitbtn").addClass("disabled");
+                        $("#receive_name").val(jdata.receive_name);
+                        $("#receive_phone").val(jdata.receive_phone);
+                        $("#express_address").val(jdata.express_address);
+                        $("#listswitchGroup").attr("disabled","disabled");
+                    }
                 }
             }, function(e) {});
             myweixin.initial();

@@ -10,24 +10,8 @@
     <meta http-equiv="cache-control" content="no-cache">
     <meta http-equiv="expires" content="0">
     <title>the ao tess</title>
-    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-    <link href="css/bootstrapSwitch.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/weui.min.css">
-    <link rel="stylesheet" href="css/my-style.css">
-    <link href="css/my.css" rel="stylesheet" type="text/css">
 
     <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
-    <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="https://cdn.bootcss.com/bootstrap-validator/0.5.3/js/bootstrapValidator.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
-    <script src="js/bootstrapSwitch.js"></script>
-    <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
-    <script type="text/javascript" src="js/jquery.flexText.min.js"></script>
-    <script src="https://cdn.bootcss.com/json2/20160511/json2.min.js"></script>
-    <script src="js/zepto-1.1.6.js"></script>
-    <script src="js/glb-swipe.js"></script>
-    <script type="text/javascript" src="js/my.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
             checkInputFileImg();
@@ -79,28 +63,71 @@
 </head>
 
 
-<body>
-    <label>投资人身份证</label>
+<body class="my-body">
     <div id="qytz_ids_group" class="container-fluid">
-        <div class="row">
-            <a href="javascript:;" class="a-upload my-icon-upload my-gap-left" style="float:left;">
-                <img id="qygd_pic1_img" class="img-responsive" src="images/picframe.svg">
-                <canvas></canvas>
-                <label style="font-size:14px;font-weight:normal">正面</label>
-                <input type="file" capture="camera" accept="image/*" title="" onchange="uploadSmallImage(this,'#qygd_pic1')">
-            </a>
-            <a href="javascript:;" class="a-upload my-icon-upload my-gap-left clearfix" style="float:left;">
-                <img id="qygd_pic2_img" class="img-responsive" src="images/picframe.svg">
-                <canvas></canvas>
-                <label style="font-size:14px;font-weight:normal">反面</label>
-                <input type="file" capture="camera" accept="image/*" title="" onchange="uploadSmallImage(this,'#qygd_pic2')">
-            </a>
-            <a href="javascript:;" class="a-upload my-icon-upload my-gap-left" style="float:left;">
-                <img id="qygd_pic3_img" class="img-responsive" src="images/picframe.svg">
-                <canvas></canvas>
-                <label style="font-size:14px;font-weight:normal">营业执照</label>
-                <input type="file" capture="camera" accept="image/*" title="" onchange="uploadSmallImage(this,'#qygd_pic3')">
-            </a>
+        <div class="container">
+            <form class="my-form" role="form">
+                <div class="form-group my-form-group">
+                    <label for="qygd_name">名称或姓名</label>
+                    <input type="text" name="qygd_name" class="form-control my-input" id="qygd_name">
+                </div>
+                <div class="form-group my-form-group my-gap-bottom" style="font-size:18px;">
+                    <span>职务</span>
+                    <select id="qygd_jobtitle" name="qygd_jobtitle" class="col-xs-12">
+                                <option>法人</option>
+                                <option>股东</option>
+                            </select>
+                </div>
+                <div class="form-group my-form-group">
+                    <label for="qygd_idnumber">证件号</label>
+                    <input type="text" name="qygd_idnumber" class="form-control my-input" id="qygd_idnumber">
+                </div>
+
+                <div class="form-group my-form-group">
+                    <label for="qygd_investment">投资金额</label>
+                    <input id="qygd_investment" type="number" name="qygd_investment" class="form-control my-input">
+                    <span>万元</span>
+                </div>
+                <label>投资人身份证</label>
+                <div id="qytz_ids_group" class="container-fluid">
+                    <div class="row">
+                        <a href="javascript:;" class="a-upload my-icon-upload my-gap-left" style="float:left;">
+                            <img id="qygd_pic1_img" class="img-responsive" src="images/picframe.svg">
+                            <canvas></canvas>
+                            <label style="font-size:14px;font-weight:normal">正面</label>
+                            <input type="file" capture="camera" accept="image/*" title="" onchange="uploadSmallImage(this,'#qygd_pic1')">
+                        </a>
+                        <a href="javascript:;" class="a-upload my-icon-upload my-gap-left clearfix" style="float:left;">
+                            <img id="qygd_pic2_img" class="img-responsive" src="images/picframe.svg">
+                            <canvas></canvas>
+                            <label style="font-size:14px;font-weight:normal">反面</label>
+                            <input type="file" capture="camera" accept="image/*" title="" onchange="uploadSmallImage(this,'#qygd_pic2')">
+                        </a>
+                        <a href="javascript:;" class="a-upload my-icon-upload my-gap-left" style="float:left;">
+                            <img id="qygd_pic3_img" class="img-responsive" src="images/picframe.svg">
+                            <canvas></canvas>
+                            <label style="font-size:14px;font-weight:normal">营业执照</label>
+                            <input type="file" capture="camera" accept="image/*" title="" onchange="uploadLisence(this,'#qygd_pic3')">
+                        </a>
+                    </div>
+                </div>
+                <input type="hidden" id="qygd_pic1">
+                <input type="hidden" id="qygd_pic2">
+                <input type="hidden" id="qygd_pic3">
+                <div id="qygd_pic3_con" class="text-center">
+                    <span style="color:red;"><h3>重要提示</h3></span>
+                    <div class="clearfix" style="text-align:left;font-size:14px;border-color: #5066b4;padding:15px;">
+                        <p>投资人为自然人需提供身份证照片;投资人为企业法人需提供营业执照（副本加盖公章）照片
+                        </p>
+
+                    </div>
+
+                </div>
+                <div class="container">
+                    <a id="investorDeleteBtn" href="javascript:delectAInvestor()" class="btn btn-warning col-xs-12 my-gap-top" style="font-size:22px;padding:5px;">删除</a>
+                    <a href="javascript:onInvestorOKHandler()" class="btn btn-success col-xs-12 my-gap-top" style="font-size:22px;padding:5px;">确定</a>
+                </div>
+            </form>
         </div>
     </div>
 </body>

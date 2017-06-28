@@ -492,6 +492,21 @@ var queny = function (fnaction) {
 function UploadCompressedImage(thetarget, targetInput, callback = null, onerrorhandler = null, showprogress = true, isshow = false, quality = 80) {
     var maxWidth = 750;
     var maxHeight = 1136;
+    //initial
+    var theparent = thetarget.parentNode
+    if (theparent == undefined || theparent == null) {
+        if (thetarget.hasOwnProperty("length") && thetarget.length > 0)
+            thetarget = thetarget[0];
+        else
+        if (onerrorhandler) onerrorhandler();
+    }
+    var thefiles = thetarget.files;
+    if (thefiles == undefined || thefiles == null) {
+        if (onerrorhandler) onerrorhandler();
+        throw new Error("fileuploader there no file!");
+        return;
+    }
+    
     var files = thetarget.files;
     for (var i = 0, f; i < files.length; i++) {
         f = files[i];
@@ -513,6 +528,7 @@ function UploadCompressedImage(thetarget, targetInput, callback = null, onerrorh
             var show = isshow;
             var ql = quality;
             cav.classList = [];
+            target.setAttribute("disabled","yes");         //disabled input
             var reader = new FileReader();
             var jmyimg = document.createElement("img");
             jmyimg.setAttribute("maxWidth", maxWidth);
@@ -525,10 +541,11 @@ function UploadCompressedImage(thetarget, targetInput, callback = null, onerrorh
             jmyimg.onload = function () {
                 var w = jmyimg.naturalWidth,
                     h = jmyimg.naturalHeight;
+                rate =1;
                 if (w > maxWidth) {
-                    var rate = jmyimg.naturalWidth / maxWidth;
+                    rate = jmyimg.naturalWidth / maxWidth;
                 } else if (h > maxHeight) {
-                    var rate = jmyimg.naturalHeight / maxHeight;
+                    rate = jmyimg.naturalHeight / maxHeight;
                 }
                 canvas.width = w / rate;
                 canvas.height = h / rate;
@@ -541,9 +558,7 @@ function UploadCompressedImage(thetarget, targetInput, callback = null, onerrorh
                 var requestData = darr[1];
                 var filetype = darr[0].split(":")[1].split(";")[0];
                 debugger;
-                jmyimg.onload = null
-                jmyimg.src = data;
-                document.body.appendChild(jmyimg);
+                jmyimg.onload = null;
                 var tmpFormData = new FormData();
                 tmpFormData.append("fileType", filetype);
                 tmpFormData.append("fileData", requestData);
@@ -554,7 +569,7 @@ function UploadCompressedImage(thetarget, targetInput, callback = null, onerrorh
                     cav2d.fillStyle = "#5066b4";
                     cav2d.fillRect(0, 0, thewidth * persently, theheight);
                     cav2d.fillStyle = "#FFFFFF";
-                    cav2d.fillText(persently * 100 + "%", thewidth / 2 - 18, theheight / 2 - 7);
+                    cav2d.fillText(parseInt(persently * 100) + "%", thewidth / 2 - 18, theheight / 2 - 7);
                 }
                 //onload
                 xhr.onload = function (event) {
@@ -564,8 +579,10 @@ function UploadCompressedImage(thetarget, targetInput, callback = null, onerrorh
                     if (xhr.status == 200) {
                         if (theinput) $(theinput).val(result.fileName);
                         if (show) fillimg["src"] = getRemotePic(result.fileName);
+                        target.removeAttribute("disabled");
                         if (thecallback) thecallback(result);
                     } else {
+                        target.removeAttribute("disabled");
                         if (theerror) theerror(event);
                     }
                     cav.classList = ["hide"];
@@ -585,51 +602,6 @@ function UploadCompressedImage(thetarget, targetInput, callback = null, onerrorh
             reader.readAsDataURL(f);
         });
 
-    }
-}
-
-//----------------图片文件压缩--------------------
-function handleFileSelect(evt) {
-    // var filebtn = document.getElementById(id);
-    // console.log(filebtn);
-    // var files = filebtn.target.files;
-    // console.log(filebtn.target);
-    // console.log(files);
-    var files = evt.target.files;
-    for (var i = 0,
-            f; f = files[i]; i++) {
-
-        // Only process image files.
-        if (!f.type.match('image.*')) {
-            continue;
-        }
-
-        var reader = new FileReader();
-
-        // Closure to capture the file information.
-        reader.onload = (function (theFile) {
-            return function (event) {
-                // Render thumbnail.
-                // console.log(evt.target.files[0]);
-                // console.log(e.target);
-                console.log(event.target.result);
-                var i = document.getElementById("test");
-                i.src = event.target.result;
-                console.log($(i).width());
-                console.log($(i).height());
-                $(i).css('width', $(i).width() / 10 + 'px');
-                //$(i).css('height',$(i).height()/10+'px');
-                console.log($(i).width());
-                console.log($(i).height());
-                var quality = 50;
-                i.src = jic.compress(i, quality).src;
-                console.log(i.src);
-                i.style.display = "block";
-            };
-        })(f);
-
-        // Read in the image file as a data URL.
-        reader.readAsDataURL(f);
     }
 }
 // 对Date的扩展，将 Date 转化为指定格式的String
@@ -792,31 +764,42 @@ var browser = {
     }(),
     language: (navigator.browserLanguage || navigator.language).toLowerCase()
 }
-//------------------------Canvas Compress-----------------------
-var jic = {
-    /**
-     * Receives an Image Object (can be JPG OR PNG) and returns a new Image Object compressed
-     * @param {Image} source_img_obj The source Image Object
-     * @param {Integer} quality The output quality of Image Object
-     * @return {Image} result_image_obj The compressed Image Object
-     */
+//-----------------------------id card validate--------------------
+function validateIdCard(idCard) {
+    //15位和18位身份证号码的正则表达式
+    var regIdCard = /^(^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$)|(^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])((\d{4})|\d{3}[Xx])$)$/;
 
-    compress: function (source_img_obj, quality, output_format) {
+    //如果通过该验证，说明身份证格式正确，但准确性还需计算
+    if (regIdCard.test(idCard)) {
+        if (idCard.length == 18) {
+            var idCardWi = new Array(7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2); //将前17位加权因子保存在数组里
+            var idCardY = new Array(1, 0, 10, 9, 8, 7, 6, 5, 4, 3, 2); //这是除以11后，可能产生的11位余数、验证码，也保存成数组
+            var idCardWiSum = 0; //用来保存前17位各自乖以加权因子后的总和
+            for (var i = 0; i < 17; i++) {
+                idCardWiSum += idCard.substring(i, i + 1) * idCardWi[i];
+            }
 
-        var mime_type = "image/jpeg";
-        if (output_format != undefined && output_format == "png") {
-            mime_type = "image/png";
+            var idCardMod = idCardWiSum % 11; //计算出校验码所在数组的位置
+            var idCardLast = idCard.substring(17); //得到最后一位身份证号码
+
+            //如果等于2，则说明校验码是10，身份证号码最后一位应该是X
+            if (idCardMod == 2) {
+                if (idCardLast == "X" || idCardLast == "x") {
+                    return true;
+                } else {
+                    alert("身份证号码错误！");
+                }
+            } else {
+                //用计算出的验证码与最后一位身份证号码匹配，如果一致，说明通过，否则是无效的身份证号码
+                if (idCardLast == idCardY[idCardMod]) {
+                    return true;
+                } else {
+                    alert("身份证号码错误！");
+                }
+            }
         }
-
-
-        var cvs = document.createElement('canvas');
-        //naturalWidth真实图片的宽度
-        cvs.width = source_img_obj.naturalWidth;
-        cvs.height = source_img_obj.naturalHeight;
-        var ctx = cvs.getContext("2d").drawImage(source_img_obj, 0, 0);
-        var newImageData = cvs.toDataURL(mime_type, quality / 100);
-        var result_image_obj = new Image();
-        result_image_obj.src = newImageData;
-        return result_image_obj;
+    } else {
+        alert("身份证格式不正确!");
     }
+    return false;
 }

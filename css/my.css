@@ -1,3 +1,16 @@
+.well {
+    min-height: 20px;
+    padding: 19px;
+    margin-bottom: 20px;
+    background-color: #fafafa;
+    border: 1px solid #e3e3e3;
+    border-radius: 4px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+
+
 /*------------------------my----------------------*/
 
 .my-topsection {
@@ -17,6 +30,28 @@
     font-size: 18px;
     color: black;
     padding: 20px;
+}
+.input-group .form-control, .input-group-addon, .input-group-btn {
+    display: table-cell;
+    height: 34px;
+}
+.form-control{
+    display:block;
+    width: 100%;
+    height: 42px;
+    padding: 15px 22px;
+    font-size: 16px;
+    line-height: 1.42857143;
+    color: black;
+    background-color: #fff;
+    border: 1px solid #e3e3e3;
+    border-radius: 4px;
+    -webkit-box-shadow: none 0 0px 0px rgba(0, 0, 0, 0);
+    -webkit-transition: none;
+    -o-transition: none;
+    transition: none;
+    box-shadow: 0px 0px 0px rgba(0, 0, 0, 0);
+    -webkit-appearance: none;
 }
 
 .my-form .btn {
@@ -70,6 +105,7 @@
     font-size: 18px;
     background-color: #FFFFFF;
     border-color: #5066b4;
+    height: 42px;
 }
 
 .my-textarea {
@@ -193,6 +229,8 @@
     width: 100%;
     text-align: center;
 }
+
+
 
 
 
@@ -361,6 +399,7 @@
     margin: 0px;
     height: auto;
 }
+
 .my-list-item-52:first-child {
     border-top-right-radius: 0px;
     border-top-left-radius: 0px;
@@ -372,18 +411,20 @@
     border-bottom-left-radius: 0px;
     border-bottom: 0px none #FFF;
 }
+
 .my-list-item-52 .my-label {
-    font-weight:bold;
-    font-size:14px;
+    font-weight: bold;
+    font-size: 14px;
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
 .my-list-item-52 .my-description {
-    font-weight:bold;
-    font-size:12px;
+    font-weight: bold;
+    font-size: 12px;
     overflow: hidden;
     text-overflow: ellipsis;
-    color:#ccc
+    color: #ccc
 }
 
 .my-list-item-heading {
@@ -509,6 +550,8 @@
     color: #2d3c70;
     opacity: 1;
 }
+
+
 
 
 

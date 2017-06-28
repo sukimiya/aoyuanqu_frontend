@@ -64,6 +64,7 @@
             }
             var me = null;
             if (dropload) me = dropload;
+            console.log("toLoadList:1 type:"+thetype);
             doloadlist($("#searchbarTf").val(), 1, ltype, false, me);
         }
 
@@ -160,6 +161,7 @@
                     if (!isunfinishList) {
                         thetype = 1;
                     }
+                    console.log("loadUp:1 type:"+thetype);
                     doloadlist($("#searchbarTf").val(), 1, thetype, false, me);
                 },
                 loadDownFn: function(me) {
@@ -167,12 +169,13 @@
                     if (!isunfinishList) {
                         thetype = 1;
                     }
+                    console.log("loadUp:"+curPage + 1+" type:"+thetype);
                     doloadlist($("#searchbarTf").val(), curPage + 1, thetype, true, me);
                 }
             });
             //-----------获取第一页数据----------
 
-            doloadlist("", 1, 0, false, dropload);
+            //doloadlist("", 1, 0, false, dropload);
         });
 
     </script>

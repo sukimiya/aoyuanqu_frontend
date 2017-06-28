@@ -119,7 +119,7 @@
             if (data.hasOwnProperty("qyjs_name")) $("#qyjs_name").val(data.qyjs_name);
             if (data.hasOwnProperty("weituo_state")) {
                 debugger;
-                if (data.weituo_state == 1) {
+                if (data.weituo_state == 0) {
                     $('#weituo_state').bootstrapSwitch('state', false);
                     $("#aainfogroup").removeClass("hide");
                 } else {
@@ -318,7 +318,7 @@
                     </div>
                     <div class="form-group">
                         <label for="qyfr_name">企业法人姓名</label>
-                        <input id="qyfr_name" name="qyfr_name" class="form-control" type="text">
+                        <input id="qyfr_name" name="qyfr_name" class="form-control" type="text" disabled>
                     </div>
                     <div class="form-group">
                         <label for="qycw_telephone">企业法人电话</label>

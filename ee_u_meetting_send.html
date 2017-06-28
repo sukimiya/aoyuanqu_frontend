@@ -151,6 +151,8 @@
                     addAinvestorToList(node);
                 }
             }
+            if (data.hasOwnProperty("appointment_time"))
+                $("#thesubmit").attr("disabled","disabled");
             checkInputFileImg();
         }
 

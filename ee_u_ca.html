@@ -91,6 +91,8 @@
                             $("#receive_phone").val(getobj.receive_phone);
                             $("#express_address").val(getobj.express_address);
                             $("#my-state-1").removeClass("hide");
+                        }else{
+                            $("#my-state-1").addClass("hide");
                         }
                         getRemotePic(getobj.license_pic, $("#lisenceImg"));
                         $("#submitBtn").text("审核");
@@ -178,8 +180,11 @@
                     <input class="my-caver-upload" type="file" capture="camera" accept="image/*" name="file" id="file">
                     <label id="uploadlabel" class="my-upload-label">拍照上传</label>
                 </a>
-                <h3 id="company_name">&nbsp;</h3>
+                
             </div>
+        </div>
+        <div class="container">
+            <h3 id="company_name" class="well">&nbsp;</h3>
         </div>
         <div id="expressInfoGroup"></div>
     </div>
