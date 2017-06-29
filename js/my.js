@@ -398,11 +398,16 @@ function previewImageWithHidden(tagName, imgTagName) {
 }
 
 function previewImagebyWX(theimg) {
-    myweixin;
+    var imgurl = "http://www.aoyuanqu.cn/lily/";
+    var purl = imgurl + theimg;
+    if(theimg.indexOf(imgurl)!=-1){
+        purl = theimg;
+    }
+    console.log("previewImagebyWX:"+theimg);
     var mypreviewRun = function () {
         wx.previewImage({
-            current: "http://www.aoyuanqu.cn/lily/" + theimg, // 当前显示图片的http链接
-            urls: ["http://www.aoyuanqu.cn/lily/" + theimg] // 需要预览的图片http链接列表
+            current: purl, // 当前显示图片的http链接
+            urls: [purl] // 需要预览的图片http链接列表
         });
     }
     myweixin.checkapi(['previewImage'], mypreviewRun, function () {

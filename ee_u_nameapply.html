@@ -35,6 +35,9 @@
             var theid = GetRequest()["id"];
             $("#sendbackBtn").on("click", function() {
                 var thedata = "id=" + theid;
+                if($("#apply_remark").val()!=null&&$("#apply_remark").val()!=""){
+                    thedata+="&apply_remark="+$("#apply_remark").val()
+                }
                 myapi.request("YCMCheck.do", "page", thedata + "&apply_state=0", function(result) {
                     if (result == 1) {
                         window.location = "ee_u_progress.html"
@@ -168,7 +171,7 @@
 </head>
 
 <body class="my-body">
-    <div style="padding:0px;marging:0px;background-size: cover;overflow-y:visible;">
+    <div style="padding:0px;marging:0px;background-size: cover;overflow-y:visible;padding-bottom:20px">
         <img class="col-xs-4 col-xs-offset-4 img-responsive my-gap-top" src="images/dfa8c6ef0acedc844c59669f4f24fe1a.png">
         <div class="section my-topsection">
             <div class="container" style="vertical-align:mid;">
@@ -207,7 +210,7 @@
                     </div>
                     <label for="register_money">注册资金</label>
                     <div class="input-group my-form-group">
-                        <input type="number" id="register_money" disabled="yes" name="register_money" class="form-control my-input">
+                        <input type="number" step="0.000001" id="register_money" disabled="yes" name="register_money" class="form-control my-input">
                         <span class="input-group-addon">万元</span>
                     </div>
                     <div class="form-group my-form-group">
@@ -275,7 +278,7 @@
 
                         <div class="form-group my-form-group">
                             <label for="qygd_investment">投资金额</label>
-                            <input id="qygd_investment" type="number" disabled="yes" name="qygd_investment" class="form-control my-input">
+                            <input id="qygd_investment" type="number" step="0.000001" disabled="yes" name="qygd_investment" class="form-control my-input">
                             <span>万元</span>
                         </div>
                         <label>投资人身份证</label>

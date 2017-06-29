@@ -105,37 +105,37 @@
         }
 
         function onInvestorOKHandler() {
-            if (!$("#qygd_name").val() || $("#qygd_name").val() == "") {
+            if ($("#qygd_name").val() == null || $("#qygd_name").val() == undefined || $("#qygd_name").val() == "") {
                 alert("请填写投资人名字")
                 return;
             }
-            if (!$("#qygd_idnumber").val() || $("#qygd_idnumber").val() == "") {
+            if ($("#qygd_idnumber").val() == null || $("#qygd_idnumber").val() == undefined || $("#qygd_idnumber").val() == "") {
                 alert("请填写证件号码")
                 return;
             }
-            if (!$("#qygd_investment").val() || $("#qygd_investment").val() == "") {
+            if ($("#qygd_investment").val() == null || $("#qygd_investment").val() == undefined || $("#qygd_investment").val() == "") {
                 alert("请填写投资金额")
                 return;
             }
-            if (!$("#qygd_pic1").val() || $("#qygd_pic1").val() == "") {
+            if ($("#qygd_pic1").val() == null || $("#qygd_pic1").val() == undefined || $("#qygd_pic1").val() == "") {
                 if (!$("#qygd_pic3").val() || $("#qygd_pic3").val() == "") {
                     alert("请上传证件照片");
                     return;
                 }
-            } else if (!$("#qygd_pic2").val() || $("#qygd_pic2").val() == "") {
+            } else if ($("#qygd_pic2").val() == null || $("#qygd_pic2").val() == undefined || $("#qygd_pic2").val() == "") {
                 alert("请上传证件照片");
                 return;
             }
-//            if(!validateIdCard($("#qygd_idnumber").val())){
-//                alert("请填写正确的身份证号码");
-//                return;
-//            }
+            //            if(!validateIdCard($("#qygd_idnumber").val())){
+            //                alert("请填写正确的身份证号码");
+            //                return;
+            //            }
             if (isAddMode) {
                 var newdata = {};
                 newdata["order"] = investorAry.length;
                 newdata["qygd_name"] = $("#qygd_name").val();
                 newdata["qygd_idnumber"] = $("#qygd_idnumber").val();
-                newdata["qygd_investment"] = $("#qygd_investment").val();
+                newdata["qygd_investment"] = parseFloat($("#qygd_investment").val());
                 newdata["qygd_jobtitle"] = $("#qygd_jobtitle").val();
                 newdata["qygd_pic1"] = $("#qygd_pic1").val();
                 newdata["qygd_pic2"] = $("#qygd_pic2").val();
@@ -174,6 +174,7 @@
             $("#addinvestorpanel").modal("hide");
         }
         var thebillid = 0;
+        var updateCurrent = null;
 
         function pressJSONData(jsonobj) {
             $("#apply_name").val(jsonobj["apply_name"]);
@@ -209,6 +210,10 @@
                 node["order"] = i;
                 addAinvestorToList(node);
             }
+            if (jsonobj.apply_state != 0) {
+                $("#thesubmit").attr("disabled", "disabled");
+            }
+            updateCurrent = jsonobj;
             debugger;
         }
 
@@ -218,13 +223,16 @@
             jsonobj["wx_openid"] = myweixin.openid;
             debugger;
             jsonobj["id"] = thebillid;
+            if (GetRequest().hasOwnProperty("id")) {
+                jsonobj["id"] = GetRequest()["id"];
+            }
             jsonobj["apply_name"] = $("#apply_name").val();
             jsonobj["apply_name2"] = $("#apply_name2").val();
             jsonobj["apply_name3"] = $("#apply_name3").val();
             jsonobj["apply_name4"] = $("#apply_name4").val();
             jsonobj["actual_address"] = $("#actual_address").val();
             jsonobj["manage_range"] = $("#manage_range").val();
-            jsonobj["register_money"] = parseInt($("#register_money").val());
+            jsonobj["register_money"] = parseFloat($("#register_money").val());
             jsonobj["register_kind"] = $("#register_kind").val();
             jsonobj["register_name"] = $("#register_name").val();
             jsonobj["register_phone"] = $("#register_phone").val();
@@ -236,7 +244,7 @@
                     jsonobj["tzfr_name"] = ainvestor.qygd_name;
                     jsonobj["tzfr_idnumber"] = ainvestor.qygd_idnumber;
                     debugger;
-                    jsonobj["f_investment"] = parseInt(ainvestor.qygd_investment);
+                    jsonobj["f_investment"] = parseFloat(ainvestor.qygd_investment);
                     jsonobj["tzfr_pic1"] = ainvestor.qygd_pic1;
                     jsonobj["tzfr_pic2"] = ainvestor.qygd_pic2;
                     jsonobj["tzfr_pic3"] = ainvestor.qygd_pic3;
@@ -417,7 +425,7 @@
                         return;
                     }
                 }
-                if($("#manage_range").val().length<12){
+                if ($("#manage_range").val().length < 12) {
                     alert("经营范围不得超过130字,最少12个字");
                     return;
                 }
@@ -429,12 +437,12 @@
                     var investorSum = 0;
                     for (var i = 0; i < investorAry.length; i++) {
                         var node = investorAry[i];
-                        investorSum+=parseFloat(node.qygd_investment);
+                        investorSum += parseFloat(node.qygd_investment);
                         if (node["qygd_jobtitle"] == "法人") {
                             qyfrnum++;
                         }
                     }
-                    if (investorSum!=parseFloat($("#register_money").val())){
+                    if (investorSum != parseFloat($("#register_money").val())) {
                         alert("投资金额和股东投资金额总和不相等");
                         return;
                     }
@@ -447,14 +455,28 @@
                     }
                 }
                 thesubmitbtn.button('loading');
-                myapi.request("insertYCM.do", "page", getApplyFromJSON(), function(result) {
-                    if (result.result == 2) {
-                        debugger;
-                        window.location = "ee_progress.html?id=" + result.id;
-                    }
-                }, function(e) {
-                    alert("提交时发生错误!");
-                }, "POST");
+
+                if (GetRequest().hasOwnProperty("id")) {
+                    var theid = GetRequest()["id"];
+                    var thejobj = getApplyFromJSON();
+                    myapi.request("updateYCM.do", null, thejobj, function(result) {
+                        if (result.result == 2) {
+                            debugger;
+                            window.location = "ee_progress.html?id=" + result.id;
+                        }
+                    }, function(e) {
+                        alert("提交时发生错误!");
+                    }, "POST");
+                } else {
+                    myapi.request("insertYCM.do", "page", getApplyFromJSON(), function(result) {
+                        if (result.result == 2) {
+                            debugger;
+                            window.location = "ee_progress.html?id=" + result.id;
+                        }
+                    }, function(e) {
+                        alert("提交时发生错误!");
+                    }, "POST");
+                }
                 isFormValidator = true;
             });
             $("#addinvestorBtn").on("click", function() {
@@ -596,7 +618,7 @@
                     <div class="form-group">
                         <label for="register_money">注册资本</label>
                         <div class="input-group my-form-group">
-                            <input type="number" id="register_money" name="register_money" class="form-control my-input">
+                            <input type="number" id="register_money" name="register_money" step="0.000001" class="form-control my-input">
                             <span class="input-group-addon">万元</span>
                         </div>
                     </div>
@@ -640,16 +662,17 @@
                         <textarea id="apply_remark" name="apply_remark" class="form-control" style="font-size:18px;border-color: #5066b4;"></textarea>
                     </div>
                     <hr>
-                    <div class="row text-center">
-                        <span style="color:red;"><h3>重要提示</h3></span>
-                        <div class="clearfix" style="text-align:left;font-size:14px;border-color: #5066b4;padding:15px;">
-                            <p>(1)由于上海地区企业数量众多，为了帮助客户快速通过工商预查名，建议公司名称尽量采用“生僻”字号！
-                                <br> (2)经营范围字符130字为上限（其中包括标点符号
-                                <br> (3)请在有效期内完善“工商注册面签”信息
-                                <br> (4)如有任何问题请致电岗位服务电话021-57320084
-                            </p>
-                        </div>
+                    <div class="row important-notify text-center">
+                    <h3>重要提示</h3>
+                    <div class="clearfix">
+                        <ul>
+                            <li>由于上海地区企业数量众多，为了帮助客户快速通过工商预查名，建议公司名称尽量采用“生僻”字号！</li>
+                            <li>经营范围字符130字为上限（其中包括标点符号）。</li>
+                            <li>请在有效期内完善“工商注册面签”信息。</li>
+                            <li>如有任何问题请致电岗位服务电话021-57320084。</li>
+                        </ul>
                     </div>
+                </div>
                     <button id="submitBtn" class="btn btn-primary col-xs-12 my-gap-bottom" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>提交申请中">申请</button>
                 </form>
 
@@ -687,7 +710,7 @@
 
                         <div class="form-group my-form-group">
                             <label for="qygd_investment">投资金额</label>
-                            <input id="qygd_investment" type="number" name="qygd_investment" class="form-control my-input">
+                            <input id="qygd_investment" type="number" name="qygd_investment" step="0.000001" class="form-control my-input">
                             <span>万元</span>
                         </div>
                         <label>投资人身份证</label>

@@ -2,19 +2,116 @@
 
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="pragma" content="no-cache">
-    <meta http-equiv="cache-control" content="no-cache">
-    <meta http-equiv="expires" content="0">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta http-equiv="pragma" content="no-cache">
     <meta http-equiv="cache-control" content="no-cache">
     <meta http-equiv="expires" content="0">
-    <title>the ao tess</title>
+    <title>面签预约</title>
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.bootcss.com/bootstrap-validator/0.5.3/css/bootstrapValidator.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
+    <link href="https://cdn.bootcss.com/bootstrap-switch/3.3.4/css/bootstrap3/bootstrap-switch.min.css" rel="stylesheet">
+    <link href="css/highlight.css" rel="stylesheet" type="text/css">
+    <link href="css/main.css" rel="stylesheet" type="text/css">
+    <link href="css/my.css" rel="stylesheet" type="text/css">
+    <style type="text/css">
+        .my-form-h1 {}
 
+        .my-form-label {
+            font-size: 16px;
+            font-weight: normal;
+            color: #040404;
+        }
+        body .mainbody{
+            background-color:floralwhite;
+            height:50%;
+            overflow-y: scroll;
+        }
+    </style>
     <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
+    <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap-validator/0.5.3/js/bootstrapValidator.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
+    <script src="https://cdn.bootcss.com/json2/20160511/json2.min.js"></script>
+    <script src="https://cdn.bootcss.com/moment.js/2.18.0/moment.min.js"></script>
+    <script src="https://cdn.bootcss.com/moment.js/2.18.0/locale/zh-cn.js"></script>
+    <script src="js/highlight.js"></script>
+    <script src="js/bootstrap-switch.js"></script>
+    <script src="js/main.js"></script>
+    <script type="text/javascript" src="js/my.js"></script>
+
+</head>
+
+
+<body class="my-body">
+    <div class="form-group text-left mainbody">
+        <label class="col-xs-7">我想委托代理记账</label>
+        <div class="input-group col-xs-5 text-right">
+            <div class="switch">
+                <input id="weituo_state" name="weituo_state" type="checkbox" data-on-text="是" data-off-text="不" checked>
+            </div>
+        </div>
+        <div id="mycrews" class="list-group my-gap-top">
+            <a href="javascript:onItemClickHandler(1)" class="list-group-item my-list-item-detail">
+                <div class="container col-xs-8">
+                    <div class="row">
+                        <span class="my-list-item-heading clearfix">张三锦</span>
+                        <span class="my-list-item-text">法人</span>
+                    </div>
+                </div>
+                <span class="badge col-xs-4 my-list-item-detail-badge">
+                    <div class="clearfix text-right">
+                        <i class="fa fa-angle-right" aria-hidden="true" style="color:#5066b4;"></i>
+                    </div>
+                </span>
+            </a>
+            <a href="javascript:onItemClickHandler(2)" class="list-group-item my-list-item-detail">
+                <div class="container col-xs-8">
+                    <div class="row">
+                        <span class="my-list-item-heading clearfix">张三锦</span>
+                        <span class="my-list-item-text">法人</span>
+                    </div>
+                </div>
+                <span class="badge col-xs-4 my-list-item-detail-badge">
+                        <div class="clearfix text-right">
+                            <i class="fa fa-angle-right" aria-hidden="true" style="color:#5066b4;"></i>
+                        </div>
+                    </span>
+            </a>
+            <a href="javascript:onItemClickHandler(3)" class="list-group-item my-list-item-detail">
+                <div class="container col-xs-8">
+                    <div class="row">
+                        <span class="my-list-item-heading clearfix">张三锦</span>
+                        <span class="my-list-item-text">法人</span>
+                    </div>
+                </div>
+                <span class="badge col-xs-4 my-list-item-detail-badge">
+                    <div class="clearfix text-right">
+                        <i class="fa fa-angle-right" aria-hidden="true" style="color:#5066b4;"></i>
+                    </div>
+                </span>
+            </a>
+        </div>
+    </div>
+    <div class="section chatGroup">
+        <div class="containeer">
+        </div>
+    </div>
     <script type="text/javascript">
         $(document).ready(function() {
-            checkInputFileImg();
+            //checkInputFileImg();
+            $('#weituo_state').on('switchChange.bootstrapSwitch', function(e, data) {
+            var $el = e,
+                value = data;
+            if (value) {
+                console.log("weituo_state:"+$('#weituo_state').val());
+            } else {
+                console.log("weituo_state:"+$('#weituo_state').val());
+            }
+
+            console.log(e, $el, value);
+        });
         });
         /**
          * 图片压缩，默认同比例压缩
@@ -58,78 +155,9 @@
                 callback(base64);
             }
         }
+        
 
     </script>
-</head>
-
-
-<body class="my-body">
-    <div id="qytz_ids_group" class="container-fluid">
-        <div class="container">
-            <form class="my-form" role="form">
-                <div class="form-group my-form-group">
-                    <label for="qygd_name">名称或姓名</label>
-                    <input type="text" name="qygd_name" class="form-control my-input" id="qygd_name">
-                </div>
-                <div class="form-group my-form-group my-gap-bottom" style="font-size:18px;">
-                    <span>职务</span>
-                    <select id="qygd_jobtitle" name="qygd_jobtitle" class="col-xs-12">
-                                <option>法人</option>
-                                <option>股东</option>
-                            </select>
-                </div>
-                <div class="form-group my-form-group">
-                    <label for="qygd_idnumber">证件号</label>
-                    <input type="text" name="qygd_idnumber" class="form-control my-input" id="qygd_idnumber">
-                </div>
-
-                <div class="form-group my-form-group">
-                    <label for="qygd_investment">投资金额</label>
-                    <input id="qygd_investment" type="number" name="qygd_investment" class="form-control my-input">
-                    <span>万元</span>
-                </div>
-                <label>投资人身份证</label>
-                <div id="qytz_ids_group" class="container-fluid">
-                    <div class="row">
-                        <a href="javascript:;" class="a-upload my-icon-upload my-gap-left" style="float:left;">
-                            <img id="qygd_pic1_img" class="img-responsive" src="images/picframe.svg">
-                            <canvas></canvas>
-                            <label style="font-size:14px;font-weight:normal">正面</label>
-                            <input type="file" capture="camera" accept="image/*" title="" onchange="uploadSmallImage(this,'#qygd_pic1')">
-                        </a>
-                        <a href="javascript:;" class="a-upload my-icon-upload my-gap-left clearfix" style="float:left;">
-                            <img id="qygd_pic2_img" class="img-responsive" src="images/picframe.svg">
-                            <canvas></canvas>
-                            <label style="font-size:14px;font-weight:normal">反面</label>
-                            <input type="file" capture="camera" accept="image/*" title="" onchange="uploadSmallImage(this,'#qygd_pic2')">
-                        </a>
-                        <a href="javascript:;" class="a-upload my-icon-upload my-gap-left" style="float:left;">
-                            <img id="qygd_pic3_img" class="img-responsive" src="images/picframe.svg">
-                            <canvas></canvas>
-                            <label style="font-size:14px;font-weight:normal">营业执照</label>
-                            <input type="file" capture="camera" accept="image/*" title="" onchange="uploadLisence(this,'#qygd_pic3')">
-                        </a>
-                    </div>
-                </div>
-                <input type="hidden" id="qygd_pic1">
-                <input type="hidden" id="qygd_pic2">
-                <input type="hidden" id="qygd_pic3">
-                <div id="qygd_pic3_con" class="text-center">
-                    <span style="color:red;"><h3>重要提示</h3></span>
-                    <div class="clearfix" style="text-align:left;font-size:14px;border-color: #5066b4;padding:15px;">
-                        <p>投资人为自然人需提供身份证照片;投资人为企业法人需提供营业执照（副本加盖公章）照片
-                        </p>
-
-                    </div>
-
-                </div>
-                <div class="container">
-                    <a id="investorDeleteBtn" href="javascript:delectAInvestor()" class="btn btn-warning col-xs-12 my-gap-top" style="font-size:22px;padding:5px;">删除</a>
-                    <a href="javascript:onInvestorOKHandler()" class="btn btn-success col-xs-12 my-gap-top" style="font-size:22px;padding:5px;">确定</a>
-                </div>
-            </form>
-        </div>
-    </div>
 </body>
 
 </html>

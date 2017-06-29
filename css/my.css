@@ -11,6 +11,7 @@
 
 
 
+
 /*------------------------my----------------------*/
 
 .my-topsection {
@@ -31,12 +32,16 @@
     color: black;
     padding: 20px;
 }
-.input-group .form-control, .input-group-addon, .input-group-btn {
+
+.input-group .form-control,
+.input-group-addon,
+.input-group-btn {
     display: table-cell;
     height: 34px;
 }
-.form-control{
-    display:block;
+
+.form-control {
+    display: block;
     width: 100%;
     height: 42px;
     padding: 15px 22px;
@@ -229,6 +234,7 @@
     width: 100%;
     text-align: center;
 }
+
 
 
 
@@ -557,6 +563,7 @@
 
 
 
+
 /*------------------------mycompanyprofile.html----------------------*/
 
 .mycompany-select {
@@ -625,4 +632,22 @@
 
 .bobble-item-bg {
     padding: 15px;
+}
+
+
+/*重要提示*/
+
+.important-notify h3 {
+    color: red;
+    border-top: 1px solid #5066b4;
+    padding-top: 20px;
+}
+
+.important-notify div ul li {
+    color: #636363;
+    text-align: left;
+    font-size: 12px;
+    border-color: #5066b4;
+    padding: 5px;
+    text-align: left;
 }

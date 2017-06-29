@@ -51,7 +51,7 @@
                 data["qygd_jobtitle"] + '</div><div class="col-xs-4 clearfix text-right my-description" nobr>' +
                 calculate_qygd_investment(data["qygd_investment"]) + '</div></a>';
             $("#investorlists").append(rsstr);
-            if(adddata)
+            if (adddata)
                 investorAry.push(data);
         }
 
@@ -82,9 +82,9 @@
                         $("#qygd_pic1" + "_img").attr("src", "images/picframe.svg");
                         $("#qygd_pic2" + "_img").attr("src", "images/picframe.svg");
                         $("#qygd_pic3" + "_img").attr("src", "images/picframe.svg");
-                        if(ainvestor["qygd_pic1"]) $("#qygd_pic1" + "_img").attr("src", getRemotePic(ainvestor["qygd_pic1"]));
-                        if(ainvestor["qygd_pic2"]) $("#qygd_pic2" + "_img").attr("src", getRemotePic(ainvestor["qygd_pic2"]));
-                        if(ainvestor["qygd_pic3"]) $("#qygd_pic3" + "_img").attr("src", getRemotePic(ainvestor["qygd_pic3"]));
+                        if (ainvestor["qygd_pic1"]) $("#qygd_pic1" + "_img").attr("src", getRemotePic(ainvestor["qygd_pic1"]));
+                        if (ainvestor["qygd_pic2"]) $("#qygd_pic2" + "_img").attr("src", getRemotePic(ainvestor["qygd_pic2"]));
+                        if (ainvestor["qygd_pic3"]) $("#qygd_pic3" + "_img").attr("src", getRemotePic(ainvestor["qygd_pic3"]));
                         curSelectedIndex = i;
                         isAddMode = false;
                         $("#addinvestorpanel").modal("toggle");
@@ -96,12 +96,12 @@
 
         function pressData(data) {
             debugger;
-            if (data.hasOwnProperty("apply_name")) $("#companyname").text(data.apply_name);
+            if (data.hasOwnProperty("confirm_name")) $("#companyname").text(data.confirm_name);
             if (data.hasOwnProperty("actual_address")) $("#actual_address").text(data.actual_address);
             if (data.hasOwnProperty("manage_range")) $("#manage_range").text(data.manage_range);
             if (data.hasOwnProperty("register_money")) $("#register_money").text(data.register_money);
             if (data.hasOwnProperty("register_kind")) $("#register_kind").text(data.register_kind);
-            if (data.hasOwnProperty("tzfr_name")) $("#tzfr_name").val(data.tzfr_name);
+            if (data.hasOwnProperty("tzfr_name")) $("#tzfr_name").text(data.tzfr_name);
             if (data.hasOwnProperty("tzfr_name")) {
                 var tzfr = {
                     qygd_name: data["tzfr_name"],
@@ -124,60 +124,59 @@
             if (data.hasOwnProperty("appointment_time")) {
                 debugger;
                 var today = new Date(data.appointment_time.time);
-                $("#appointment_time").val(today.Format("yyyy-MM-dd hh:mm"));
+                $("#appointment_time").text(today.Format("yyyy-MM-dd hh:mm"));
             }
             if (data.hasOwnProperty("appointment_address"))
-                $("#appointment_address").val(data.appointment_address);
-            if (data.hasOwnProperty("zip_code")) $("#zip_code").val(data.zip_code);
-            if (data.hasOwnProperty("qyfr_name")) $("#qyfr_name").val(data.qyfr_name);
-            if (data.hasOwnProperty("qyfr_telephone")) $("#qyfr_telephone").val(data.qyfr_telephone);
-            if (data.hasOwnProperty("qyfr_email")) $("#qyfr_email").val(data.qyfr_email);
-            if (data.hasOwnProperty("qyfr_mobile")) $("#qyfr_mobile").val(data.qyfr_mobile);
-            if (data.hasOwnProperty("qyjs_idnumber")) $("#qyjs_idnumber").val(data.qyjs_idnumber);
-            if (data.hasOwnProperty("qyjs_name")) $("#qyjs_name").val(data.qyjs_name);
+                $("#appointment_address").text(data.appointment_address);
+            if (data.hasOwnProperty("zip_code")) $("#zip_code").text(data.zip_code);
+            if (data.hasOwnProperty("qyfr_name")) $("#qyfr_name").text(data.qyfr_name);
+            if (data.hasOwnProperty("qyfr_telephone")) $("#qyfr_telephone").text(data.qyfr_telephone);
+            if (data.hasOwnProperty("qyfr_email")) $("#qyfr_email").text(data.qyfr_email);
+            if (data.hasOwnProperty("qyfr_mobile")) $("#qyfr_mobile").text(data.qyfr_mobile);
+            if (data.hasOwnProperty("qyjs_idnumber")) $("#qyjs_idnumber").text(data.qyjs_idnumber);
+            if (data.hasOwnProperty("qyjs_name")) $("#qyjs_name").text(data.qyjs_name);
             debugger;
             if (data.hasOwnProperty("weituo_state")) {
                 debugger;
                 if (data.weituo_state == 0) {
-                    $('#weituo_state').bootstrapSwitch('state', false);
+                    $('#weituo_state').text("委托代理记账:否");
                     $("#aainfogroup").removeClass("hide");
                 } else {
-                    $('#weituo_state').bootstrapSwitch('state', true);
+                    $('#weituo_state').text("委托代理记账:是");
                     $("#aainfogroup").addClass("hide");
                 }
             }
-            $('#weituo_state').bootstrapSwitch("disabled",true);
-            if (data.hasOwnProperty("qycw_name")) $("#qycw_name").val(data.qycw_name);
-            if (data.hasOwnProperty("qycw_telephone")) $("#qycw_telephone").val(data.qycw_telephone);
-            if (data.hasOwnProperty("qycw_email")) $("#qycw_email").val(data.qycw_email);
-            if (data.hasOwnProperty("qycw_mobile")) $("#qycw_mobile").val(data.qycw_mobile);
+            if (data.hasOwnProperty("qycw_name")) $("#qycw_name").text(data.qycw_name);
+            if (data.hasOwnProperty("qycw_telephone")) $("#qycw_telephone").text(data.qycw_telephone);
+            if (data.hasOwnProperty("qycw_email")) $("#qycw_email").text(data.qycw_email);
+            if (data.hasOwnProperty("qycw_mobile")) $("#qycw_mobile").text(data.qycw_mobile);
             debugger;
             if (data.hasOwnProperty("qyjs_pic1")) {
                 $("#qyjs_pic1").val(data.qyjs_pic1);
-                $("#qyjs_pic1_img").attr("src",getRemotePic(data.qyjs_pic1));
+                $("#qyjs_pic1_img").attr("src", getRemotePic(data.qyjs_pic1));
             }
             if (data.hasOwnProperty("qyjs_pic2")) {
                 $("#qyjs_pic2").val(data.qyjs_pic2);
-                $("#qyjs_pic2_img").attr("src",getRemotePic(data.qyjs_pic2));
+                $("#qyjs_pic2_img").attr("src", getRemotePic(data.qyjs_pic2));
             }
             if (data.hasOwnProperty("qycw_pic1")) {
                 $("#qycw_pic1").val(data.qycw_pic1);
-                $("#qycw_pic1_img").attr("src",getRemotePic(data.qycw_pic1));
+                $("#qycw_pic1_img").attr("src", getRemotePic(data.qycw_pic1));
             }
-            
+
             if (data.hasOwnProperty("qycw_pic2")) {
                 $("#qycw_pic2").val(data.qycw_pic2);
-                $("#qycw_pic2_img").attr("src",getRemotePic(data.qycw_pic2));
+                $("#qycw_pic2_img").attr("src", getRemotePic(data.qycw_pic2));
             }
-            
+
             if (data.hasOwnProperty("qycw_pic3")) {
                 $("#qycw_pic3").val(data.qycw_pic3);
-                $("#qycw_pic3_img").attr("src",getRemotePic(data.qycw_pic3));
+                $("#qycw_pic3_img").attr("src", getRemotePic(data.qycw_pic3));
             }
-            
+
             if (data.hasOwnProperty("qycw_pic4")) {
                 $("#qycw_pic4").val(data.qycw_pic4);
-                $("#qycw_pic4_img").attr("src",getRemotePic(data.qycw_pic4));
+                $("#qycw_pic4_img").attr("src", getRemotePic(data.qycw_pic4));
             }
             checkInputFileImg();
         }
@@ -191,8 +190,12 @@
             }, function(e) {});
         }
         $(document).ready(function() {
-            
-            
+
+            $(".my-previewer").on("click", function() {
+                var img = this.getElementsByTagName("img")[0];
+                debugger;
+                previewImagebyWX(img.src);
+            });
             getmeetingdata();
         })
 
@@ -227,82 +230,79 @@
                 </div>
                 <div class="form-group">
                     <label for="register_money">企业注册资本：</label>
-                    <label id="register_money" class="form-control my-form-label text-left">&nbsp;
-                    </label>
+                    <div id="register_money" class="well well-lg">&nbsp;
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="register_kind">企业注册类型：</label>
-                    <div id="register_kind" class="form-control my-form-label text-left">&nbsp;
+                    <div id="register_kind" class="well well-lg">&nbsp;
                     </div>
                 </div>
                 <form id="bookform">
                     <div class="form-group">
                         <label class="clearfix">面签预约时间</label>
                         <div class="form-group">
-                            <input id="appointment_time" type='text' class="form-control" name="appointment_time" disabled>
+                            <div id="appointment_time" class="well well-lg"></div>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="clearfix">面签预约地点</label>
-                        <select id="appointment_address" name="appointment_address" class="mycompany-select">
-                        <option title="小区总部" value="小区总部"><span style="font-size:12;color:#cccccc">园区小区总部，地址是：上海市XX区XX路233号</span></option>
-                        <option title="市区总部" value="市区总部"><span style="font-size:12;color:#cccccc">园区市区总部，地址是：上海市XX区XX路233号</span></option>
-                        </select>
+                        <div id="appointment_address" class="well well-lg"></div>
                     </div>
                     <div class="form-group">
                         <label for="zip_code">区域邮政编码</label>
-                        <input id="zip_code" name="zip_code" class="form-control" type="number" maxlength="6" disabled>
+                        <div id="zip_code" class="well well-lg"></div>
                     </div>
                     <div class="form-group">
                         <label for="qycw_name">企业法人姓名</label>
-                        <input id="qyfr_name" name="qycw_name" class="form-control" type="text" disabled>
+                        <div id="qyfr_name" class="well well-lg"></div>
                     </div>
                     <div class="form-group">
                         <label for="qycw_telephone">企业法人电话</label>
-                        <input id="qyfr_telephone" name="qycw_telephone" class="form-control" type="tel" disabled>
+                        <div id="qyfr_telephone" class="well well-lg"></div>
                     </div>
                     <div class="form-group">
                         <label for="qycw_mobile">企业法人手机</label>
-                        <input id="qyfr_mobile" name="qycw_mobile" class="form-control" type="tel" disabled>
+                        <div id="qyfr_mobile" class="well well-lg"></div>
                     </div>
                     <div class="form-group">
                         <label for="qycw_email">企业法人邮箱</label>
-                        <input id="qyfr_email" name="qycw_email" class="form-control" type="email" disabled>
+                        <div id="qyfr_email" class="well well-lg"></div>
                     </div>
                     <div class="form-group text-left">
-                        <label class="col-xs-7">是否委托代理记账</label>
-                        <input type="checkbox" id="weituo_state" name="weituo_state" data-on-text="是" data-off-text="不" checked>
+                        <div id="weituo_state" class="well well-lg"></div>
                     </div>
                     <div id="aainfogroup" class="hide">
                         <div class="form-group">
                             <label for="qycw_name">财务姓名</label>
-                            <input id="qycw_name" name="qycw_name" class="form-control" type="text" disabled>
+                            <div id="qycw_name" class="well well-lg"></div>
                         </div>
                         <div class="form-group">
                             <label for="qycw_telephone">财务电话</label>
-                            <input id="qycw_telephone" name="qycw_telephone" class="form-control" type="tel" disabled>
+                            <div id="qycw_telephone" class="well well-lg"></div>
                         </div>
                         <div class="form-group">
                             <label for="qycw_mobile">财务手机</label>
-                            <input id="qycw_mobile" name="qycw_mobile" class="form-control" type="tel" disabled>
+                            <div id="qycw_mobile" class="well well-lg"></div>
                         </div>
                         <div class="form-group">
                             <label for="qycw_email">财务邮箱</label>
-                            <input id="qycw_email" name="qycw_email" class="form-control" type="email" disabled>
+                            <div id="qycw_email" class="well well-lg"></div>
                         </div>
                         <div class="row">
-                            <a class="col-xs-4" href="javascript:previewImageWithHidden('#qycw_pic1','#qycw_pic1_img')" style="border:0px solid #000">
+                            <a class="col-xs-4 my-previewer" style="border:0px solid #000;float:left">
                                 <img id="qycw_pic1_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
                             </a>
-                            <a class="col-xs-4" href="javascript:previewImageWithHidden('#qycw_pic2','#qycw_pic2_img')" style="border:0px solid #000">
+                            <a class="col-xs-4 my-previewer" style="border:0px solid #000;float:left">
                                 <img id="qycw_pic2_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
                             </a>
                         </div>
+                        <span>&nbsp;</span>
                         <div class="row">
-                            <a class="col-xs-4" href="javascript:previewImageWithHidden('#qycw_pic3','#qycw_pic3_img')" style="border:0px solid #000">
+                            <a class="col-xs-4 my-previewer" style="border:0px solid #000;float:left">
                                 <img id="qycw_pic3_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
                             </a>
-                            <a class="col-xs-4" href="javascript:previewImageWithHidden('#qycw_pic4','#qycw_pic4_img')" style="border:0px solid #000">
+                            <a class="col-xs-4 my-previewer" style="border:0px solid #000;float:left">
                                 <img id="qycw_pic4_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
                             </a>
                         </div>
@@ -323,17 +323,17 @@
                     <hr class="my-gap-top">
                     <div class="form-group">
                         <label for="qyjs_name">企业监事姓名</label>
-                        <input id="qyjs_name" name="qyjs_name" type="text" disabled>
+                        <div id="qyjs_name" class="well well-lg"></div>
                     </div>
                     <div class="form-group">
                         <label for="qyjs_idnumber">监事证件号码</label>
-                        <input id="qyjs_idnumber" name="qyjs_idnumber" type="tel" disabled>
+                        <div id="qyjs_idnumber" class="well well-lg"></div>
                     </div>
                     <div class="row">
-                        <a class="col-xs-4" href="javascript:previewImageWithHidden('#qyjs_pic1','#qyjs_pic1_img')" style="border:0px solid #000">
+                        <a class="col-xs-4 my-previewer" style="border:0px solid #000;float:left">
                             <img id="qyjs_pic1_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
                         </a>
-                        <a class="col-xs-4" href="javascript:previewImageWithHidden('#qyjs_pic2','#qyjs_pic2_img')" style="border:0px solid #000">
+                        <a class="col-xs-4 my-previewer" style="border:0px solid #000;float:left">
                             <img id="qyjs_pic2_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
                         </a>
                     </div>
@@ -376,7 +376,7 @@
 
                         <div class="form-group my-form-group">
                             <label for="qygd_investment">投资金额</label>
-                            <input id="qygd_investment" type="number" name="qygd_investment" class="form-control my-input" disabled>
+                            <input id="qygd_investment" type="number" step="0.000001" name="qygd_investment" class="form-control my-input" disabled>
                             <span>万元</span>
                         </div>
                         <label>投资人身份证</label>

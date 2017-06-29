@@ -35,7 +35,7 @@
                 $("#confirm_name").text(data.confirm_name);
             var today = new Date(data.szhd_time)
             $("#appointment_time").val(today.Format("yyyy-MM-ddThh:mm"));
-            if(data.hasOwnProperty("szhd_address"))$("#szhd_address").val(data.szhd_address);
+            if (data.hasOwnProperty("szhd_address")) $("#szhd_address").val(data.szhd_address);
             if (data.szhd_state1 == 2) {
                 //已完成
                 myweixin.initial();
@@ -54,7 +54,7 @@
 
                 } else {
                     //未提交
-                     myweixin.initial();
+                    myweixin.initial();
                     $("#appointment_time").attr('min', today.Format("yyyy-MM-ddThh:mm"));
                     var month = new Date(new Date().setMonth(today.getMonth() + 6));
                     $("#appointment_time").attr('max', month.Format("yyyy-MM-ddThh:mm"));
@@ -116,6 +116,16 @@
                         <hr>
                         <a href="javascript:onpreview()"><img id="szhd_license_img" class="img-responsive my-gap-top my-gat-bottom" src="images/picframe.svg"></a>
 
+                    </div>
+                    <div class="row important-notify text-center">
+                        <h3>重要提示</h3>
+                        <div class="clearfix">
+                            <ul>
+                                <li>到场人员：企业法人及财务。</li>
+                                <li>携带材料：《营业执照》正本、《银行开户许可证》、经营场所《房产证》复印件及《房屋合同》原件、《房屋租赁的发票》、《法人及财务身份证》原件、《会计上岗证》、企业公章、发票专用章、数字证书。</li>
+                                <li>如有任何问题，请致电岗位服务电话：021-57320084。</li>
+                            </ul>
+                        </div>
                     </div>
                     <a id="submitbtn" class="btn btn-primary cal-xs-12 my-gap-top">提交</a>
                 </form>

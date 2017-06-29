@@ -60,7 +60,7 @@
                     var jobj = data;
                     for (var i = 0; i < jobj.lists.length; i++) {
                         var node = jobj.lists[i];
-                        var nodestr = "<option value='" + node["ShipperCode"] + "'>" + node["Shipper"] + "</option>";
+                        var nodestr = "<option value='" + node["Shipper"] + "'>" + node["Shipper"] + "</option>";
                         $("#shipper").append(nodestr);
                     }
                     $("#shipper").selectpicker('refresh');

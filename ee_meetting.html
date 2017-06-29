@@ -209,7 +209,7 @@
             rsobj["appointment_time"] = $("#appointment_time").val().replace("/","-").replace("T"," ");
             rsobj["appointment_address"] = $("#appointment_address").val();
             rsobj["zip_code"] = $("#zip_code").val();
-            rsobj["weituo_state"] = $("#weituo_state").val() == "on" ? 1 : 0;
+            rsobj["weituo_state"] = $("#aainfogroup").hasClass("hide") ? 1 : 0;
             rsobj["qyfr_name"] = $("#qyfr_name").val();
             rsobj["qyfr_telephone"] = $("#qyfr_telephone").val();
             rsobj["qyfr_mobile"] = $("#qyfr_mobile").val();
@@ -251,9 +251,9 @@
                 var $el = e,
                     value = data;
                 if (value) {
-                    $("#aainfogroup").addClass("hidden");
+                    $("#aainfogroup").addClass("hide");
                 } else {
-                    $("#aainfogroup").removeClass("hidden");
+                    $("#aainfogroup").removeClass("hide");
                 }
 
                 console.log(e, $el, value);
@@ -340,7 +340,7 @@
                             </div>
                         </div>
                     </div>
-                    <div id="aainfogroup" class="hidden">
+                    <div id="aainfogroup" class="hide">
                         <div class="form-group">
                             <label for="qycw_name">财务姓名</label>
                             <input id="qycw_name" name="qycw_name" class="form-control" type="text">
@@ -427,6 +427,16 @@
                     </div>
                     <input type="hidden" id="qyjs_pic1">
                     <input type="hidden" id="qyjs_pic2">
+                    <div class="row important-notify text-center">
+                    <h3>重要提示</h3>
+                    <div class="clearfix">
+                        <ul>
+                            <li>投资人为自然人需提供其身份证（正反面）照片;投资人为企业法人需提供其营业执照（副本加盖公章）照片;会计上岗证照片（本人身份证复印件内签名）。</li>
+                            <li>面签现场必须出示上述提供的所有证照原件，由工商机构进行比对核查。</li>
+                            <li>如有任何问题，请致电岗位服务电话：021-57320084。</li>
+                        </ul>
+                    </div>
+                </div>
                     <button id="thesubmit" class="btn btn-primary col-xs-12 my-gap-top" type="button" style="font-size:20px;padding-bottom:7px">提交</button>
                 </form>
             </div>
@@ -460,7 +470,7 @@
 
                         <div class="form-group my-form-group">
                             <label for="qygd_investment">投资金额</label>
-                            <input id="qygd_investment" type="number" name="qygd_investment" class="form-control my-input" disabled>
+                            <input id="qygd_investment" type="number" step="0.000001" name="qygd_investment" class="form-control my-input" disabled>
                             <span>万元</span>
                         </div>
                         <label>投资人身份证</label>
