@@ -71,6 +71,15 @@
                                 investorAry[n].order = n;
                                 addAinvestorToList(investorAry[n], false);
                             }
+                            $("#qygd_pic1").val("");
+                            $("#qygd_pic2").val("");
+                            $("#qygd_pic3").val("");
+                            console.log("clear for model:" + $("#qygd_pic1").val())
+                            console.log("clear for model:" + $("#qygd_pic2").val())
+                            console.log("clear for model:" + $("#qygd_pic3").val())
+                            $("#qygd_pic1" + "_img").attr("src", "images/picframe.svg");
+                            $("#qygd_pic2" + "_img").attr("src", "images/picframe.svg");
+                            $("#qygd_pic3" + "_img").attr("src", "images/picframe.svg");
                             $("#addinvestorpanel").modal("hide");
                             return;
                         }
@@ -663,16 +672,16 @@
                     </div>
                     <hr>
                     <div class="row important-notify text-center">
-                    <h3>重要提示</h3>
-                    <div class="clearfix">
-                        <ul>
-                            <li>由于上海地区企业数量众多，为了帮助客户快速通过工商预查名，建议公司名称尽量采用“生僻”字号！</li>
-                            <li>经营范围字符130字为上限（其中包括标点符号）。</li>
-                            <li>请在有效期内完善“工商注册面签”信息。</li>
-                            <li>如有任何问题请致电岗位服务电话021-57320084。</li>
-                        </ul>
+                        <h3>重要提示</h3>
+                        <div class="clearfix">
+                            <ul>
+                                <li>由于上海地区企业数量众多，为了帮助客户快速通过工商预查名，建议公司名称尽量采用“生僻”字号！</li>
+                                <li>经营范围字符130字为上限（其中包括标点符号）。</li>
+                                <li>请在有效期内完善“工商注册面签”信息。</li>
+                                <li>如有任何问题请致电岗位服务电话021-57320084。</li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
                     <button id="submitBtn" class="btn btn-primary col-xs-12 my-gap-bottom" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>提交申请中">申请</button>
                 </form>
 

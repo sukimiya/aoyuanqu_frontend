@@ -125,7 +125,7 @@
                 var today = new Date(data.appointment_time.time);
                 var lastday = new Date(today);
 
-                lastday.setDate(lastday.getDate()+60);
+                lastday.setMonth(lastday.getMonth()+6);
                 $("#appointment_time").val(today.Format("yyyy-MM-ddThh:mm"));
                 $("#appointment_time").attr("min",today.Format("yyyy-MM-ddThh:mm"))
                 $("#appointment_time").attr("max",lastday.Format("yyyy-MM-ddThh:mm"))

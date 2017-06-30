@@ -386,6 +386,10 @@ var myweixin = (function () {
     return mythis;
 }());
 
+function previewImgWithSelf(targetId) {
+    previewImagebyWX($(targetId)[0].getElementsByTagName("img")[0].src);
+}
+
 function previewImgWithName(tagName, imgTagName) {
     previewImageWithHidden(tagName, imgTagName);
 }
@@ -400,10 +404,10 @@ function previewImageWithHidden(tagName, imgTagName) {
 function previewImagebyWX(theimg) {
     var imgurl = "http://www.aoyuanqu.cn/lily/";
     var purl = imgurl + theimg;
-    if(theimg.indexOf(imgurl)!=-1){
+    if (theimg.indexOf(imgurl) != -1) {
         purl = theimg;
     }
-    console.log("previewImagebyWX:"+theimg);
+    console.log("previewImagebyWX:" + theimg);
     var mypreviewRun = function () {
         wx.previewImage({
             current: purl, // 当前显示图片的http链接
@@ -508,10 +512,10 @@ function UploadCompressedImage(thetarget, targetInput, callback = null, onerrorh
     var thefiles = thetarget.files;
     if (thefiles == undefined || thefiles == null) {
         if (onerrorhandler) onerrorhandler();
-        throw new Error("fileuploader there no file!");
+        //throw new Error("fileuploader there no file!");
         return;
     }
-    
+
     var files = thetarget.files;
     for (var i = 0, f; i < files.length; i++) {
         f = files[i];
@@ -533,7 +537,7 @@ function UploadCompressedImage(thetarget, targetInput, callback = null, onerrorh
             var show = isshow;
             var ql = quality;
             cav.classList = [];
-            target.setAttribute("disabled","yes");         //disabled input
+            target.setAttribute("disabled", "yes"); //disabled input
             var reader = new FileReader();
             var jmyimg = document.createElement("img");
             jmyimg.setAttribute("maxWidth", maxWidth);
@@ -546,7 +550,7 @@ function UploadCompressedImage(thetarget, targetInput, callback = null, onerrorh
             jmyimg.onload = function () {
                 var w = jmyimg.naturalWidth,
                     h = jmyimg.naturalHeight;
-                rate =1;
+                rate = 1;
                 if (w > maxWidth) {
                     rate = jmyimg.naturalWidth / maxWidth;
                 } else if (h > maxHeight) {

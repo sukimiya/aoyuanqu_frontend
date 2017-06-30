@@ -54,6 +54,12 @@
             $(setl2).addClass("btn-primary");
             $(setl2).addClass("active");
             isunfinishList = !isunfinishList;
+            $('#mycrews').html("");
+            if (dropload) me = dropload;
+            if (me.isLockUp || me.isLockDown) {
+                me.isLockUp = false;
+                me.isLockDown = false;
+            }
             toLoadList(isunfinishList);
         }
 
@@ -107,6 +113,11 @@
                                 listdata = jsonObj.arr;
                             }else{
                                 listdata = listdata.concat(jsonObj.arr);
+                            }
+                            if(curPage==1)
+                            if(me.isLockUp || me.isLockDown){
+                                me.isLockUp = false;
+                                me.isLockDown = false;
                             }
                         } else {
                             //droplist opration

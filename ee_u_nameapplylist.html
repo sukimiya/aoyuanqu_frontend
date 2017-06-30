@@ -54,6 +54,12 @@
             $(setl2).addClass("btn-primary");
             $(setl2).addClass("active");
             isunfinishList = !isunfinishList;
+            $('#mycrews').html("");
+            if (dropload) me = dropload;
+            if (me.isLockUp || me.isLockDown) {
+                me.isLockUp = false;
+                me.isLockDown = false;
+            }
             toLoadList(isunfinishList);
         }
 
@@ -64,7 +70,6 @@
             }
             var me = null;
             if (dropload) me = dropload;
-            console.log("toLoadList:1 type:"+thetype);
             doloadlist($("#searchbarTf").val(), 1, ltype, false, me);
         }
 
@@ -84,7 +89,7 @@
 
         function doloadlist(skey = "", page = 1, ttype = 0, isappend = true, me = null) {
             var myapi = restapis;
-            var requestdata = "apply_state=" + (ttype+1) + "&page=" + page;
+            var requestdata = "apply_state=" + (ttype + 1) + "&page=" + page;
             if (skey != null && skey != "") {
                 requestdata += "&key=" + skey;
             }
@@ -103,11 +108,11 @@
                             var node = jsonObj.arr[i];
                             var displayname = node["apply_name"];
                             if (node.hasOwnProperty("confirm_name")) displayname = node["confirm_name"]
-                            result += '<a href="javascript:gotoEE(' 
-                                +"'"+node["id"]+"'"
-                                +')" class="list-group-item my-list-item" style="text-align: left;">' 
-                                +displayname 
-                                +'<span class="badge mytextbadge">&nbsp;<i class="fa fa-angle-right" aria-hidden="true"></i></span></a>';
+                            result += '<a href="javascript:gotoEE(' +
+                                "'" + node["id"] + "'" +
+                                ')" class="list-group-item my-list-item" style="text-align: left;">' +
+                                displayname +
+                                '<span class="badge mytextbadge">&nbsp;<i class="fa fa-angle-right" aria-hidden="true"></i></span></a>';
                         }
                         debugger;
                         if (curPage == 1) {
@@ -115,6 +120,11 @@
                         } else {
                             listdata = listdata.concat(jsonObj.arr);
                         }
+                        if (curPage == 1)
+                            if (me.isLockUp || me.isLockDown) {
+                                me.isLockUp = false;
+                                me.isLockDown = false;
+                            }
                     } else {
                         //droplist opration
                         if (me) {
@@ -161,7 +171,6 @@
                     if (!isunfinishList) {
                         thetype = 1;
                     }
-                    console.log("loadUp:1 type:"+thetype);
                     doloadlist($("#searchbarTf").val(), 1, thetype, false, me);
                 },
                 loadDownFn: function(me) {
@@ -169,7 +178,7 @@
                     if (!isunfinishList) {
                         thetype = 1;
                     }
-                    console.log("loadUp:"+curPage + 1+" type:"+thetype);
+                    console.log("loadUp:" + curPage + 1 + " type:" + thetype);
                     doloadlist($("#searchbarTf").val(), curPage + 1, thetype, true, me);
                 }
             });

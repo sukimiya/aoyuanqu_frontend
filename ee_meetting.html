@@ -86,7 +86,7 @@
                 
                 var today = new Date(data.appointment_time.time);
                 var lastday = new Date(today.Format("yyyy-MM-dd hh:mm"));
-                lastday.setDate(lastday.getDate()+60);
+                lastday.setMonth(lastday.getMonth()+6);
                 $("#appointment_time").val(today.Format("yyyy-MM-ddThh:mm"));
                 $("#appointment_time").attr("min",today.Format("yyyy-MM-ddThh:mm"))
                 $("#appointment_time").attr("max",lastday.Format("yyyy-MM-ddThh:mm"))
@@ -164,13 +164,10 @@
                 $("#thesubmit").attr("disabled",true);
                 $(".a-upload input").addClass("disabled");
                 $(".a-upload input").attr("disabled",true);
-                $(".a-upload").attr("href","javascript:previewImgWithSelf(this)");
+                $(".a-upload").attr("onclick","previewImgWithSelf(this)");
             }else{
                 
             }
-        }
-        function previewImgWithSelf(targetId){
-            previewImagebyWX(targetId.getElementsByTagName("img")[0].src);
         }
         var curSelectedIndex = -1;
 

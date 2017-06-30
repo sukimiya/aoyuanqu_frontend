@@ -36,6 +36,7 @@
     <script src="https://cdn.bootcss.com/json2/20160511/json2.min.js"></script>
     <script src="https://cdn.bootcss.com/moment.js/2.18.0/moment.min.js"></script>
     <script src="https://cdn.bootcss.com/moment.js/2.18.0/locale/zh-cn.js"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
     <script src="js/highlight.js"></script>
     <script src="js/bootstrap-switch.js"></script>
     <script src="js/main.js"></script>
@@ -45,57 +46,12 @@
 
 
 <body class="my-body">
-    <div class="form-group text-left mainbody">
-        <label class="col-xs-7">我想委托代理记账</label>
-        <div class="input-group col-xs-5 text-right">
-            <div class="switch">
-                <input id="weituo_state" name="weituo_state" type="checkbox" data-on-text="是" data-off-text="不" checked>
-            </div>
-        </div>
-        <div id="mycrews" class="list-group my-gap-top">
-            <a href="javascript:onItemClickHandler(1)" class="list-group-item my-list-item-detail">
-                <div class="container col-xs-8">
-                    <div class="row">
-                        <span class="my-list-item-heading clearfix">张三锦</span>
-                        <span class="my-list-item-text">法人</span>
-                    </div>
-                </div>
-                <span class="badge col-xs-4 my-list-item-detail-badge">
-                    <div class="clearfix text-right">
-                        <i class="fa fa-angle-right" aria-hidden="true" style="color:#5066b4;"></i>
-                    </div>
-                </span>
-            </a>
-            <a href="javascript:onItemClickHandler(2)" class="list-group-item my-list-item-detail">
-                <div class="container col-xs-8">
-                    <div class="row">
-                        <span class="my-list-item-heading clearfix">张三锦</span>
-                        <span class="my-list-item-text">法人</span>
-                    </div>
-                </div>
-                <span class="badge col-xs-4 my-list-item-detail-badge">
-                        <div class="clearfix text-right">
-                            <i class="fa fa-angle-right" aria-hidden="true" style="color:#5066b4;"></i>
-                        </div>
-                    </span>
-            </a>
-            <a href="javascript:onItemClickHandler(3)" class="list-group-item my-list-item-detail">
-                <div class="container col-xs-8">
-                    <div class="row">
-                        <span class="my-list-item-heading clearfix">张三锦</span>
-                        <span class="my-list-item-text">法人</span>
-                    </div>
-                </div>
-                <span class="badge col-xs-4 my-list-item-detail-badge">
-                    <div class="clearfix text-right">
-                        <i class="fa fa-angle-right" aria-hidden="true" style="color:#5066b4;"></i>
-                    </div>
-                </span>
-            </a>
-        </div>
-    </div>
+    
     <div class="section chatGroup">
-        <div class="containeer">
+        <div class="container">
+            <a onclick="previewImgWithSelf(this)">
+                <img src="images/yuanqu1.jpg" class="img-responsive">
+            </a>
         </div>
     </div>
     <script type="text/javascript">

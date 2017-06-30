@@ -28,12 +28,20 @@
     <script type="text/javascript">
         var investorAry = [];
         var isAddMode = true;
-
+        function formatDateTo(dstr){
+            var result = dstr;
+            if(result.indexOf(" ")!=-1){
+                var thedatearr = result.split(" ");
+                var timearr = thedatearr[1].split(":");
+                result = thedatearr[0] +" " + timearr[0]+":"+timearr[1];
+                return result;
+            }
+        }
         function initial(data) {
             debugger;
             if (data.confirm_name)
                 $("#confirm_name").text(data.confirm_name);
-            var today = new Date(data.szhd_time)
+            var today = new Date(formatDateTo(data.szhd_time));
             $("#appointment_time").val(today.Format("yyyy-MM-ddThh:mm"));
             if (data.hasOwnProperty("szhd_address")) $("#szhd_address").val(data.szhd_address);
             if (data.szhd_state1 == 2) {

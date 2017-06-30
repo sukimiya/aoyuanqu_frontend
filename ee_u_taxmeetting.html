@@ -29,15 +29,17 @@
         var investorAry = [];
         var isAddMode = true;
         var curDate;
-        function formatDateTo(dstr){
-            var result = "2017-06-30 10:00:00.0";
-            if(result.indexOf(" ")!=-1){
+
+        function formatDateTo(dstr) {
+            var result = dstr;
+            if (result.indexOf(" ") != -1) {
                 var thedatearr = result.split(" ");
                 var timearr = thedatearr[1].split(":");
-                result = thedatearr[0] +" " + timearr[0]+":"+timearr[1];
+                result = thedatearr[0] + " " + timearr[0] + ":" + timearr[1];
                 return result;
             }
         }
+
         function initial(data) {
             curDate = data;
             debugger;
@@ -48,14 +50,18 @@
                 if (data.szhd_state1 == 1) {
                     if (data.hasOwnProperty("szhd_address"))
                         $("#szhd_address").val(data.szhd_address);
+                    var todaystr = formatDateTo(data.szhd_time);
+                    var today = new Date(todaystr)
                     if (data.szhd_state == 2) {
-                        $("#appointment_time").val(data.szhd_time.replace(" ","T"));
+                        $("#appointment_time").val(todaystr.replace(" ", "T"));
                         $("#appointment_time").attr("disabled", "yes");
                         $("#szhd_address").attr("disabled", "yes");
                         $("#photoGroup").removeClass("hide");
                     } else {
+                        var todaystr = formatDateTo(data.szhd_time);
+                        var today = new Date(todaystr)
                         if (data.hasOwnProperty("szhd_time")) {
-                            $("#appointment_time").val(data.szhd_time.replace(" ","T"));
+                            $("#appointment_time").val(todaystr.replace(" ", "T"));
                         } else {
                             var today = new Date();
                             $("#appointment_time").attr('min', today.Format("yyyy-MM-ddThh:mm"));
@@ -63,13 +69,15 @@
                             $("#appointment_time").attr('max', month.Format("yyyy-MM-ddThh:mm"));
                         }
                         if (data.hasOwnProperty("szhd_address")) $("#szhd_address").val(data.szhd_address);
-                        if(data.szhd_state==1){
+                        if (data.szhd_state == 1) {
                             $("#thesubmit").attr("disabled", "yes");
                         }
                     }
                 } else {
                     if (data.hasOwnProperty("szhd_time")) {
-                        $("#appointment_time").val(data.szhd_time.replace(" ","T"));
+                        var todaystr = formatDateTo(data.szhd_time);
+                        var today = new Date(todaystr)
+                        $("#appointment_time").val(todaystr.replace(" ", "T"));
                     }
                     $("#szhd_address").val(data.szhd_address);
                     if (data.szhd_license == null || data.szhd_license) {

@@ -82,7 +82,7 @@
                 $("#company_name").text(getobj["confirm_name"]);
                 if (getobj.license_state == 1) {
                     if (getobj.hasOwnProperty("license_pic")) {
-
+                        getRemotePic(getobj.license_pic, $("#lisenceImg"));
                         $("#imgcon").addClass("hide");
                         $("#lisence_pic1").val(getobj["license_pic"]);
                         debugger;
@@ -91,11 +91,18 @@
                             $("#receive_phone").val(getobj.receive_phone);
                             $("#express_address").val(getobj.express_address);
                             $("#my-state-1").removeClass("hide");
+                        }else if(getobj.license_takekind == 0){
+                            $("#my-state-1").addClass("hide");
+                            $("#expressInfoGroup").append('<div class="well well-lg">取件方式:自取');
+                            
                         }else{
                             $("#my-state-1").addClass("hide");
+                            $("#submitBtn").addClass("hide");
+                            return;
                         }
-                        getRemotePic(getobj.license_pic, $("#lisenceImg"));
+                        
                         $("#submitBtn").text("审核");
+                        
                         $("#submitBtn").on("click", function() {
                             var requestStr = "id=" + GetRequest()["id"];
                             if (getobj.license_takekind == 1) {
@@ -131,7 +138,7 @@
                     $("#imgcon").addClass("hide");
                     $("#lisence_pic1").val(getobj["license_pic"]);
                     getRemotePic(getobj.license_pic, $("#lisenceImg"));
-                    $("#expressInfoGroup").append('<div class="well well-lg">快递公司:'+getobj["express_company"]+'<p>'+getobj["express_number"]+'</p></div>')
+                    $("#expressInfoGroup").append('<div class="well well-lg">快递公司:'+getobj["express_company"]+'<p>'+getobj["express_number"]+'</p></div>');
                 } else {
                     $("#my-state-1").removeClass("hide");
                     $("#receive_name").text(getobj["receive_name"]);

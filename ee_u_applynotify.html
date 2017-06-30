@@ -33,35 +33,40 @@
             var myapi = restapis;
             myapi.request("ee_u_applynotify", null, "id=" + GetRequest()["id"], function(result) {
                 debugger;
-                if (result.hasOwnProperty("allow_pic") && result.allow_pic != null && result.allow_pic != "")
+                if (result.hasOwnProperty("allow_pic") && result.allow_pic != null && result.allow_pic != "") {
                     getRemotePic(result.allow_pic, $("#qygd_pic1_img"));
+                    $("submistBtn").addClass("hide");
+                } else {
+                    $("#submistBtn").on("click", function(me) {
+                        var myapi = restapis;
+                        theimagesid = $("#qygd_pic1").val();
+                        if (theimagesid != "")
+                            myapi.request("updateAllow_pic", null, "id=" + GetRequest()["id"] + "&allow_pic=" + theimagesid, function(result) {
+                                window.location = "ee_u_progress.html";
+                            }, function(e) {
+                                alert("提交失败了");
+                            });
+                    });
+                    $("#file").on("change", function() {
+                        $("#file").addClass("disabled");
+                        UploadCompressedImage($("#file"), "#qygd_pic1", function(result) {
+                            $("#uploadlabel").text("上传完毕");
+                            $("#qygd_pic1").val(result.fileName);
+                            getRemotePic(result.fileName, $("#qygd_pic1_img"));
+                            $("#file").removeClass("disabled");
+                        }, function(event) {
+                            alert("上传失败");
+                            $("#file").removeClass("disabled");
+                        });
+                    });
+                }
                 if (result.allow_notice == 2) {
                     $("submistBtn").addClass("hide");
                 }
             }, function(e) {
                 alert("获取数据出错");
             })
-            $("#submistBtn").on("click", function(me) {
-                theimagesid = $("#qygd_pic1").val();
-                if (theimagesid != "")
-                    myapi.request("updateAllow_pic", null, "id=" + GetRequest()["id"] + "&allow_pic=" + theimagesid, function(result) {
-                        window.location = "ee_u_progress.html";
-                    }, function(e) {
-                        alert("提交失败了");
-                    });
-            });
-            $("#file").on("change", function() {
-                $("#file").addClass("disabled");
-                UploadCompressedImage($("#file"), "#qygd_pic1", function(result) {
-                    $("#uploadlabel").text("上传完毕");
-                    $("#qygd_pic1").val(result.fileName);
-                    getRemotePic(result.fileName, $("#qygd_pic1_img"));
-                    $("#file").removeClass("disabled");
-                }, function(event) {
-                    alert("上传失败");
-                    $("#file").removeClass("disabled");
-                });
-            });
+
         });
 
     </script>
