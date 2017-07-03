@@ -35,7 +35,7 @@
         var listdata = [];
         var curPage = 0;
         var totalPage = 1;
-        var pageSize=20;
+        var pageSize = 20;
 
         function switchlisttype() {
             var setl1 = "";
@@ -74,7 +74,7 @@
         }
 
         function gotoEE(order) {
-            window.location = "ee_u_openccount.html?id="+order;
+            window.location = "ee_u_openccount.html?id=" + order;
         }
 
         function searchbykey() {
@@ -89,58 +89,64 @@
 
         function doloadlist(skey = "", page = 1, ttype = 0, isappend = true, me = null) {
             var myapi = restapis;
-            var requestdata = "swsf_state="+(ttype+1)+"&page="+page;
-            if(skey!=null&&skey!=""){
-                requestdata+="&key="+skey;
+            var requestdata = "swsf_state=" + (ttype + 1) + "&page=" + page;
+            if (skey != null && skey != "") {
+                requestdata += "&key=" + skey;
             }
-            myapi.request("searchYHKHList",null,requestdata,function(jsonObj){
-                if (!jsonObj.resault) {
-                        if(jsonObj.hasOwnProperty("totalPage")) tatalPages = jsonObj.totalPage;
-                        if(jsonObj.hasOwnProperty("curPage")){curPage = jsonObj.curPage;}else{curPage = page}
-                        if (jsonObj.arr) {
-                            var result = "";
-                            for (var i = 0; i < jsonObj.arr.length; i++) {
-                                var node = jsonObj.arr[i];
-                                var displayname = node["apply_name"];
-                                if(node.hasOwnProperty("confirm_name"))displayname=node["confirm_name"]
-                                result += '<a href="javascript:gotoEE(' 
-                                +"'"+node["id"]+"'"
-                                +')" class="list-group-item my-list-item" style="text-align: left;">' 
-                                +displayname 
-                                +'<span class="badge mytextbadge">&nbsp;<i class="fa fa-angle-right" aria-hidden="true"></i></span></a>';
-                            }
-                            if(curPage==1){
-                                listdata = jsonObj.arr;
-                            }else{
-                                listdata = listdata.concat(jsonObj.arr);
-                            }
-                            if(curPage==1)
-                            if(me.isLockUp || me.isLockDown){
+            myapi.request("searchYHKHList", null, requestdata, function(jsonObj) {
+                if (!jsonObj.result) {
+                    if (jsonObj.hasOwnProperty("totalPage")) tatalPages = jsonObj.totalPage;
+                    if (jsonObj.hasOwnProperty("curPage")) {
+                        curPage = jsonObj.curPage;
+                    } else {
+                        curPage = page
+                    }
+                    if (jsonObj.arr) {
+                        var result = "";
+                        for (var i = 0; i < jsonObj.arr.length; i++) {
+                            var node = jsonObj.arr[i];
+                            var displayname = node["apply_name"];
+                            if (node.hasOwnProperty("confirm_name")) displayname = node["confirm_name"]
+                            result += '<a href="javascript:gotoEE(' +
+                                "'" + node["id"] + "'" +
+                                ')" class="list-group-item my-list-item" style="text-align: left;">' +
+                                displayname +
+                                '<span class="badge mytextbadge">&nbsp;<i class="fa fa-angle-right" aria-hidden="true"></i></span></a>';
+                        }
+                        if (curPage == 1) {
+                            listdata = jsonObj.arr;
+                        } else {
+                            listdata = listdata.concat(jsonObj.arr);
+                        }
+                        if (curPage == 1)
+                            if (me.isLockUp || me.isLockDown) {
                                 me.isLockUp = false;
                                 me.isLockDown = false;
                             }
-                        } else {
-                            //droplist opration
-                            if (me) {
-                                // 锁定
-                                me.lock();
-                                // 无数据
-                                me.noData();
-                            }
-                        }
-                        if (isappend) {
-                            $('#mycrews').append(result);
-                        } else {
-                            $('#mycrews').html(result);
-                        }
-                        if (me) {
-                            me.resetload();
-                        }
                     } else {
-                        debugger;
-                        alert("获取数据错误");
+                        //droplist opration
+                        if (me) {
+                            // 锁定
+                            me.lock();
+                            // 无数据
+                            me.noData();
+                        }
                     }
-            },function(e){alert("网络错误，请检查网络连接是否正常")});
+                    if (isappend) {
+                        $('#mycrews').append(result);
+                    } else {
+                        $('#mycrews').html(result);
+                    }
+                    if (me) {
+                        me.resetload();
+                    }
+                } else {
+                    if(jsonObj==1)
+                    $('#mycrews').html("");
+                }
+            }, function(e) {
+                alert("网络错误，请检查网络连接是否正常")
+            });
         }
         var dropload = null;
         $(document).ready(function() {

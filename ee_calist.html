@@ -97,7 +97,7 @@
                 requestdata += "&key=" + skey;
             }
             myapi.request("searchZZFFList", null, requestdata, function(jsonObj) {
-                if (!jsonObj.resault) {
+                if (!jsonObj.result) {
                     debugger;
                     if (jsonObj.hasOwnProperty("totalPage")) tatalPages = jsonObj.totalPage;
                     if (jsonObj.hasOwnProperty("curPage")) {
@@ -145,8 +145,8 @@
                         me.resetload();
                     }
                 } else {
-                    debugger;
-                    alert("获取数据错误");
+                    if(jsonObj==1)
+                    $('#mycrews').html("");
                 }
             }, function(e) {
                 alert("网络错误，请检查网络连接是否正常")

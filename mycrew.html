@@ -157,11 +157,14 @@
                     　　data: "prority=" + 0 + "&uid=" + selectId,
                     　　error: function(XMLHttpRequest, textStatus, errorThrown) {},
                     　　success: function(jsonObj) {
-                        if (jsonObj.resault) {
+                        if (jsonObj.result) {
                             dropload.resetload();
                         } else {
                             debugger;
-                            alert("获取数据错误");
+                            // 锁定
+                            me.lock();
+                            // 无数据
+                            me.noData();
                         }
                     }
                 });
@@ -187,7 +190,7 @@
                     data: "page=" + curPage + "&key=" + searchKey,
                     dataType: 'json',
                     success: function(data) {
-                        if (!jsonObj.resault) {
+                        if (!jsonObj.result) {
                             var result = "";
                             for (var i = 0; i < data.lists.length; i++) {
                                 var node = data.lists[i];
@@ -222,7 +225,7 @@
                     data: "page=" + curPage + "&key=" + searchKey,
                     dataType: 'json',
                     success: function(data) {
-                        if (!data.resault) {
+                        if (!data.result) {
                             curPage = data.curPage;
                             var result = "";
                             for (var i = 0; i < data.lists.length; i++) {
@@ -238,7 +241,10 @@
                             mycrewsdata = data.lists;
                         } else {
                             debugger;
-                            alert("获取数据错误");
+                            // 锁定
+                            me.lock();
+                            // 无数据
+                            me.noData();
                         }
                         // 为了测试，延迟1秒加载
                         setTimeout(function() {
@@ -272,7 +278,7 @@
                 　　data: "page=" + curPage,
                 　　error: function(XMLHttpRequest, textStatus, errorThrown) {},
                 　　success: function(jsonObj) {
-                    if (!jsonObj.resault) {
+                    if (!jsonObj.result) {
                         tatalPages = jsonObj.totalPage;
                         curPage = jsonObj.curPage;
                         if (jsonObj.lists) {
@@ -293,7 +299,10 @@
                         dropload.resetload();
                     } else {
                         debugger;
-                        alert("获取数据错误");
+                        // 锁定
+                        me.lock();
+                        // 无数据
+                        me.noData();
                     }
                 }
             });
@@ -367,6 +376,7 @@
                 console.log(e, $el, value);
             });
         });
+
     </script>
 </body>
 
