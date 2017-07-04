@@ -232,6 +232,8 @@ var myweixin = (function () {
                         , 'previewImage'
                         , 'uploadImage'
                         , 'getLocalImgData'
+                        , 'onMenuShareAppMessage'
+                        , 'onMenuShareQQ'
                         , 'getNetworkType'];
     mythis.redictlocation = window.location.href.split("#")[0];
     var mylocation = encodeURIComponent(mythis.redictlocation);
@@ -260,6 +262,7 @@ var myweixin = (function () {
                     console.log("web token expired");
                     mythis.requestCode();
                 } else {
+                    mythis.isConfiged = true;
                     if (mythis.onOpenid) mythis.onOpenid();
                     if (mythis.onUser) mythis.onUser();
                     if (mythis.onConfig) mythis.onConfig();
@@ -385,6 +388,72 @@ var myweixin = (function () {
     //
     return mythis;
 }());
+//----------------------------------分享功能----------------------------
+var myshare = (function () {
+    var myshareinit = function (initialed) {
+        if (myweixin.isConfiged) {
+            if (initialed) initialed();
+        } else {
+            myweixin.checkapi(['onMenuShareAppMessage','onMenuShareQQ'], mypreviewRun, function () {
+                myweixin.onConfig = function () {
+                    if (initialed) initialed();
+                }
+                myweixin.requestTicket();
+            });
+        }
+    }
+    var mythis = {};
+    //reference from http://www.cnblogs.com/huijieoo/articles/5569990.html
+    mythis.copytochip = function (txt) {
+        if (window.clipboardData) {
+            window.clipboardData.clearData();
+            clipboardData.setData("Text", txt);
+            console.log("复制成功！");
+        }
+    }
+    mythis.sharetomsg = function (url, callback, oncancel = null, title = '', desc = '', imgUrl = '', dataUrl = '') {
+        if (!callback) return;
+        myshareinit(function () {
+            wx.onMenuShareAppMessage({
+                title: title, // 分享标题
+                desc: desc, // 分享描述
+                link: url, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                imgUrl: imgUrl, // 分享图标
+                type: 'link', // 分享类型,music、video或link，不填默认为link
+                dataUrl: dataUrl, // 如果type是music或video，则要提供数据链接，默认为空
+                success: function () {
+                    // 用户确认分享后执行的回调函数
+                    callback();
+                },
+                cancel: function () {
+                    // 用户取消分享后执行的回调函数
+                    if (oncancel) oncancel();
+                }
+            });
+        });
+    }
+    mythis.sharetoqq = function (url, callback, oncancel = null, title = '', desc = '', imgUrl = '') {
+
+        if (!callback) return;
+        myshareinit(function () {
+            wx.onMenuShareQQ({
+                title: title, // 分享标题
+                desc: desc, // 分享描述
+                link: url, // 分享链接
+                imgUrl: imgUrl, // 分享图标
+                success: function () {
+                    // 用户确认分享后执行的回调函数
+                    callback();
+                },
+                cancel: function () {
+                    // 用户取消分享后执行的回调函数
+                    if (oncancel) oncancel();
+                }
+            });
+        });
+    }
+    return mythis;
+}());
 
 function previewImgWithSelf(targetId) {
     previewImagebyWX($(targetId)[0].getElementsByTagName("img")[0].src);
@@ -504,9 +573,9 @@ function UploadCompressedImage(thetarget, targetInput, callback = null, onerrorh
     //initial
     var theparent = thetarget.parentNode
     if (theparent == undefined || theparent == null) {
-        if (thetarget.hasOwnProperty("length") && thetarget.length > 0){
+        if (thetarget.hasOwnProperty("length") && thetarget.length > 0) {
             thetarget = thetarget[0];
-        }else{
+        } else {
             if (onerrorhandler) onerrorhandler();
             return;
         }

@@ -1,0 +1,186 @@
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>验证您的手机号码</title>
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.bootcss.com/bootstrap-validator/0.5.3/css/bootstrapValidator.min.css" rel="stylesheet">
+    <!-- JS -->
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap-validator/0.5.3/js/bootstrapValidator.min.js"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script src="https://cdn.bootcss.com/json2/20160511/json2.min.js"></script>
+    <script type="text/javascript" src="js/my.js"></script>
+    <link href="css/my.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript">
+        var redirectionLocation = "my.html";
+        var validateCode_static = null;
+        //----------------Reference from http://www.cnblogs.com/xcsn/archive/2013/04/22/3035240.html--------
+        var InterValObj; //timer变量，控制时间
+        var count = 60; //间隔函数，1秒执行
+        var curCount; //当前剩余秒数
+        $(document).ready(function() {
+            var myapi = restapis;
+            myweixin.initial();
+            $('form').bootstrapValidator({
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                disabled: true,
+                excluded: ':disabled',
+                fields: {
+                    validateCode: {
+                        validators: {
+                            message: '验证失败',
+                            notEmpty: {
+                                message: '输入验证码',
+                            }
+                        }
+                    },
+                    inputmobile: {
+                        validators: {
+                            notEmpty: {
+                                message: '请输入手机'
+                            },
+                            stringLength: {
+                                min: 8,
+                                max: 11,
+                                message: '手机长度必须在8到11之间'
+                            }
+                        }
+                    }
+                }
+            })
+            $("#submitBtn").on("click", function() {
+
+                var $this = $(this);
+                $this.button('loading');
+
+                var fv_timestamp = Date.parse(new Date());
+                var fv_mobileNumber = $("#inputmobile").val();
+                var fv_nickname = $("#nick_name").val();
+                var fv_jobtitle = $("#jobtitle").val();
+                console.log("mobile=" + fv_mobileNumber + "  oppen_id=" + myweixin.requestOpenid());
+                debugger;
+                //完成员工注册的接口，需要季键修改的地方
+                myapi.request("UserUpdate", null, "mobile=" + fv_mobileNumber + "&nick_name=" + fv_nickname + "&jobtitle=" + fv_jobtitle + "&oppen_id=" + myweixin.openid, function(result) {
+                    if (result) {
+                        window.location = redirectionLocation;
+                    }
+                }, function(e) {
+                    alert("网络错误，请稍后再试");
+                });
+                setTimeout(function() {
+                    $this.button('reset');
+                    alert("请检查连接");
+                }, 30000); //30秒超时
+
+
+            });
+            $("#inputmobile").on("change", function() {
+                var fv_mobileNumber = $("#inputmobile").val();
+                if ($("#inputmobile").val().length == 11) {
+                    myapi.request("verfymobile", null, "mobile=" + fv_mobileNumber, function(result) {
+                        if (result == 0) {
+
+                        } else {
+                            $("#changpwdform").data("bootstrapValidator").updateStatus("inputmobile", "NOT_VALIDATED", "手机号码已注册");
+                        }
+                    }, function(e) {
+                        $("#changpwdform").data("bootstrapValidator").updateStatus("inputmobile", "NOT_VALIDATED", "手机号码验证错误,请稍后再试");
+                    });
+                } else {
+                    $("#submitBtn").attr("disabled", "yes");
+                }
+            });
+            $("#InputValidateCode").on("change", function() {
+                if (validateCode_static != null && $("InputValidateCode").val() == validateCode_static) {
+                    $("#submitBtn").removeAttr("disabled");
+                } else {
+                    $("#submitBtn").attr("disabled", "yes");
+                }
+            });
+            var request = GetRequest();
+            if (request["redict"]) {
+                $.querySelector
+                redirectionLocation = request["redict"];
+            }
+            $("#verfiyBtn").on("click", function() {
+                curCount = count;　　 //设置button效果，开始计时
+                $("#verfiyBtn").attr("disabled", "on");
+                var intid = setInterval(function() {
+                    curCount--;
+                    $("#verfiyBtn").text(curCount);
+                    //$("#verfiyBtn").attr("data-loading-text", " " + curCount);
+                    //document.title = "验证您的手机号码：" + curCount;
+                    if (curCount <= 0) {
+                        $("#verfiyBtn").text("重新验证");
+                        $("#verfiyBtn").removeAttr("disabled");
+                        clearInterval(intid);
+                    }
+                }, 1000);
+                //
+
+                var fv_mobileNumber = $("#inputmobile").val();
+                debugger;
+                myapi.request("checkMessage", null, "mobile=" + fv_mobileNumber, function(result) {
+                    if (result.valid) {
+                        validateCode_static = result.validateCode;
+                    } else {
+                        alert("发送验证码错误");
+                        debugger;
+                    }
+                }, function() {
+                    alert("网络错误，请稍后再试");
+                });
+            });
+        }); //ready
+
+    </script>
+</head>
+
+<body>
+    <div class="section my-topsection">
+
+        <div class="container">
+            <h3 id="companyname"></h3>
+            <form id="changpwdform" class="my-form" role="form" data-toggle="validator">
+                <div class="form-group">
+                    <label for="nick_name">真实姓名</label>
+                    <input type="text" name="nick_name" class="form-control" id="nick_name" required>
+                </div>
+                <div class="form-group">
+                    <label for="jobtitle">选择职务</label>
+                    <select id="jobtitle" name="jobtitle" class="mycompany-select form-control" required>
+                            <option title="财务负责人" value="财务负责人"><span style="font-size:12;color:#cccccc">财务负责人</span></option>
+                            <option title="出纳" value="出纳"><span style="font-size:12;color:#cccccc">出纳</span></option>
+                            <option title="员工" value="员工"><span style="font-size:12;color:#cccccc">员工</span></option>
+                        </select>
+                </div>
+                <div class="form-group">
+                    <label for="InputMoblie">验证手机</label>
+                    <input type="tel" name="inputmobile" class="form-control my-tel" id="inputmobile" required>
+                </div>
+                <div class="form-group" style="padding-bottom:80px;">
+                    <label for="validateCodeGroup">验证码</label>
+                    <div id="validateCodeGroup">
+                        <div class="col-xs-6" style="padding-left:0px;">
+                            <input type="number" name="validateCode" class="form-control col-xs-6" id="InputValidateCode" placeholder="------" maxlength="6" required>
+                        </div>
+                        <div class="col-xs-2">&nbsp;</div>
+                        <button id="verfiyBtn" href="#" class="btn btn-success col-xs-4">验证</button>
+                    </div>
+                </div>
+
+                <a id="submitBtn" class="btn btn-primary col-xs-12" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> " style="font-size:22px;">注册</a>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

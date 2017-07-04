@@ -23,11 +23,13 @@
             font-weight: normal;
             color: #040404;
         }
-        body .mainbody{
-            background-color:floralwhite;
-            height:50%;
+
+        body .mainbody {
+            background-color: floralwhite;
+            height: 50%;
             overflow-y: scroll;
         }
+
     </style>
     <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
     <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -46,7 +48,11 @@
 
 
 <body class="my-body">
-    
+    <form action="mailto:to">
+        <input type="text" name="subject" class="form-control" value="Tax anniu PDF">
+        <input type="text" name="body" class="form-control" value="mybody is url">
+        <button class="btn btn-primary col-xs-12" type="submit">mailto</button>
+    </form>
     <div class="section chatGroup">
         <div class="container">
             <a onclick="previewImgWithSelf(this)">
@@ -58,16 +64,16 @@
         $(document).ready(function() {
             //checkInputFileImg();
             $('#weituo_state').on('switchChange.bootstrapSwitch', function(e, data) {
-            var $el = e,
-                value = data;
-            if (value) {
-                console.log("weituo_state:"+$('#weituo_state').val());
-            } else {
-                console.log("weituo_state:"+$('#weituo_state').val());
-            }
+                var $el = e,
+                    value = data;
+                if (value) {
+                    console.log("weituo_state:" + $('#weituo_state').val());
+                } else {
+                    console.log("weituo_state:" + $('#weituo_state').val());
+                }
 
-            console.log(e, $el, value);
-        });
+                console.log(e, $el, value);
+            });
         });
         /**
          * 图片压缩，默认同比例压缩
@@ -111,7 +117,6 @@
                 callback(base64);
             }
         }
-        
 
     </script>
 </body>
