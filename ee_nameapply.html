@@ -451,7 +451,8 @@
                             qyfrnum++;
                         }
                     }
-                    if (investorSum != parseFloat($("#register_money").val())) {
+                    var registmoney = parseFloat($("#register_money").val());
+                    if (investorSum != registmoney) {
                         alert("投资金额和股东投资金额总和不相等");
                         return;
                     }
@@ -753,15 +754,12 @@
                             <div class="clearfix" style="text-align:left;font-size:14px;border-color: #5066b4;padding:15px;">
                                 <p>投资人为自然人需提供身份证照片;投资人为企业法人需提供营业执照（副本加盖公章）照片
                                 </p>
-
                             </div>
-
                         </div>
                         <div class="container">
                             <a id="investorDeleteBtn" href="javascript:delectAInvestor()" class="btn btn-warning col-xs-12 my-gap-top" style="font-size:22px;padding:5px;">删除</a>
                             <a href="javascript:onInvestorOKHandler()" class="btn btn-success col-xs-12 my-gap-top" style="font-size:22px;padding:5px;">确定</a>
                         </div>
-
                     </form>
                 </div>
 

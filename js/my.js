@@ -504,10 +504,12 @@ function UploadCompressedImage(thetarget, targetInput, callback = null, onerrorh
     //initial
     var theparent = thetarget.parentNode
     if (theparent == undefined || theparent == null) {
-        if (thetarget.hasOwnProperty("length") && thetarget.length > 0)
+        if (thetarget.hasOwnProperty("length") && thetarget.length > 0){
             thetarget = thetarget[0];
-        else
-        if (onerrorhandler) onerrorhandler();
+        }else{
+            if (onerrorhandler) onerrorhandler();
+            return;
+        }
     }
     var thefiles = thetarget.files;
     if (thefiles == undefined || thefiles == null) {
@@ -590,6 +592,7 @@ function UploadCompressedImage(thetarget, targetInput, callback = null, onerrorh
                         if (show) fillimg["src"] = getRemotePic(result.fileName);
                         target.removeAttribute("disabled");
                         if (thecallback) thecallback(result);
+                        target.value = "";
                     } else {
                         target.removeAttribute("disabled");
                         if (theerror) theerror(event);
