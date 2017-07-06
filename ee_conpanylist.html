@@ -91,7 +91,7 @@
 
         function doloadlist(skey = "", page = 1, ttype = 0, isappend = true, me = null) {
             var myapi = restapis;
-            var requestdata = "check_state=" + ttype + "&wx_openid=" + myweixin.openid + "&page=" + page;
+            var requestdata = "szhd_state1=" + (ttype+1) + "&wx_openid=" + myweixin.openid + "&page=" + page;
             if (skey != null && skey != "") {
                 requestdata += "&key=" + skey;
             }
@@ -128,8 +128,10 @@
                     } else {
                         //droplist opration
                         if (me) {
-                            if(jsonObj==1)
-                            $('#mycrews').html("");
+                            // 锁定
+                            me.lock();
+                            // 无数据
+                            me.noData();
                         }
                     }
                     if (isappend) {
@@ -141,10 +143,14 @@
                         me.resetload();
                     }
                 } else {
-                    // 锁定
-                    me.lock();
-                    // 无数据
-                    me.noData();
+                    if (jsonObj.result == 1) {
+                        $('#mycrews').html("");
+                    } else if (jsonObj.result == 2) {
+                        me.lock();
+                        // 无数据
+                        me.noData();
+                    }
+                    me.resetload();
                 }
             }, function(e) {
                 alert("网络错误，请检查网络连接是否正常")

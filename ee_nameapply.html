@@ -145,6 +145,7 @@
                 newdata["qygd_name"] = $("#qygd_name").val();
                 newdata["qygd_idnumber"] = $("#qygd_idnumber").val();
                 newdata["qygd_investment"] = parseFloat($("#qygd_investment").val());
+                newdata["qygd_percent"] = calculate_qygd_investment(newdata["qygd_investment"]).replace("%","");
                 newdata["qygd_jobtitle"] = $("#qygd_jobtitle").val();
                 newdata["qygd_pic1"] = $("#qygd_pic1").val();
                 newdata["qygd_pic2"] = $("#qygd_pic2").val();
@@ -159,6 +160,7 @@
                     curSelect["qygd_name"] = $("#qygd_name").val();
                     curSelect["qygd_idnumber"] = $("#qygd_idnumber").val();
                     curSelect["qygd_investment"] = parseFloat($("#qygd_investment").val());
+                    curSelect["qygd_percent"] = calculate_qygd_investment(curSelect["qygd_investment"]).replace("%","");
                     curSelect["qygd_jobtitle"] = $("#qygd_jobtitle").val();
                     curSelect["qygd_pic1"] = $("#qygd_pic1").val();
                     curSelect["qygd_pic2"] = $("#qygd_pic2").val();
@@ -203,10 +205,11 @@
                 var tzfr = {
                     qygd_name: jsonobj["tzfr_name"],
                     qygd_idnumber: jsonobj["tzfr_idnumber"],
-                    qygd_investment: jsonobj["f_investment"],
+                    qygd_investment: jsonobj["tzfr_money"],
                     qygd_pic1: jsonobj["tzfr_pic1"],
                     qygd_pic2: jsonobj["tzfr_pic2"],
                     qygd_pic3: jsonobj["tzfr_pic3"],
+                    qygd_percent: jsonobj["tzfr_percent"],
                     id: jsonobj["id"],
                     qygd_jobtitle: "法人"
                 };
@@ -253,10 +256,11 @@
                     jsonobj["tzfr_name"] = ainvestor.qygd_name;
                     jsonobj["tzfr_idnumber"] = ainvestor.qygd_idnumber;
                     debugger;
-                    jsonobj["f_investment"] = parseFloat(ainvestor.qygd_investment);
+                    jsonobj["tzfr_money"] = parseFloat(ainvestor.qygd_investment);
                     jsonobj["tzfr_pic1"] = ainvestor.qygd_pic1;
                     jsonobj["tzfr_pic2"] = ainvestor.qygd_pic2;
                     jsonobj["tzfr_pic3"] = ainvestor.qygd_pic3;
+                    jsonobj["tzfr_percent"] = ainvestor.qygd_percent.replace("%","");
                 } else {
                     jsonobj["arr"].push(ainvestor);
                 }

@@ -110,7 +110,7 @@ mysettingpassword.html  我的密码设置
     "qyfr_email": "123",
     "qygd_name1": "123",
     "f_position": "123",
-    "f_investment": "123",
+    "tzfr_money": "123",
     "f_percent": "123",
     "qyjs_name": "123",
     "qyjs_idnumber": "123",

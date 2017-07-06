@@ -234,6 +234,7 @@ var myweixin = (function () {
                         , 'getLocalImgData'
                         , 'onMenuShareAppMessage'
                         , 'onMenuShareQQ'
+                        , 'showOptionMenu'
                         , 'getNetworkType'];
     mythis.redictlocation = window.location.href.split("#")[0];
     var mylocation = encodeURIComponent(mythis.redictlocation);
@@ -394,7 +395,9 @@ var myshare = (function () {
         if (myweixin.isConfiged) {
             if (initialed) initialed();
         } else {
-            myweixin.checkapi(['onMenuShareAppMessage','onMenuShareQQ'], mypreviewRun, function () {
+            myweixin.checkapi(['onMenuShareAppMessage', 'onMenuShareQQ','showOptionMenu'], function () {
+                if (initialed) initialed();
+            }, function () {
                 myweixin.onConfig = function () {
                     if (initialed) initialed();
                 }
@@ -451,6 +454,16 @@ var myshare = (function () {
                 }
             });
         });
+    }
+    mythis.open = function () {
+
+        myshareinit(function () {
+//                    wx.showMenuItems({
+//                        menuList: ['menuItem:share:appMessage', 'menuItem:share:qq', 'menuItem:favorite', 'menuItem:share:email']
+//                    });
+            wx.showOptionMenu();
+        });
+        
     }
     return mythis;
 }());

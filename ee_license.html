@@ -72,26 +72,17 @@
         $(document).ready(function() {
             var myapi = restapis;
             $('textarea').flexText();
-            $("#submitbtn").on("click", function() {
-                var postobj = {};
-                postobj["id"] = GetRequest()["id"];
-                postobj["receive_name"] = $("#receive_name").val();
-                postobj["license_takekind"] = isunfinishList ? 1 : 0;
-                postobj["receive_phone"] = $("#receive_phone").val();
-                postobj["express_address"] = $("#express_address").val();
-                debugger;
-                myapi.request("updateZZFF.do", "page", JSON.stringify(postobj), function(data) {
-                    debugger;
-                    console.log("deliver infomation had been record.");
-                    window.location.replace("ee_progress.html?id=" + GetRequest()["id"]);
-                }, function(e) {}, "POST");
-            });
+            
             myapi.request("searchZZFF", null, "id=" + GetRequest()["id"], function(data) {
                 var jdata = data;
                 if (jdata.hasOwnProperty("license_pic")) {
 
                     getRemotePic(jdata.license_pic, $("#lisencePic"));
                     $("lisencePic1").val(jdata.license_pic);
+                }else{
+                    $("#my-state-1").addClass("hide");
+                    $("#submitbtn").addClass("hide");
+                    return;
                 }
                 isunfinishList = true;
                 if (jdata.license_takekind == 0) {
@@ -105,7 +96,7 @@
                     setFromDisabled("deliverform", true);
                     $("#my-state-1").addClass("hide");
                     if (jdata.hasOwnProperty("express_company")) {
-                        $("#expressInfoGroup").append('<div class="well well-lg">快递公司:' + jdata["express_company"] + '<p>' + jdata["express_number"] + '</p></div>');
+                        $("#expressInfoGroup").append('<div class="well well-lg">快递公司:' + jdata["express_company"] + '<p>快递单号:' + jdata["express_number"] + '</p></div>');
                     } else {
                         if (jdata.license_takekind == 0) {
                             $("#expressInfoGroup").append('<div class="well well-lg"><span style="font-size:12px">状态:</span><br>已接收</div>');
@@ -127,6 +118,20 @@
                             $("#listswitchGroup").attr("disabled", "disabled");
                         }
                 }
+                $("#submitbtn").on("click", function() {
+                var postobj = {};
+                postobj["id"] = GetRequest()["id"];
+                postobj["receive_name"] = $("#receive_name").val();
+                postobj["license_takekind"] = isunfinishList ? 1 : 0;
+                postobj["receive_phone"] = $("#receive_phone").val();
+                postobj["express_address"] = $("#express_address").val();
+                debugger;
+                myapi.request("updateZZFF.do", "page", JSON.stringify(postobj), function(data) {
+                    debugger;
+                    console.log("deliver infomation had been record.");
+                    window.location.replace("ee_progress.html?id=" + GetRequest()["id"]);
+                }, function(e) {}, "POST");
+            });
             }, function(e) {});
             myweixin.initial();
         });

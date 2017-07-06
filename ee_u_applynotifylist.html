@@ -142,8 +142,14 @@
                         me.resetload();
                     }
                 } else {
-                    if(jsonObj==1)
-                    $('#mycrews').html("");
+                    if (jsonObj.result == 1) {
+                        $('#mycrews').html("");
+                    } else if (jsonObj.result == 2) {
+                        me.lock();
+                        // 无数据
+                        me.noData();
+                    }
+                    me.resetload();
                 }
             }, function(e) {
                 alert("网络错误，请检查网络连接是否正常")

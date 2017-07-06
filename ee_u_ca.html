@@ -138,7 +138,10 @@
                     $("#imgcon").addClass("hide");
                     $("#lisence_pic1").val(getobj["license_pic"]);
                     getRemotePic(getobj.license_pic, $("#lisenceImg"));
-                    $("#expressInfoGroup").append('<div class="well well-lg">快递公司:'+getobj["express_company"]+'<p>'+getobj["express_number"]+'</p></div>');
+                    if(getobj.hasOwnProperty("express_company")){
+                        $("#expressInfoGroup").append('<div class="well well-lg">快递公司:'+getobj["express_company"]+'<p>快递单号:'+getobj["express_number"]+'</p></div>');
+                    }
+                    
                 } else {
                     $("#my-state-1").removeClass("hide");
                     $("#receive_name").text(getobj["receive_name"]);
