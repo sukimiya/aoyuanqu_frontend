@@ -178,7 +178,10 @@
                     if (result.result == 0) {
                         window.location = "ee_u_progress.html";
                     } else {
-                        alert("提交错误，请检查提交的参数.")
+                        if(result.result == 1)
+                            alert("选择的企业名称重复，请核实");
+                        else
+                            alert("提交错误，请检查提交的参数.")
                     }
                 }, function(e) {
                     alert("提交错误，请检网络.")
