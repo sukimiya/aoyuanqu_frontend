@@ -96,7 +96,7 @@
                     setFromDisabled("deliverform", true);
                     $("#my-state-1").addClass("hide");
                     if (jdata.hasOwnProperty("express_company")) {
-                        $("#expressInfoGroup").append('<div class="well well-lg">快递公司:' + jdata["express_company"] + '<p>快递单号:' + jdata["express_number"] + '</p></div>');
+                        $("#expressInfoGroup").append('<div class="well well-lg">快递公司:' + jdata["express_company"] + '<p><b>快递单号:' + jdata["express_number"] + '</b></p><p>收件人:'+jdata["receive_name"]+'</p><p>电话:'+jdata["receive_phone"]+'</p><p>电话:'+jdata["express_address"]+'</p></div>');
                     } else {
                         if (jdata.license_takekind == 0) {
                             $("#expressInfoGroup").append('<div class="well well-lg"><span style="font-size:12px">状态:</span><br>已接收</div>');

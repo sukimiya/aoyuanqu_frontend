@@ -24,6 +24,18 @@
         var curCount; //当前剩余秒数
         $(document).ready(function() {
             var myapi = restapis;
+            myweixin.onUser = function() {
+                var user = myweixin.getUserInfo();
+                myapi.request("getUserInfo", null, "open_id=" + myweixin.openid, function(result) {
+                    if(result.mobile==0){
+                        
+                    }else{
+                        window.location.replace("index.html");
+                    }
+                }, function() {
+                    alert("网络错误，请稍后再试");
+                });
+            }
             myweixin.initial();
             $('form').bootstrapValidator({
                 feedbackIcons: {
@@ -66,8 +78,15 @@
                 console.log("mobile=" + fv_mobileNumber + "  oppen_id=" + myweixin.requestOpenid());
                 debugger;
                 myapi.request("UserUpdate", null, "mobile=" + fv_mobileNumber + "&oppen_id=" + myweixin.openid, function(result) {
-                    if (result) {
-                        window.location = redirectionLocation;
+                    if (result) {//http://www.aoyuanqu.cn/lily/registbymobile.html?mobilephone
+                        if(GetRequest().hasOwnProperty("mobilephone")){
+                            myapi.request("insertRecommand",null,"open_id="+myweiin.openid+"&phone="+GetRequest()["mobilephone"],function(result){
+                                console.log("recogenize persent:"+GetRequest()["mobilephone"]);
+                                window.location = redirectionLocation;
+                            });
+                        }else{
+                            window.location = redirectionLocation;
+                        }
                     }
                 }, function(e) {
                     alert("网络错误，请稍后再试");

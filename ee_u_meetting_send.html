@@ -165,6 +165,12 @@
                 var myapi = restapis;
                 var theid = GetRequest()["id"];
                 var thetime = $("#appointment_time").val();
+                if($("#appointment_time").val()&&$("#appointment_time").val()!=""){
+                    
+                }else{
+                    alert("没有选择面签时间");
+                    return;
+                }
                 thetime = thetime.replace("/", "-");
                 var theaddress = $("#appointment_address").val();
                 var theparam = "id=" + theid 

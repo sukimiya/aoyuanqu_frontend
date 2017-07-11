@@ -68,7 +68,7 @@
                 console.log("mobile=" + fv_mobileNumber + "  oppen_id=" + myweixin.requestOpenid());
                 debugger;
                 //完成员工注册的接口，需要季键修改的地方
-                myapi.request("UserUpdate", null, "mobile=" + fv_mobileNumber + "&nick_name=" + fv_nickname + "&jobtitle=" + fv_jobtitle + "&oppen_id=" + myweixin.openid, function(result) {
+                myapi.request("insert_company_user_staff", null, "mobilephone=" + fv_mobileNumber + "&user_name=" + fv_nickname + "&fjob=" + fv_jobtitle + "&oppen_id=" + myweixin.openid+"&company_name="+GetRequest()["confirm_name"], function(result) {
                     if (result) {
                         window.location = redirectionLocation;
                     }
@@ -139,6 +139,7 @@
                     alert("网络错误，请稍后再试");
                 });
             });
+            $("#companyname").text(GetRequest()["confirm_name"]);
         }); //ready
 
     </script>
