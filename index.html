@@ -19,10 +19,23 @@
         $(document).ready(function() {
             myweixin;
             debugger;
+            myweixin.onInitial=function(){
+                var user = myweixin.getUserInfo();
+                if (user.hasOwnProperty("userid")&&user.userid!="undefined") {
+                    console.log("login success");
+                    debugger;
+                    if (user.hasPri("402880e74d75c4dd014d75d3c5f40001") || user.hasPri("402881875b19f141015b19fb1d490019") || user.hasPri("8a8ab0b246dc81120146dc81818b0051")) {
+                        $("#o2o_admin").removeClass("hide");
+                    }
+                } else {
+                    console.log("no user");
+                    window.location = "registbymobile.html";
+                }
+            }
             myweixin.onUser = function() {
                 var user = myweixin.getUserInfo();
                 debugger;
-                if (user.hasOwnProperty("userid")) {
+                if (user.hasOwnProperty("userid")&&user.userid!="undefined") {
                     console.log("login success");
                     debugger;
                     if (user.hasPri("402880e74d75c4dd014d75d3c5f40001") || user.hasPri("402881875b19f141015b19fb1d490019") || user.hasPri("8a8ab0b246dc81120146dc81818b0051")) {

@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>draggable demo</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <style>
+        body {
+            align-content: center;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        #draggable {
+            width: 20px;
+            height: 20px;
+            display: block;
+            background: #f3f3f3;
+        }
+    </style>
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+</head>
+
+<body>
+
+    <div id="inp" style="width: 40px;height: 40px;background-color: aqua;border-radius: 4px;display: block"></div>
+
+    <script>
+        function load() {
+
+            document.addEventListener('touchstart', touch, false);
+            document.addEventListener('touchmove', touch, false);
+            document.addEventListener('touchend', touch, false);
+
+            function touch(event) {
+                var event = event || window.event;
+
+                var oInp = document.getElementById("inp");
+                var downX;
+                switch (event.type) {
+                    case "touchstart":
+                        downX = event.clientX;
+                        oInp.innerHTML = "Touch started (" + event.touches[0].clientX + "," + event.touches[0].clientY + ")";
+                        break;
+                    case "touchend":
+                        oInp.innerHTML = "<br/>Touch end (" + event.changedTouches[0].clientX + "," + event.changedTouches[0].clientY + ")";
+                        break;
+                    case "touchmove":
+                        event.preventDefault();
+                        oInp.innerHTML = "<br/>Touch moved (" + event.touches[0].clientX + "," + event.touches[0].clientY + ")";
+                        break;
+                }
+
+            }
+        }
+        window.addEventListener('load', load, false);
+    </script>
+
+</body>
+
+</html>

@@ -9,11 +9,7 @@
     <title>面签预约</title>
     <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-    <link href="https://cdn.bootcss.com/bootstrap-validator/0.5.3/css/bootstrapValidator.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
-    <link href="https://cdn.bootcss.com/bootstrap-switch/3.3.4/css/bootstrap3/bootstrap-switch.min.css" rel="stylesheet">
-    <link href="css/highlight.css" rel="stylesheet" type="text/css">
-    <link href="css/main.css" rel="stylesheet" type="text/css">
+    <link href="css/unlock.css" rel="stylesheet" type="text/css">
     <link href="css/my.css" rel="stylesheet" type="text/css">
     <style type="text/css">
         .my-form-h1 {}
@@ -33,33 +29,15 @@
     </style>
     <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
     <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="https://cdn.bootcss.com/bootstrap-validator/0.5.3/js/bootstrapValidator.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
-    <script src="https://cdn.bootcss.com/json2/20160511/json2.min.js"></script>
-    <script src="https://cdn.bootcss.com/moment.js/2.18.0/moment.min.js"></script>
-    <script src="https://cdn.bootcss.com/moment.js/2.18.0/locale/zh-cn.js"></script>
-    <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
-    <script src="js/highlight.js"></script>
-    <script src="js/bootstrap-switch.js"></script>
-    <script src="js/main.js"></script>
+    <script src="js/unlock.js"></script>
     <script type="text/javascript" src="js/my.js"></script>
 
 </head>
 
 
 <body class="my-body">
-    <form action="mailto:to">
-        <input type="text" name="subject" class="form-control" value="Tax anniu PDF">
-        <input type="text" name="body" class="form-control" value="mybody is url">
-        <button class="btn btn-primary col-xs-12" type="submit">mailto</button>
-    </form>
-    <div class="section chatGroup">
-        <div class="container">
-            <a onclick="previewImgWithSelf(this)">
-                <img src="images/yuanqu1.jpg" class="img-responsive">
-            </a>
-        </div>
-    </div>
+    <div id="dragbar" draggable="true" style="background-color:azure;width:80px;height:80px;border: 1px solid #ccc">&nbsp;</div>
+    <div class="col-xs-12 dragVerfy">&nbsp;</div>
     <script type="text/javascript">
         $(document).ready(function() {
             //checkInputFileImg();
@@ -74,6 +52,11 @@
 
                 console.log(e, $el, value);
             });
+
+        });
+        $(".dragVerfy").slideToUnlock({
+            text: '滑动发送验证码',
+            succText: '发送成功'
         });
         /**
          * 图片压缩，默认同比例压缩

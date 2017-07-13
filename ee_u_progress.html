@@ -125,7 +125,7 @@
             myweixin.onUser = function() {
                 var user = myweixin.getUserInfo();
                 debugger;
-                if (user.hasOwnProperty("userid")) {
+                if (user.hasOwnProperty("userid")&&user.userid!="undefined") {
                     console.log("login success");
                     if (user.hasPri("402880e74d75c4dd014d75d3c5f40001")) {
                         $("#item1").attr("href", "javascript:gotoNameApply()");

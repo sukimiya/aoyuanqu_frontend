@@ -49,13 +49,13 @@
             if (data.hasOwnProperty("szhd_state"))
                 if (data.szhd_state1 == 1) {
                     if (data.hasOwnProperty("szhd_address"))
-                        $("#szhd_address").val(data.szhd_address);
+                        $("#appointment_address").val(data.szhd_address);
                     var todaystr = formatDateTo(data.szhd_time);
                     var today = new Date(todaystr)
                     if (data.szhd_state == 2) {
                         $("#appointment_time").val(todaystr.replace(" ", "T"));
                         $("#appointment_time").attr("disabled", "yes");
-                        $("#szhd_address").attr("disabled", "yes");
+                        $("#appointment_address").attr("disabled", "yes");
                         $("#photoGroup").removeClass("hide");
                     } else {
                         var todaystr = formatDateTo(data.szhd_time);
@@ -68,7 +68,7 @@
                             var month = new Date(new Date().setMonth(today.getMonth() + 6));
                             $("#appointment_time").attr('max', month.Format("yyyy-MM-ddThh:mm"));
                         }
-                        if (data.hasOwnProperty("szhd_address")) $("#szhd_address").val(data.szhd_address);
+                        if (data.hasOwnProperty("szhd_address")) $("#appointment_address").val(data.szhd_address);
                         if (data.szhd_state == 1) {
                             $("#thesubmit").attr("disabled", "yes");
                         }
@@ -79,7 +79,7 @@
                         var today = new Date(todaystr)
                         $("#appointment_time").val(todaystr.replace(" ", "T"));
                     }
-                    $("#szhd_address").val(data.szhd_address);
+                    $("#appointment_address").val(data.szhd_address);
                     if (data.szhd_license == null || data.szhd_license) {
                         $("#szhd_license_img").attr("src", getRemotePic(data.szhd_license));
                     }

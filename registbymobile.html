@@ -7,14 +7,25 @@
     <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="https://cdn.bootcss.com/bootstrap-validator/0.5.3/css/bootstrapValidator.min.css" rel="stylesheet">
+    <link href="css/unlock.css" rel="stylesheet" type="text/css">
+    <link href="css/my.css" rel="stylesheet" type="text/css">
+
+    <style type="text/css">
+        .bar {
+            margin: 20px;
+            height: 40px;
+            width: 300px;
+        }
+
+    </style>
     <!-- JS -->
     <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://cdn.bootcss.com/bootstrap-validator/0.5.3/js/bootstrapValidator.min.js"></script>
     <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
     <script src="https://cdn.bootcss.com/json2/20160511/json2.min.js"></script>
+
     <script type="text/javascript" src="js/my.js"></script>
-    <link href="css/my.css" rel="stylesheet" type="text/css">
     <script type="text/javascript">
         var redirectionLocation = "index.html";
         var validateCode_static = null;
@@ -24,17 +35,27 @@
         var curCount; //当前剩余秒数
         $(document).ready(function() {
             var myapi = restapis;
+            $("#dragVerfy").css("width", window.screen.width - 30 - 40 + "px");
+            $("#dragVerfy").slideToUnlock({
+                text: '滑动发送验证码',
+                succText: '发送成功',
+                successFunc: function() {
+                    getVerfyCode();
+                    $("#dragVerfy").remove();
+                }
+            });
             myweixin.onUser = function() {
                 var user = myweixin.getUserInfo();
-                myapi.request("getUserInfo", null, "open_id=" + myweixin.openid, function(result) {
-                    if(result.mobile==0){
-                        
-                    }else{
-                        window.location.replace("index.html");
-                    }
-                }, function() {
-                    alert("网络错误，请稍后再试");
-                });
+                if (user.hasOwnProperty("userid") && user.userid != "undefined")
+                    myapi.request("getUserInfo", null, "oppen_id=" + myweixin.openid, function(result) {
+                        if (result.mobile == 0) {
+
+                        } else {
+                            window.location.replace("index.html");
+                        }
+                    }, function() {
+                        alert("网络错误，请稍后再试");
+                    });
             }
             myweixin.initial();
             $('form').bootstrapValidator({
@@ -72,21 +93,26 @@
 
                 var $this = $(this);
                 $this.button('loading');
-
+                if (validateCode_static != $("#InputValidateCode").val()) {
+                    alert("请输入正确的验证码")
+                }
                 var fv_timestamp = Date.parse(new Date());
                 var fv_mobileNumber = $("#inputmobile").val();
-                console.log("mobile=" + fv_mobileNumber + "  oppen_id=" + myweixin.requestOpenid());
+                var wx_openid = myweixin.requestOpenid();
+                console.log("mobile=" + fv_mobileNumber + "  oppen_id=" + wx_openid);
                 debugger;
-                myapi.request("UserUpdate", null, "mobile=" + fv_mobileNumber + "&oppen_id=" + myweixin.openid, function(result) {
-                    if (result) {//http://www.aoyuanqu.cn/lily/registbymobile.html?mobilephone
-                        if(GetRequest().hasOwnProperty("mobilephone")){
-                            myapi.request("insertRecommand",null,"open_id="+myweiin.openid+"&phone="+GetRequest()["mobilephone"],function(result){
-                                console.log("recogenize persent:"+GetRequest()["mobilephone"]);
-                                window.location = redirectionLocation;
+                myapi.request("UserUpdate", null, "mobile=" + fv_mobileNumber + "&oppen_id=" + wx_openid, function(result) {
+                    if (result) { //http://www.aoyuanqu.cn/lily/registbymobile.html?mobilephone
+                        if (GetRequest().hasOwnProperty("mobilephone")) {
+                            myapi.request("insertRecommand", null, "open_id=" + myweiin.openid + "&phone=" + GetRequest()["mobilephone"], function(result) {
+                                console.log("recogenize persent:" + GetRequest()["mobilephone"]);
                             });
-                        }else{
-                            window.location = redirectionLocation;
                         }
+                        localStorage.removeItem("userid");
+                        window.location = redirectionLocation;
+                    } else if (result == 0) {
+                        alert("用户注册失败");
+                        $this.button('reset');
                     }
                 }, function(e) {
                     alert("网络错误，请稍后再试");
@@ -111,14 +137,14 @@
                         $("#changpwdform").data("bootstrapValidator").updateStatus("inputmobile", "NOT_VALIDATED", "手机号码验证错误,请稍后再试");
                     });
                 } else {
-                    $("#submitBtn").attr("disabled", "yes");
+                    $("#submitBtn").attr("disabled", "disabled");
                 }
             });
             $("#InputValidateCode").on("change", function() {
                 if (validateCode_static != null && $("InputValidateCode").val() == validateCode_static) {
                     $("#submitBtn").removeAttr("disabled");
                 } else {
-                    $("#submitBtn").attr("disabled", "yes");
+                    $("#submitBtn").attr("disabled", "disabled");
                 }
             });
             var request = GetRequest();
@@ -126,36 +152,58 @@
                 $.querySelector
                 redirectionLocation = request["redict"];
             }
-            $("#verfiyBtn").on("click", function() {
-                curCount = count;　　 //设置button效果，开始计时
-                $("#verfiyBtn").attr("disabled", "on");
-                var intid = setInterval(function() {
-                    curCount--;
-                    $("#verfiyBtn").text(curCount);
-                    //$("#verfiyBtn").attr("data-loading-text", " " + curCount);
-                    //document.title = "验证您的手机号码：" + curCount;
-                    if (curCount <= 0) {
-                        $("#verfiyBtn").text("重新验证");
-                        $("#verfiyBtn").removeAttr("disabled");
-                        clearInterval(intid);
-                    }
-                }, 1000);
-                //
+            $("#verfiyBtn").on("click", null, onVerfyBtnClickHandler1);
 
-                var fv_mobileNumber = $("#inputmobile").val();
-                debugger;
-                myapi.request("checkMessage", null, "mobile=" + fv_mobileNumber, function(result) {
-                    if (result.valid) {
-                        validateCode_static = result.validateCode;
-                    } else {
-                        alert("发送验证码错误");
-                        debugger;
-                    }
-                }, function() {
-                    alert("网络错误，请稍后再试");
-                });
-            });
         }); //ready
+        function onVerfyBtnClickHandler1() {
+            $(".drag").removeClass("hide");
+        }
+
+        function onVerfyBtnClickHandler2() {
+            $("#changpwdform").append('<div id="dragVerfy" class="hide bar drag">&nbsp;</div>');
+            $("#dragVerfy").slideToUnlock({
+                text: '滑动发送验证码',
+                succText: '发送成功',
+                successFunc: function() {
+                    getVerfyCode();
+                    $("#dragVerfy").remove();
+                }
+            });
+            $(".drag").removeClass("hide");
+        }
+
+        function getVerfyCode() {
+            var myapi = restapis;
+            curCount = count;　　 //设置button效果，开始计时
+            $("#verfiyBtn").attr("disabled", "on");
+            var intid = setInterval(function() {
+                curCount--;
+                $("#verfiyBtn").text(curCount);
+                //$("#verfiyBtn").attr("data-loading-text", " " + curCount);
+                //document.title = "验证您的手机号码：" + curCount;
+                if (curCount <= 0) {
+                    $("#verfiyBtn").text("重新验证");
+                    $("#verfiyBtn").removeAttr("disabled");
+                    $("#verfiyBtn").off("click", null, onVerfyBtnClickHandler1);
+                    $("#verfiyBtn").on("click", null, onVerfyBtnClickHandler2);
+                    clearInterval(intid);
+                }
+            }, 1000);
+            //
+
+            var fv_mobileNumber = $("#inputmobile").val();
+            debugger;
+            myapi.request("checkMessage", null, "mobile=" + fv_mobileNumber, function(result) {
+                if (result.valid) {
+                    validateCode_static = result.validateCode;
+                } else {
+                    alert("发送验证码错误");
+                    debugger;
+                }
+            }, function() {
+                alert("网络错误，请稍后再试");
+            });
+        }
 
     </script>
 </head>
@@ -179,11 +227,19 @@
                         <button id="verfiyBtn" href="#" class="btn btn-success col-xs-4">验证</button>
                     </div>
                 </div>
+                <div id="dragVerfy" class="hide bar drag">&nbsp;</div>
 
-                <a id="submitBtn" class="btn btn-primary col-xs-12" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> " style="font-size:22px;">注册</a>
+
             </form>
+
         </div>
     </div>
+    <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation" style="background-color:transparent;border:0px solid transparent;">
+        <div class="container">
+            <a id="submitBtn" class="btn btn-primary col-xs-12" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> " style="font-size:22px;">注册</a>
+        </div>
+    </nav>
+    <script type="text/javascript" src="js/unlock.js"></script>
 </body>
 
 </html>

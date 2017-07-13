@@ -16,7 +16,7 @@
     <script type="text/javascript" src="js/my.js"></script>
     <link href="css/my.css" rel="stylesheet" type="text/css">
     <script type="text/javascript">
-        var redirectionLocation = "my.html";
+        var redirectionLocation = "index.html";
         var validateCode_static = null;
         //----------------Reference from http://www.cnblogs.com/xcsn/archive/2013/04/22/3035240.html--------
         var InterValObj; //timer变量，控制时间
@@ -60,16 +60,21 @@
 
                 var $this = $(this);
                 $this.button('loading');
-
+                if(validateCode_static != $("#InputValidateCode").val()){
+                    alert("请输入正确的验证码")
+                }
                 var fv_timestamp = Date.parse(new Date());
                 var fv_mobileNumber = $("#inputmobile").val();
                 var fv_nickname = $("#nick_name").val();
                 var fv_jobtitle = $("#jobtitle").val();
-                console.log("mobile=" + fv_mobileNumber + "  oppen_id=" + myweixin.requestOpenid());
+                var wx_openid= myweixin.requestOpenid();
+                console.log("mobile=" + fv_mobileNumber + "  oppen_id=" + wx_openid);
+                debugger;
                 debugger;
                 //完成员工注册的接口，需要季键修改的地方
-                myapi.request("insert_company_user_staff", null, "mobilephone=" + fv_mobileNumber + "&user_name=" + fv_nickname + "&fjob=" + fv_jobtitle + "&oppen_id=" + myweixin.openid+"&company_name="+GetRequest()["confirm_name"], function(result) {
+                myapi.request("insert_company_user_staff", null, "mobilephone=" + fv_mobileNumber + "&user_name=" + fv_nickname + "&fjob=" + fv_jobtitle + "&open_id=" + wx_openid+"&company_name="+GetRequest()["confirm_name"], function(result) {
                     if (result) {
+                        localStorage.removeItem("userid");
                         window.location = redirectionLocation;
                     }
                 }, function(e) {

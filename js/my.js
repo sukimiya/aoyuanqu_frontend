@@ -200,7 +200,7 @@ var restapis = (function () {
             theurl += mothed
         }
         var contentType = "text/plain";
-        if (dataType == "json") contentType = "application/json; charset=utf-8"
+        if (dataType == "json") contentType = "application/json; charset=utf-8";
         $.ajax({
             type: post,
             dataType: dataType,
@@ -244,6 +244,7 @@ var myweixin = (function () {
     mythis.initial = function () {
         debugger;
         console.log("微信配置初始化中");
+
         if (GetRequest()["code"] != null && GetRequest()["code"] != undefined) {
             mythis.code = GetRequest()["code"];
             if (localStorage.getItem("wxopenid") == undefined || localStorage.getItem("wxopenid") == null) {
@@ -253,14 +254,17 @@ var myweixin = (function () {
             var thewxcode = GetRequest()["code"];
             var openid = localStorage.getItem("wxopenid");
             debugger;
-            if (localStorage.getItem("wxopenid")) {
+            if (openid) {
                 mythis.openid = localStorage.getItem("wxopenid");
                 mythis.webtoken = localStorage.getItem("wxwebtoken");
                 mythis.webrefreshtoken = localStorage.getItem("wxwebrefreshtoken");
                 mythis.webtokenexpires = localStorage.getItem("wxwebtokenexpires");
                 mythis.wxhead_img_url = localStorage.getItem("wxhead_img_url");
-                if (parseInt(mythis.webtokenexpires) > (new Date().getTime())) {
+                var d1 = parseInt(mythis.webtokenexpires);
+                var d2 = parseInt(new Date().getTime());
+                if (d1 < d2) {
                     console.log("web token expired");
+                    localStorage.clear();
                     mythis.requestCode();
                 } else {
                     mythis.isConfiged = true;
@@ -295,6 +299,7 @@ var myweixin = (function () {
     };
     mythis.requestOpenid = function (wxcode) {
         if (localStorage.getItem("wxopenid")) {
+            mythis.openid = localStorage.getItem("wxopenid");
             if (mythis.onOpenid) mythis.onOpenid();
             if (mythis.onUser) mythis.onUser();
             mythis.requestTicket();
@@ -304,17 +309,29 @@ var myweixin = (function () {
             var myapi = restapis;
             myapi.request("getOppen_id", null, "code=" + wxcode + "&yxName=" + mythis.yxName, function (result) {
                 debugger;
-                console.log("getOppen_id result" + result);
-                mythis.openid = result.openid;
-                localStorage.setItem("wxopenid", result.openid);
-                localStorage.setItem("wxwebtoken", result.access_token);
-                localStorage.setItem("wxwebrefreshtoken", result.refresh_token);
-                localStorage.setItem("wxwebtokenexpires", (new Date().getTime()) + parseInt(result.expires_in));
-                localStorage.setItem("userid", result.username);
-                localStorage.setItem("wxname", result.realname);
-                localStorage.setItem("wxhead_img_url", result.head_img_url);
-                if (result.hasOwnProperty("roleid")) localStorage.setItem("roleid", result.roleid);
-                window.location.replace(window.location.href.split("?")[0]);
+                console.log("getOppen_id result" + JSON.stringify(result));
+                if (result.hasOwnProperty("openid") && result.openid != "undefined" && result.openid != "") {
+                    localStorage.setItem("wxopenid", result.openid);
+                    localStorage.setItem("wxwebtoken", result.access_token);
+                    localStorage.setItem("wxwebrefreshtoken", result.refresh_token);
+                    localStorage.setItem("wxwebtokenexpires", (new Date().getTime()) + parseInt(result.expires_in)*1000);
+                    localStorage.setItem("wxname", result.realname);
+                    localStorage.setItem("wxhead_img_url", result.head_img_url);
+                }
+                if (result.hasOwnProperty("username") && result.username != "undefined" && result.username != "") {
+                    mythis.openid = result.openid;
+                    
+                    localStorage.setItem("userid", result.username);
+                    localStorage.setItem("wxhead_img_url", result.head_img_url);
+                    if (result.hasOwnProperty("roleid")) localStorage.setItem("roleid", result.roleid);
+                    window.location.replace(window.location.href.split("?")[0]);
+                } else {
+                    localStorage.removeItem("userid");
+                    if (window.location.href.indexOf("registbymobile.html") == -1)
+                        window.location.replace("registbymobile.html");
+                    if (mythis.onOpenid) mythis.onOpenid();
+                    if (mythis.onUser) mythis.onUser();
+                }
             }, function (req, e, data) {
                 if (myerror && myerror.hasOwnProperty(onWXError)) myerror.onWXError(req, e, data);
             });
@@ -322,26 +339,34 @@ var myweixin = (function () {
     }
     mythis.getUserInfo = function () {
         var user = {};
-        user.userid = localStorage.getItem("userid");
-        user.wxname = localStorage.getItem("wxname");
-        user.wxhead_img_url = localStorage.getItem("wxhead_img_url");
-        user.roleid = localStorage.getItem("roleid").split(",");
-        user.hasPri = function (pri) {
-            if (user.hasOwnProperty("roleid") && user.roleid != undefined)
-                for (var i = 0; i < user.roleid.length; i++) {
-                    if (pri == user.roleid[i])
-                        return true;
+        if (localStorage.getItem("userid") && localStorage.getItem("userid") != "undefined" && localStorage.getItem("userid") != "null") {
+            user.userid = localStorage.getItem("userid");
+            user.wxname = localStorage.getItem("wxname");
+            user.wxhead_img_url = localStorage.getItem("wxhead_img_url");
+            if (localStorage.getItem("roleid"))
+                user.roleid = localStorage.getItem("roleid").split(",");
+            user.hasPri = function (pri) {
+                if (user.hasOwnProperty("roleid") && user.roleid != undefined){
+                    user.roles =  user.roleid;
+                    for (var i = 0; i < user.roles.length; i++) {
+                        if (pri == user.roles[i])
+                            return true;
+                    }
                 }
-            return false;
+                return false;
+            }
         }
         return user;
+    }
+    mythis.clearLocal = function () {
+        localStorage.clear();
     }
     mythis.requestTicket = function (mytoken = null) {
         var myapi = restapis;
         myapi.request("getJSApiTicket", null, "yxName=" + mythis.yxName + "&timestamp=" + (new Date().getTime()), function (result) {
             if (result.errcode == 0) {
                 localStorage.setItem("wxticket", result.ticket);
-                localStorage.setItem("wxticketexpires", (new Date().getTime()) + result.expires_in);
+                localStorage.setItem("wxticketexpires", (new Date().getTime()) + parseInt(result.expires_in)*1000);
             } else {
                 if (myerror && myerror.hasOwnProperty(onWXError)) myerror.onWXError(null, null, result);
             }
@@ -395,7 +420,7 @@ var myshare = (function () {
         if (myweixin.isConfiged) {
             if (initialed) initialed();
         } else {
-            myweixin.checkapi(['onMenuShareAppMessage', 'onMenuShareQQ','showOptionMenu'], function () {
+            myweixin.checkapi(['onMenuShareAppMessage', 'onMenuShareQQ', 'showOptionMenu'], function () {
                 if (initialed) initialed();
             }, function () {
                 myweixin.onConfig = function () {
@@ -458,12 +483,12 @@ var myshare = (function () {
     mythis.open = function () {
 
         myshareinit(function () {
-//                    wx.showMenuItems({
-//                        menuList: ['menuItem:share:appMessage', 'menuItem:share:qq', 'menuItem:favorite', 'menuItem:share:email']
-//                    });
+            //                    wx.showMenuItems({
+            //                        menuList: ['menuItem:share:appMessage', 'menuItem:share:qq', 'menuItem:favorite', 'menuItem:share:email']
+            //                    });
             wx.showOptionMenu();
         });
-        
+
     }
     return mythis;
 }());

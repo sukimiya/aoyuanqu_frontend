@@ -173,11 +173,6 @@
                 $("#qycw_pic3").val(data.qycw_pic3);
                 $("#qycw_pic3_img").attr("src", getRemotePic(data.qycw_pic3));
             }
-
-            if (data.hasOwnProperty("qycw_pic4")) {
-                $("#qycw_pic4").val(data.qycw_pic4);
-                $("#qycw_pic4_img").attr("src", getRemotePic(data.qycw_pic4));
-            }
             checkInputFileImg();
         }
 
@@ -228,10 +223,11 @@
                     <div id="manage_range" class="well well-lg">&nbsp;
                     </div>
                 </div>
+                <label>注册资本：</label>
                 <div class="form-group">
-                    <label for="register_money">企业注册资本：</label>
-                    <div id="register_money" class="well well-lg">&nbsp;
+                    <div id="register_money" class="well well-lg col-xs-8">&nbsp;
                     </div>
+                    <div class="wanyuan col-xs-4" style="padding-top: 20px;">万元</div>
                 </div>
                 <div class="form-group">
                     <label for="register_kind">企业注册类型：</label>
@@ -302,14 +298,10 @@
                             <a class="col-xs-4 my-previewer" style="border:0px solid #000;float:left">
                                 <img id="qycw_pic3_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
                             </a>
-                            <a class="col-xs-4 my-previewer" style="border:0px solid #000;float:left">
-                                <img id="qycw_pic4_img" src="images/picframe.svg" width="100" height="100" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
-                            </a>
                         </div>
                         <input type="hidden" id="qycw_pic1">
                         <input type="hidden" id="qycw_pic2">
                         <input type="hidden" id="qycw_pic3">
-                        <input type="hidden" id="qycw_pic4">
                     </div>
                     <hr>
                     <hr>

@@ -22,7 +22,7 @@
             myweixin.onUser = function() {
                 var user = myweixin.getUserInfo();
                 debugger;
-                if (user.hasOwnProperty("userid")) {
+                if (user.hasOwnProperty("userid")&&user.userid!="undefined") {
                     console.log("login success");
                     debugger;
                     if (user.hasPri("402880e74d75c4dd014d75d3c5f40001") || user.hasPri("402881875b19f141015b19fb1d490019") || user.hasPri("8a8ab0b246dc81120146dc81818b0051")) {
@@ -106,7 +106,7 @@
                 </a>
             </div>
             <div id="o2o_text1" class="my-icon-container col-xs-4 text-center" style="padding-right:30px;padding-top:30px">
-                <a href="ee_u_progress.html" class="text-center">
+                <a href="ee_index.html" class="text-center">
                     <span class="my-icon-text" style="color:#ff0000">一键注册公司</span>
                 </a>
             </div>
@@ -123,8 +123,8 @@
                 </a>
             </div>
             <div id="o2o_text2" class="my-icon-container col-xs-4 text-center" style="padding-right:30px;padding-top:30px">
-                <a href="ee_u_progress.html" class="text-center">
-                    <span class="my-icon-text" style="color:#ff0000">一键注册公司</span>
+                <a href="ee_index.html" class="text-center">
+                    <span class="my-icon-text" style="color:#ff0000">分享招商奖励</span>
                 </a>
             </div>
             <div id="o2o_data" class="my-icon-container col-xs-4 text-center hide" style="padding-left:30px;padding-top:30px">
