@@ -1,0 +1,945 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>财政扶持</title>
+    <link rel="stylesheet" href="../../css/weui.css" />
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
+    <script src="https://cdn.bootcss.com/jspdf/1.3.4/jspdf.min.js"></script>
+    <script src="https://cdn.bootcss.com/canvasjs/1.7.0/canvasjs.min.js"></script>
+    <script src="https://cdn.bootcss.com/jspdf-autotable/2.3.2/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdn.bootcss.com/html2canvas/0.5.0-beta4/html2canvas.js"></script>
+    <script src="js/my.js"></script>
+    <script src="../../js/lrz.min.js"></script>
+    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+
+    <style>
+        .weui-cell::before {
+            right: 15px;
+        }
+
+        .weui-btn {
+            margin-left: 0px;
+            margin-right: 0px;
+        }
+
+        .textAlign {
+            text-align: center;
+            ;
+        }
+
+        .borderBot {
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .weui-cells::before,
+        .noBorder::before {
+            border-top: 0px;
+        }
+
+        .noBorder {
+            padding: 5px 15px;
+        }
+
+        .blueBorder::before {
+            border-top: 1px solid #5066B4;
+        }
+
+        .detail_info p,
+        label {
+            font-size: 12px;
+            border: 0px solid #ccc;
+        }
+
+        .weui-label {
+            width: auto;
+        }
+
+        .history img {
+            margin: 0px auto;
+            ;
+        }
+
+        #e_date {
+            font-size: 13px;
+            color: #888888;
+        }
+
+        #showDatePicker img {
+            width: 30px;
+            display: block;
+        }
+
+        .weui-btn-area {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+
+        .weui-btn+.weui-btn {
+            margin-top: 0px;
+        }
+
+        .bottom_bt {
+            font-size: 14px;
+            color: #fff;
+            background: #3F51B5;
+        }
+
+        .bottom_bt:nth-of-type(1) {
+            border: 1px solid #3F51B5;
+            color: #3F51B5;
+            background: #fff;
+        }
+
+        .weui_uploader_bd {
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .weui_uploader_files {
+            list-style: outside none none;
+        }
+
+        .weui_uploader_input_wrp::before {
+            height: 39.5px;
+            width: 2px;
+        }
+
+        .noAddIcon::before {
+            height: 0px;
+            width: 0px;
+        }
+
+        .weui_uploader_input_wrp::after,
+        .weui_uploader_input_wrp::before {
+            background-color: #d9d9d9;
+            content: " ";
+            left: 50%;
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .weui_uploader_input_wrp::after {
+            height: 2px;
+            width: 39.5px;
+        }
+
+        .noAddIcon::after {
+            height: 0px;
+            width: 0px;
+        }
+
+        .weui_uploader_input_wrp::after,
+        .weui_uploader_input_wrp::before {
+            background-color: #d9d9d9;
+            content: " ";
+            left: 50%;
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .weui_uploader_input_wrp {
+            float: left;
+            width: 100%;
+            height: 200px;
+            position: relative;
+        }
+
+        .weui_uploader_input {
+            height: 100%;
+            left: 0;
+            opacity: 0;
+            position: absolute;
+            top: 0;
+            width: 100%;
+            z-index: 1;
+        }
+
+        .weui_uploader_file {
+            background: rgba(0, 0, 0, 0) none no-repeat scroll 50% center / cover;
+            float: left;
+            height: 100%;
+            margin-bottom: 9px;
+            margin-right: 9px;
+            width: 100%;
+        }
+
+        .weui_uploader_files {
+            list-style: outside none none;
+        }
+
+        .contentWrap {
+            position: relative;
+        }
+
+        .shadeMask {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .Mask {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
+            ;
+        }
+
+        .toastModal_f {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: 200px;
+            overflow: hidden;
+            background: #fff;
+            border-radius: 10px;
+            z-index: 9999;
+        }
+
+        .toastModal_f_top {
+            height: 120px;
+            display: flex;
+            flex-direction: column;
+            align-content: center;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid #BBBBBB;
+        }
+
+        .toastModal_f_top h4 {
+            color: #FA3440;
+        }
+
+        .toastModal_f_top p {
+            font-size: 14px;
+        }
+
+        .toastModal_f_bot {
+            height: 80px;
+            display: flex;
+            flex-direction: column;
+            align-content: center;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ikonw {
+            width: 50%;
+            height: 40px;
+            background: #5066B4;
+            border-radius: 5px;
+            color: #fff;
+            text-align: center;
+            line-height: 40px;
+        }
+
+        .toastModal_s {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            display: none;
+        }
+
+        .hide {
+            display: none;
+        }
+
+        .show {
+            display: block;
+        }
+
+        table {
+            color: #000;
+        }
+
+        table caption {
+            font-size: 6px;
+            font-weight: 100;
+        }
+
+        table td {
+            font-size: 6px;
+            border-left: 1px solid #000;
+            border-top: 1px solid #000;
+        }
+
+        table .hasBorder td:last-of-type {
+            border-right: 1px solid #000;
+        }
+
+        table .lastTr td {
+            border-bottom: 1px solid #000;
+        }
+
+        .noBackground {
+            background: #fff;
+        }
+
+        .textAlignR {
+            text-align: right;
+        }
+
+        .noborderTd {
+            border: 0px;
+        }
+
+        .verticalAlignTop {
+            vertical-align: top;
+        }
+
+        .captionBold {
+            font-weight: bold;
+        }
+
+        .detail_info,
+        .container {
+            border-top: 0px;
+        }
+
+        .imgBlock {
+            border-radius: 5px;
+            background: #E5E5E5;
+        }
+
+    </style>
+
+</head>
+
+<body>
+    <div class="contentWrap">
+        <!--top block-->
+        <div class="page panel js_show">
+            <a class="weui-cell weui-cell_access " href="javascript:;">
+                <div class="weui-cell__bd textAlign borderBot">
+                    <p id="e_name"></p>
+                    <p id="e_date"></p>
+                    <p id="oppen_id" style="display:none"></p>
+                </div>
+            </a>
+        </div>
+        <!--information list-->
+        <div class="detail_info" id="detail_info">
+            <div class="weui-cell noBorder" style="display: none">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">id：</label></div>
+                <div class="weui-cell__bd">
+                    <p id="id"></p>
+                </div>
+            </div>
+            <div class="weui-cell noBorder">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">企业类型：</label></div>
+                <div class="weui-cell__bd">
+                    <p id="company_kind"></p>
+                </div>
+            </div>
+            <div class="weui-cell noBorder">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">税务管理码：</label></div>
+                <div class="weui-cell__bd">
+                    <p id="tax_code"></p>
+                </div>
+            </div>
+            <div class="weui-cell noBorder">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">所属乡镇：</label></div>
+                <div class="weui-cell__bd">
+                    <p id="city_name"></p>
+                </div>
+            </div>
+            <div class="weui-cell noBorder">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">所属工业园区：</label></div>
+                <div class="weui-cell__bd">
+                    <p id="subordinate_Industry"></p>
+                </div>
+            </div>
+            <div class="weui-cell noBorder">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">所属经济园区：</label></div>
+                <div class="weui-cell__bd">
+                    <p id="subordinate_economic"></p>
+                </div>
+            </div>
+            <div class="weui-cell noBorder">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">所属特色产业基地：</label></div>
+                <div class="weui-cell__bd">
+                    <p id="subordinate_feature"></p>
+                </div>
+            </div>
+            <div class="weui-cell noBorder">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">注册类型：</label></div>
+                <div class="weui-cell__bd">
+                    <p id="register_kind"></p>
+                </div>
+            </div>
+            <div class="weui-cell noBorder">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">产业（行业）类型：</label></div>
+                <div class="weui-cell__bd">
+                    <p id="industry_kind"></p>
+                </div>
+            </div>
+            <div class="weui-cell noBorder">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">扶持方式：</label></div>
+                <div class="weui-cell__bd">
+                    <p id="support_kind"></p>
+                </div>
+            </div>
+            <div class="weui-cell noBorder">
+                <div class="weui-cell__hd">
+                    <label class="weui-label" style="font-weight: bold">企业银行账户信息</label></div>
+            </div>
+            <div class="weui-cell noBorder">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">户名：</label></div>
+                <div class="weui-cell__bd">
+                    <p id="company_name"></p>
+                </div>
+            </div>
+            <div class="weui-cell noBorder">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">开户银行：</label></div>
+                <div class="weui-cell__bd">
+                    <p id="account_bank"></p>
+                </div>
+            </div>
+            <div class="weui-cell noBorder">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">银行账号：</label></div>
+                <div class="weui-cell__bd">
+                    <p id="account_number"></p>
+                </div>
+            </div>
+            <div class="weui-cell noBorder">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">备注：</label></div>
+                <div class="weui-cell__bd">
+                    <p id="fremark"></p>
+                </div>
+            </div>
+            <div class="weui-cell noBorder">
+                <div class="weui-cell__hd">
+                    <label class="weui-label" style="font-weight: bold">扶持金额</label></div>
+            </div>
+            <div class="weui-cell noBorder ">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">本年累加未退金额：</label></div>
+                <div class="weui-cell__bd">
+                    <p id="Preliminary_count" style="color:#E51C23;font-size: 13px;font-weight: bold;"></p>
+                </div>
+            </div>
+            <!-- 财政扶持预览表-->
+            <div class="weui-cell blueBorder">
+                <div class="weui-cell__hd">
+                    <label class="weui-label" style="font-weight: bold">财政扶持预览表</label></div>
+            </div>
+            <div class="weui-cell noBorder">
+                <div class="weui-cell__hd" style="width: 100%;background: #BDD7EE;padding-top: 10px">
+                    <div class="result"></div>
+                    <table id="table1" width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+                        <caption class="">金山区财政扶持资金申请表</caption>
+                        <caption class="textAlignR" id="pdfName"></caption>
+                        <tr>
+                            <td class="noborderTd" colspan="2" id="company"></td>
+                            <td class="noborderTd textAlignR">单位:万元</td>
+                        </tr>
+                        <tr class="hasBorder">
+                            <td width="33%" height="21" align="center">所属时期</td>
+                            <td width="33%" align="center">扶持方式</td>
+                            <td width="33%" align="center">本次申请扶持金额</td>
+                        </tr>
+                        <tr class="hasBorder">
+                            <td width="33%" align="" class="quarter"></td>
+                            <td width="33%" align="center" class="supportKind"></td>
+                            <td width="33%" align="center" class="applyAmount"></td>
+                        </tr>
+                        <tr class="hasBorder">
+                            <td width="33%" height="21" align="center">开户银行</td>
+                            <td width="33%" align="center">户名</td>
+                            <td width="33%" align="center">银行账号</td>
+                        </tr>
+                        <tr class="hasBorder">
+                            <td width="33%" align="" class="bank"></td>
+                            <td width="33%" align="" class="company"></td>
+                            <td width="33%" align="" class="accountNo"></td>
+                        </tr>
+                        <tr class="verticalAlignTop hasBorder lastTr">
+                            <td width="33%" height="100" align="">企业负责人(签章):</td>
+                            <td width="33%" height="100" align="">经济园区意见(签章):</td>
+                            <td width="33%" height="100" align="">同级财政意见(签章):</td>
+                        </tr>
+                        <!-- 脚注-->
+                        <tr class="noBackground">
+                            <td class="noborderTd" colspan="2" height="30">填表人:</td>
+                            <td class="noborderTd" height="30">填表日期:</td>
+                        </tr>
+                        <tr class="noBackground">
+                            <td class="noborderTd" colspan="3">备注:当企业银行账户发生变更时，请填列"开户银行","户名","银行账户"的信息。(若无变更,请勿填写！)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <!-- 财政扶持资金申请表盖章上传-->
+            <div class="weui-cell blueBorder">
+                <div class="weui-cell__hd">
+                    <label class="weui-label" style="font-weight: bold">财政扶持资金申请表盖章上传</label></div>
+            </div>
+            <div class="weui-cell noBorder">
+                <div class="weui_uploader_bd">
+                    <div class="weui_uploader_input_wrp imgBlock">
+                        <a href="javascript:;" class="a-upload my-icon-upload my-gap-left" style="float:left;width: 100%; height: 100%">
+                            <img id="file1" class="img-responsive" src="images/picframe.svg">
+                            <canvas></canvas>
+                            <input type="file" capture="camera" accept="image/*" title="" onchange="uploadSmallImage(this,'#file1_pic1')">
+                            
+                        </a>
+                        <input type="hidden" id="file1_pic1">
+                        <!--a onclick="chooseImage()" style="border:0px solid #000">
+                            <img id="file1" src="images/picframe.svg" style="width: 100%; height: 100%" class="img-responsive my-picbackground my-gap-right" style="border-radius: 8px;background-color: #E5E5E4;border: 1px solid #d3d3d3;">
+                        </a-->
+                        <!--<input id="file1" class="weui_uploader_input" accept="image/*" multiple="" type="file" onchange="uploadImg('file1','result1')">-->
+                        <div id="result1" class="weui_uploader_file uploadImg"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 按钮-->
+        <div class="weui-btn-area">
+            <div class="weui-btn weui-btn_primar bottom_bt" id="downloadFile">分享并下载</div>
+            <div class="weui-btn weui-btn_primar bottom_bt" id="uploadFile">已盖章，上传</div>
+        </div>
+    </div>
+    <!--遮盖-->
+    <div class="shadeMask">
+        <!-- step1-->
+        <div class="toastModal_f">
+            <div class="toastModal_f_top">
+                <h4>重要提示</h4>
+                <p>请先下载申请表</p>
+                <p>后盖章并上传</p>
+            </div>
+            <div class="toastModal_f_bot">
+                <a class="ikonw" href="javascript:" id="hiddenIkonw">我知道了</a></div>
+        </div>
+        <!-- step2-->
+        <div class="toastModal_s" style="background:url('../../images/raw_1494987959.png') no-repeat top center/contain"></div>
+    </div>
+    <div class="Mask"></div>
+    <!--toast-->
+    <div id="toast" style="display: none;">
+        <div class="weui-mask_transparent"></div>
+        <div class="weui-toast">
+            <i class="weui-icon-success-no-circle weui-icon_toast"></i>
+            <p class="weui-toast__content">上传成功</p>
+        </div>
+    </div>
+
+    <script>
+        var uploadBaseCode;
+        var myweixin = myweixin;
+        var imageLocalId;
+        var imageServerId;
+        var shareUrl; //pdf下载地址
+
+
+        //选择图片
+        function chooseImage() {
+            wx.chooseImage({
+                count: 1, // 默认9
+                sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+                sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+                success: function(res) {
+                    alert(res.localIds)
+                    imageLocalId = res.localIds[0]; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+                    //显示所选图片
+                    document.getElementById('result1').innerHTML = '<div id="result" class="weui_uploader_file uploadImg"  style="background-color:#000;background-image:url(' + res.localIds[0] + ')">' + '</div>';
+                    wx.uploadImage({
+                        localId: imageLocalId, // 需要上传的图片的本地ID，由chooseImage接口获得
+                        isShowProgressTips: 1, // 默认为1，显示进度提示
+                        success: function(res) {
+                            imageServerId = res.serverId[0]; // 返回图片的服务器端ID
+                        }
+                    });
+                },
+                fail: function(res) {
+                    alert('chooseimg fail')
+                    alert(res)
+                }
+
+            });
+        }
+        //上传图片到微信，需要从微信上下载到服务器上
+        $('#uploadFile').on('click', function() {
+            $('.Mask').show();
+            $.ajax({
+                type: 'get',
+                url: '',
+                data: {
+                    imageServerId: imageServerId //图片的服务器端ID,需要后台从微信多媒体接口下载图片到自己的服务器
+                },
+                dataType: 'json',
+                success: function(data) {
+                    //成功1
+                    if (data.rasult == 1) {
+                        var $toast = $('#toast');
+                        if ($toast.css('display') != 'none') return;
+                        $toast.fadeIn(100);
+                        setTimeout(function() {
+                            $toast.fadeOut(100);
+                        }, 2000);
+                        $('.Mask').hide();
+                    }
+                },
+                error: function(xhr, type) {}
+            });
+        });
+        //分享
+        $("#downloadFile").on('click', function() {
+            wx.onMenuShareTimeline({
+                title: '分享标题', // 分享标题
+                link: shareUrl, // getDate中获取pdf下载地址     分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                success: function() {
+                    // 用户确认分享后执行的回调函数
+                },
+                cancel: function() {
+                    // 用户取消分享后执行的回调函数
+                }
+            });
+        });
+
+        function GetRequest() {
+            return QueryString.data;
+            //添加数据$.session.set('key', 'value')删除数据$.session.remove('key');获取数据$.session.get('key');清除数据$.session.clear();
+        }
+        QueryString = {
+            data: {},
+            Initial: function() {
+                var aPairs, aTmp;
+                var queryString = new String(window.location.search);
+                queryString = queryString.substr(1, queryString.length); //remove   "?"     
+                aPairs = queryString.split("&");
+                for (var i = 0; i < aPairs.length; i++) {
+                    aTmp = aPairs[i].split("=");
+                    this.data[aTmp[0]] = aTmp[1];
+                }
+            },
+            GetValue: function(key) {
+                return this.data[key];
+            }
+        }
+        QueryString.Initial();
+
+        $(document).ready(function() {
+            getJSApiTicket();
+            //localStorage.removeItem("company_name");
+            //localStorage.removeItem("company_kind");
+            var company_name = localStorage.getItem("company_name");
+            var company_kind = localStorage.getItem("company_kind");
+
+            if (GetRequest()["code"] != null && GetRequest()["code"] != undefined) {
+                debugger;
+                var code = GetRequest()["code"];
+                $.ajax({
+                    type: 'get',
+                    url: 'http://119.29.153.19:8082/getOppen_id?code=' + code + '&&yxName=' + '廊下经济园区',
+                    dataType: 'json',
+                    async: false,
+                    success: function(data) {
+                        debugger;
+                        $('#oppen_id').text(data.openid);
+                        localStorage.setItem("oppenid", data.openid);
+                    },
+                    error: function(xhr, type) {}
+                });
+
+                console.log(company_name)
+                debugger;
+
+
+                //获取公司名字
+                getCompany_name(company_name);
+
+                if (company_name != "" && company_name != null) {
+                    $('#e_name').text(company_name);
+                }
+                if (company_kind != "" && company_kind != null) {
+                    $('#company_kind').text(company_kind);
+                }
+
+
+                var company_name = $('#e_name').text();
+
+                debugger;
+                //获取纳税数据
+                getDate(company_name);
+
+
+            } else {
+                var oppenid = localStorage.getItem("oppenid");
+                if (oppenid != null && oppenid != "") {
+                    $('#oppen_id').text(oppenid);
+                    console.log(oppenid)
+                    console.log(company_name)
+                    debugger;
+
+                    //获取公司名字
+                    getCompany_name(company_name);
+
+                    if (company_name != "" && company_name != null) {
+                        $('#e_name').text(company_name);
+                    }
+                    if (company_kind != "" && company_kind != null) {
+                        $('#company_kind').text(company_kind);
+                    }
+
+
+                    var company_name = $('#e_name').text();
+                    debugger;
+                    //获取纳税数据
+                    getDate(company_name);
+                } else {
+                    var authurl = "https://open.weixin.qq.com/connect/oauth2/";
+                    var appid = "wx7a6967db884b7058";
+                    var returnUrl = window.location.href.split("#")[0];
+                    //var newReturnUrl=returnUrl.replace("aoyuanqu","www.aoyuanqu"); 
+                    debugger;
+                    window.location = authurl + "authorize" + "?" + "appid=" + appid + "&redirect_uri=" + returnUrl + "&response_type=code&scope=snsapi_base&state=0#wechat_redirect";
+                }
+
+            }
+
+
+            function getCompany_name(company_name) {
+                if (company_name == "undefined" || company_name == null) {
+                    var oppen_id = $('#oppen_id').text();
+                    debugger;
+                    console.log(oppen_id)
+                    debugger;
+                    $.ajax({
+                        type: 'get',
+                        url: 'http://119.29.153.19:8082/searchDefaultCompany?oppen_id=' + oppen_id,
+                        dataType: 'json',
+                        async: false,
+                        success: function(data) {
+                            debugger;
+                            $('#e_name').text(data.company_name);
+                            $('#company_kind').text(data.company_kind);
+                            localStorage.setItem("company_name", data.company_name);
+                            localStorage.setItem("company_kind", data.company_kind);
+                        },
+                        error: function(xhr, type) {}
+                    });
+                }
+            }
+
+
+            function getDate(company_name) {
+                debugger;
+                if (company_name != "" && company_name != null) {
+                    debugger;
+                    $(function() {
+                        debugger;
+                        //initial data
+                        var company_name = $('#e_name').text();
+                        debugger;
+                        $.ajax({
+                            type: 'get',
+                            url: 'http://119.29.153.19:8082/getTaxSupport_quarter?company_name=' + company_name,
+                            async: false,
+                            dataType: 'json',
+                            success: function(data) {
+                                debugger;
+                                console.log(data)
+                                var elementIdArray = ['id', 'company_kind', 'tax_code', 'city_name', 'subordinate_Industry', 'subordinate_economic', 'subordinate_feature', 'register_kind', 'industryKind', 'support_kind', 'company_name', 'account_bank', 'account_number', 'fremark', 'Preliminary_count'];
+                                elementIdArray.map(function(item, index) {
+                                    $('#' + item).text(data[item])
+                                });
+                                $('#e_date').text(data['subordinate_period']);
+                                //initial form data
+                                $('.bank').text(data['account_bank']);
+                                $('.accountNo').text(data['account_number']);
+                                $('.company').text(data['company_name']);
+                                $('.applyAmount').text(data['Preliminary_count']);
+                                $('.supportKind').text(data['support_kind']);
+                                $('.quarter').text(data['subordinate_period']);
+                                $('#company').text('企业全称(盖章):' + data['company_name']);
+                                $('#pdfName').text(data['pdfName']);
+                                console.log('<div id="result" class="weui_uploader_file uploadImg"  style="background-color:#000;background-image:url(http://119.29.153.19:8082/(' + data['apply_pic'] + '))">' + '</div>')
+
+                                document.getElementById('result1').innerHTML = '<div id="result" class="weui_uploader_file uploadImg"  style="background-color:#000;background-image:url(http://119.29.153.19:8082/' + data['apply_pic'] + ')">' + '</div>';
+                            },
+                            error: function(xhr, type) {}
+                        });
+                    })
+
+                }
+
+            }
+
+
+            function getJSApiTicket() {
+                var yxName = "廊下经济园区";
+                debugger;
+                console.log(yxName)
+                debugger;
+                $.ajax({
+                    type: 'get',
+                    url: 'http://119.29.153.19:8082/getJSApiTicket?yxName=' + yxName,
+                    dataType: 'json',
+                    async: false,
+                    success: function(data) {
+                        debugger;
+                        localStorage.setItem("ticket", data.ticket);
+                        localStorage.setItem("appid", data.appid);
+                    },
+                    error: function(xhr, type) {}
+                });
+            }
+
+
+
+
+            /*    	var date = myweixin.company_name(oppen_id);
+                	//localStorage.removeItem("company_name");
+               // var company_name = localStorage.getItem("company_name");
+                //console.log(localStorage.getItem("company_name"))
+
+            	$('#wxhead_img_url').text(localStorage.getItem("company_name"));  */
+
+
+            /* 		myweixin.initial();
+            		myweixin.requestOpenid();
+            		$('#e_oppen_id').text(myweixin.requestOpenid());
+            		var date = myweixin.getUserInfo();
+            		$('#wxname').text(date.wxname);
+            		$('#wxhead_img_url').text(date.wxhead_img_url); */
+        });
+
+
+
+
+        //    //upload img  选择图片
+        //    function uploadImg(flieNodeName,resultNodeName){
+        //        var file = document.getElementById(flieNodeName).files[0];
+        //        if(!/image\/\w+/.test(file.type)){
+        //            return false;
+        //        }
+        //        if(file.size>2*1024*1024){
+        //            console.log('大于2MB---')
+        //            lrz(file,{width:750,fieldName:"file"}).then(function (rst) {
+        //                console.log(rst)
+        //                uploadBaseCode=rst.base64
+        //                var result=document.getElementById(resultNodeName);
+        //                //显示文件
+        //                result.innerHTML='<div id="result" class="weui_uploader_file uploadImg"  style="background-color:#000;background-image:url('+uploadBaseCode+')">'+'</div>';
+        //            })
+        //                    .catch(function (err) {
+        //                        console.log(err);
+        //                    })
+        //                    .always(function () {
+        //                    });
+        //        }else{
+        //            var reader = new FileReader();
+        //            reader.onload=function(e){
+        //                console.log(e.target.result)
+        //                uploadBaseCode=e.target.result
+        //                var result=document.getElementById(resultNodeName);
+        //                //显示文件
+        //                result.innerHTML='<div id="result" class="weui_uploader_file uploadImg"  style="background-color:#000;background-image:url('+e.target.result+')">'+'</div>';
+        //            }
+        //            reader.readAsDataURL(file);
+        //        }
+        //    };
+        //    //upload image 确认上传
+        //    $('#uploadFile').on('click', function(){
+        //
+        //    	var id = $('#id').text();
+        //        console.log('uploadBaseCode----+++')
+        //        //console.log(uploadBaseCode)
+        //        $.ajax({
+        //            type: 'post',
+        //            url: 'http://119.29.153.19:8082/uploadBase?imgStr='+uploadBaseCode,
+        //            //data: JSON.stringify({'uploadBaseCode':uploadBaseCode.substring(23) }),
+        //            contentType: 'application/json',
+        //            success: function(data){
+        //            	debugger;
+        //               $.ajax({
+        //	                    type: 'get',
+        //	                    url: 'http://119.29.153.19:8082/update_apply_pic?fileName='+data.fileName+'&id='+id,
+        //	                    //data: JSON.stringify({'uploadBaseCode':uploadBaseCode.substring(23) }),
+        //	                    contentType: 'application/json',
+        //	                    success: function(data){
+        //	                    	debugger;
+        //	                        var $toast = $('#toast');
+        //	                        if ($toast.css('display') != 'none') return;
+        //	                        $toast.fadeIn(100);
+        //	                        setTimeout(function () {
+        //	                            $toast.fadeOut(100);
+        //	                        }, 2000);
+        //                    	},
+        //                        error: function(xhr, type){
+        //                        }
+        //                })
+        //
+        //
+        //                var $toast = $('#toast');
+        //                if ($toast.css('display') != 'none') return;
+        //                $toast.fadeIn(100);
+        //                setTimeout(function () {
+        //                    $toast.fadeOut(100);
+        //                }, 2000);
+        //            },
+        //            error: function(xhr, type){
+        //            }
+        //        })
+        //    })
+        //Modal show or off
+        $('#hiddenIkonw').on('click', function() {
+            $('.toastModal_f').addClass('hide');
+            $('.toastModal_s').addClass('show');
+        });
+        $('.toastModal_s').on('click', function() {
+            $('.shadeMask').addClass('hide');
+        });
+
+        //下载pdf
+        $('#downloadFile').on('click', function() {
+            var str = $('#table1');
+            console.log(str);
+            html2canvas([str.get(0)], {
+                onrendered: function(canvas) {
+                    var imgData = canvas.toDataURL('image/jpeg');
+                    var doc = new jsPDF('p', 'mm', 'a4');
+                    doc.addImage(imgData, 'jpg', 10, 0, 190, 190);
+                    doc.save('ticket.report_' + new Date().getTime() + '.pdf');
+                },
+                background: "#fff",
+                allowTaint: true
+            });
+        })
+
+    </script>
+
+
+</body>
+
+</html>

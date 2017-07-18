@@ -39,15 +39,19 @@
 //                $iosMask.fadeIn(200);
 //            });
 //        });
-
+        
         function onShareMsgFinishedHandler() {
             weui.alert("分享成功");
         }
         $(document).ready(function() {
+            $("#showIOSActionSheet").on("click",function(e){
+                myshare.sharetomsg('http://www.aoyuanqu.cn/lily/uploads/aoyuanqu.pdf', onShareMsgFinishedHandler, null, '财政扶持申请表PDF', '2017年度二季度财政扶持申请表格PDF文件','http://www.aoyuanqu.cn/lily/images/icon_pdf.svg','http://www.aoyuanqu.cn/lily/uploads/aoyuanqu.pdf');
+                    myshare.sharetoqq('http://www.aoyuanqu.cn/lily/uploads/aoyuanqu.pdf', onShareMsgFinishedHandler, null, '财政扶持申请表PDF', '2017年度二季度财政扶持申请表格PDF文件','http://www.aoyuanqu.cn/lily/images/icon_pdf.svg');
+            });
             myweixin.onConfig = function() {
                 setTimeout(function() {
-                    myshare.sharetomsg('http://www.aoyuanqu.cn/lily/uploads/aoyuanqu.pdf', onShareMsgFinishedHandler, null, '财政扶持申请表PDF', '2017年度二季度财政扶持申请表格PDF文件');
-                    myshare.sharetoqq('http://www.aoyuanqu.cn/lily/uploads/aoyuanqu.pdf', onShareMsgFinishedHandler, null, '财政扶持申请表PDF', '2017年度二季度财政扶持申请表格PDF文件');
+                    myshare.sharetomsg('http://www.aoyuanqu.cn/lily/uploads/aoyuanqu.pdf', onShareMsgFinishedHandler, null, '财政扶持申请表PDF', '2017年度二季度财政扶持申请表格PDF文件','http://www.aoyuanqu.cn/lily/images/icon_pdf.svg','http://www.aoyuanqu.cn/lily/uploads/aoyuanqu.pdf');
+                    myshare.sharetoqq('http://www.aoyuanqu.cn/lily/uploads/aoyuanqu.pdf', onShareMsgFinishedHandler, null, '财政扶持申请表PDF', '2017年度二季度财政扶持申请表格PDF文件','http://www.aoyuanqu.cn/lily/images/icon_pdf.svg');
                 }, 1000);
 
             }
@@ -69,7 +73,7 @@
         </a>
     </div>
 
-    <a id="showIOSActionSheet" class="weui-btn weui-btn weui-btn_primary" href="javascript:myshare.open()">按钮</a>
+    <a id="showIOSActionSheet" class="weui-btn weui-btn weui-btn_primary">按钮</a>
 </body>
 
 </html>

@@ -75,6 +75,7 @@
                 myapi.request("insert_company_user_staff", null, "mobilephone=" + fv_mobileNumber + "&user_name=" + fv_nickname + "&fjob=" + fv_jobtitle + "&open_id=" + wx_openid+"&company_name="+GetRequest()["confirm_name"], function(result) {
                     if (result) {
                         localStorage.removeItem("userid");
+                        localStorage.removeItem("wxopenid");
                         window.location = redirectionLocation;
                     }
                 }, function(e) {

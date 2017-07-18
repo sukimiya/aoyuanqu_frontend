@@ -25,6 +25,6 @@ $file_Data = $_POST["fileData"];
           }
 $img = base64_decode($file_Data);
 $a = file_put_contents("uploads/" . $tmp_name.$tmp_extention, $img);//返回的是字节数
-      echo '{"result":0,"msg":"file uploaded","fileSize":'.$a.',"fileName":"'.$tmp_name.$tmp_extention.'"}';
+      echo '{"result":0,"msg":"file uploaded","fileName":"'.$tmp_name.$tmp_extention.'"}';
 
 ?>

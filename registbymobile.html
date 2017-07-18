@@ -46,7 +46,7 @@
             });
             myweixin.onUser = function() {
                 var user = myweixin.getUserInfo();
-                if (user.hasOwnProperty("userid") && user.userid != "undefined")
+                if (user.hasOwnProperty("userid") && user.userid != "undefined") {
                     myapi.request("getUserInfo", null, "oppen_id=" + myweixin.openid, function(result) {
                         if (result.mobile == 0) {
 
@@ -56,6 +56,10 @@
                     }, function() {
                         alert("网络错误，请稍后再试");
                     });
+                }else{
+                    
+                }
+
             }
             myweixin.initial();
             $('form').bootstrapValidator({
@@ -109,6 +113,7 @@
                             });
                         }
                         localStorage.removeItem("userid");
+                        localStorage.removeItem("wxopenid");
                         window.location = redirectionLocation;
                     } else if (result == 0) {
                         alert("用户注册失败");

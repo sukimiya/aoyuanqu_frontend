@@ -267,11 +267,11 @@ var myweixin = (function () {
                     localStorage.clear();
                     mythis.requestCode();
                 } else {
-                    mythis.isConfiged = true;
                     if (mythis.onOpenid) mythis.onOpenid();
                     if (mythis.onUser) mythis.onUser();
-                    if (mythis.onConfig) mythis.onConfig();
-                    if (mythis.onInitial) mythis.onInitial();
+                    mythis.requestTicket(mythis.webtoken);
+//                    if (mythis.onConfig) mythis.onConfig();
+//                    if (mythis.onInitial) mythis.onInitial();
                 }
             } else {
                 mythis.requestCode();
@@ -279,23 +279,37 @@ var myweixin = (function () {
         }
     };
     mythis.config = function (wxticket) {
+        if(mythis.isConfiged){
+            if (mythis.onConfig) mythis.onConfig();
+            if (mythis.onInitial) mythis.onInitial();
+            return;
+        }
         var wxjsapi_ticket = wxticket;
-        var mytimestamp = (Date.parse(new Date())) / 1000;
-        var mynonceStr = sha1.hash(String(mytimestamp)).substring(0, 16);
-        var mysignature = "jsapi_ticket=" + wxjsapi_ticket + "&noncestr=" + mynonceStr + "&timestamp=" + mytimestamp + "&url=" + window.location.href.split("#")[0];
-        console.log(mynonceStr + "::" + wxjsapi_ticket + "::" + mytimestamp + "::" + window.location.href.split("#")[0]);
-        var signatureSHA1 = sha1.hash(mysignature);
-        wx.config({
-            debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
-            appId: appid, // 必填，公众号的唯一标识
-            timestamp: mytimestamp, // 必填，生成签名的时间戳
-            nonceStr: mynonceStr, // 必填，生成签名的随机串
-            signature: signatureSHA1, // 必填，签名，见附录1
-            jsApiList: mythis.apilist
-        });
-        mythis.isConfiged = true;
-        if (mythis.onConfig) mythis.onConfig();
-        if (mythis.onInitial) mythis.onInitial();
+        var configRun = function () {
+            var mytimestamp = (Date.parse(new Date())) / 1000;
+            var mynonceStr = sha1.hash(String(mytimestamp)).substring(0, 16);
+            var mysignature = "jsapi_ticket=" + wxjsapi_ticket + "&noncestr=" + mynonceStr + "&timestamp=" + mytimestamp + "&url=" + window.location.href.split("#")[0];
+            console.log(mynonceStr + "::" + wxjsapi_ticket + "::" + mytimestamp + "::" + window.location.href.split("#")[0]);
+            var signatureSHA1 = sha1.hash(mysignature);
+            wx.config({
+                debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+                appId: appid, // 必填，公众号的唯一标识
+                timestamp: mytimestamp, // 必填，生成签名的时间戳
+                nonceStr: mynonceStr, // 必填，生成签名的随机串
+                signature: signatureSHA1, // 必填，签名，见附录1
+                jsApiList: mythis.apilist
+            });
+            mythis.isConfiged = true;
+            if (mythis.onConfig) mythis.onConfig();
+            if (mythis.onInitial) mythis.onInitial();
+        }
+        if (wxjsapi_ticket){
+            configRun();
+        }
+        else{
+            mythis.onTicketGet = configRun;
+            mythis.requestTicket(mythis.webtoken);
+        }
     };
     mythis.requestOpenid = function (wxcode) {
         if (localStorage.getItem("wxopenid")) {
@@ -314,13 +328,13 @@ var myweixin = (function () {
                     localStorage.setItem("wxopenid", result.openid);
                     localStorage.setItem("wxwebtoken", result.access_token);
                     localStorage.setItem("wxwebrefreshtoken", result.refresh_token);
-                    localStorage.setItem("wxwebtokenexpires", (new Date().getTime()) + parseInt(result.expires_in)*1000);
+                    localStorage.setItem("wxwebtokenexpires", (new Date().getTime()) + parseInt(result.expires_in) * 1000);
                     localStorage.setItem("wxname", result.realname);
                     localStorage.setItem("wxhead_img_url", result.head_img_url);
                 }
                 if (result.hasOwnProperty("username") && result.username != "undefined" && result.username != "") {
                     mythis.openid = result.openid;
-                    
+
                     localStorage.setItem("userid", result.username);
                     localStorage.setItem("wxhead_img_url", result.head_img_url);
                     if (result.hasOwnProperty("roleid")) localStorage.setItem("roleid", result.roleid);
@@ -346,8 +360,8 @@ var myweixin = (function () {
             if (localStorage.getItem("roleid"))
                 user.roleid = localStorage.getItem("roleid").split(",");
             user.hasPri = function (pri) {
-                if (user.hasOwnProperty("roleid") && user.roleid != undefined){
-                    user.roles =  user.roleid;
+                if (user.hasOwnProperty("roleid") && user.roleid != undefined) {
+                    user.roles = user.roleid;
                     for (var i = 0; i < user.roles.length; i++) {
                         if (pri == user.roles[i])
                             return true;
@@ -366,12 +380,13 @@ var myweixin = (function () {
         myapi.request("getJSApiTicket", null, "yxName=" + mythis.yxName + "&timestamp=" + (new Date().getTime()), function (result) {
             if (result.errcode == 0) {
                 localStorage.setItem("wxticket", result.ticket);
-                localStorage.setItem("wxticketexpires", (new Date().getTime()) + parseInt(result.expires_in)*1000);
+                localStorage.setItem("wxticketexpires", (new Date().getTime()) + parseInt(result.expires_in) * 1000);
             } else {
                 if (myerror && myerror.hasOwnProperty(onWXError)) myerror.onWXError(null, null, result);
             }
             if (mythis.onTicketGet) mythis.onTicketGet(result.ticket);
-            mythis.config(result.ticket);
+            if (!mythis.isConfiged)
+                mythis.config(result.ticket);
         }, function (req, e, data) {
             if (myerror && myerror.hasOwnProperty(onWXError)) myerror.onWXError(req, e, data);
         });
@@ -412,6 +427,14 @@ var myweixin = (function () {
     mythis.onConfig = null;
     mythis.onUser = null;
     //
+    if (wx) wx.error(function (res) {
+
+        // config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
+
+        alert("errorMSG:" + res);
+
+    });
+
     return mythis;
 }());
 //----------------------------------分享功能----------------------------

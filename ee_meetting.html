@@ -74,6 +74,9 @@
         }
 
         function pressData(data) {
+            if(!data.hasOwnProperty("confirm_name")){
+                window.location.replace("ee_progress.html?id"+GetRequest()["id"]);
+            }
             if (data.hasOwnProperty("confirm_name")) $("#companyname").text(data.confirm_name);
             if (data.hasOwnProperty("actual_address")) $("#actual_address").text(data.actual_address);
             if (data.hasOwnProperty("manage_range")) $("#manage_range").text(data.manage_range);
