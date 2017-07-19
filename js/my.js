@@ -247,6 +247,7 @@ var myweixin = (function () {
 
         if (GetRequest()["code"] != null && GetRequest()["code"] != undefined) {
             mythis.code = GetRequest()["code"];
+            console.log("myweixin got a code:"+mythis.code);
             if (localStorage.getItem("wxopenid") == undefined || localStorage.getItem("wxopenid") == null) {
                 mythis.requestOpenid(mythis.code);
             }
@@ -322,7 +323,6 @@ var myweixin = (function () {
         if (wxcode != null && wxcode != undefined) {
             var myapi = restapis;
             myapi.request("getOppen_id", null, "code=" + wxcode + "&yxName=" + mythis.yxName, function (result) {
-                debugger;
                 console.log("getOppen_id result" + JSON.stringify(result));
                 if (result.hasOwnProperty("openid") && result.openid != "undefined" && result.openid != "") {
                     localStorage.setItem("wxopenid", result.openid);
@@ -331,6 +331,10 @@ var myweixin = (function () {
                     localStorage.setItem("wxwebtokenexpires", (new Date().getTime()) + parseInt(result.expires_in) * 1000);
                     localStorage.setItem("wxname", result.realname);
                     localStorage.setItem("wxhead_img_url", result.head_img_url);
+                }else{
+                    //openid get fail
+                    
+                    return;
                 }
                 if (result.hasOwnProperty("username") && result.username != "undefined" && result.username != "") {
                     mythis.openid = result.openid;
@@ -548,7 +552,8 @@ function previewImagebyWX(theimg) {
         myweixin.onConfig = function () {
             mypreviewRun();
         }
-        myweixin.requestTicket();
+        if(myweixin.isConfiged) mypreviewRun();
+        else myweixin.requestTicket();
     });
 }
 
