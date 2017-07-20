@@ -72,14 +72,14 @@
         $(document).ready(function() {
             var myapi = restapis;
             $('textarea').flexText();
-            
+
             myapi.request("searchZZFF", null, "id=" + GetRequest()["id"], function(data) {
                 var jdata = data;
                 if (jdata.hasOwnProperty("license_pic")) {
 
                     getRemotePic(jdata.license_pic, $("#lisencePic"));
                     $("lisencePic1").val(jdata.license_pic);
-                }else{
+                } else {
                     $("#my-state-1").addClass("hide");
                     $("#submitbtn").addClass("hide");
                     return;
@@ -96,7 +96,7 @@
                     setFromDisabled("deliverform", true);
                     $("#my-state-1").addClass("hide");
                     if (jdata.hasOwnProperty("express_company")) {
-                        $("#expressInfoGroup").append('<div class="well well-lg">快递公司:' + jdata["express_company"] + '<p><b>快递单号:' + jdata["express_number"] + '</b></p><p>收件人:'+jdata["receive_name"]+'</p><p>电话:'+jdata["receive_phone"]+'</p><p>电话:'+jdata["express_address"]+'</p></div>');
+                        $("#expressInfoGroup").append('<div class="well well-lg">快递公司:' + jdata["express_company"] + '<p><b>快递单号:' + jdata["express_number"] + '</b></p><p>收件人:' + jdata["receive_name"] + '</p><p>电话:' + jdata["receive_phone"] + '</p><p>电话:' + jdata["express_address"] + '</p></div>');
                     } else {
                         if (jdata.license_takekind == 0) {
                             $("#expressInfoGroup").append('<div class="well well-lg"><span style="font-size:12px">状态:</span><br>已接收</div>');
@@ -119,19 +119,19 @@
                         }
                 }
                 $("#submitbtn").on("click", function() {
-                var postobj = {};
-                postobj["id"] = GetRequest()["id"];
-                postobj["receive_name"] = $("#receive_name").val();
-                postobj["license_takekind"] = isunfinishList ? 1 : 0;
-                postobj["receive_phone"] = $("#receive_phone").val();
-                postobj["express_address"] = $("#express_address").val();
-                debugger;
-                myapi.request("updateZZFF.do", "page", JSON.stringify(postobj), function(data) {
+                    var postobj = {};
+                    postobj["id"] = GetRequest()["id"];
+                    postobj["receive_name"] = $("#receive_name").val();
+                    postobj["license_takekind"] = isunfinishList ? 1 : 0;
+                    postobj["receive_phone"] = $("#receive_phone").val();
+                    postobj["express_address"] = $("#express_address").val();
                     debugger;
-                    console.log("deliver infomation had been record.");
-                    window.location.replace("ee_progress.html?id=" + GetRequest()["id"]);
-                }, function(e) {}, "POST");
-            });
+                    myapi.request("updateZZFF.do", "page", JSON.stringify(postobj), function(data) {
+                        debugger;
+                        console.log("deliver infomation had been record.");
+                        window.location.replace("ee_progress.html?id=" + GetRequest()["id"]);
+                    }, function(e) {}, "POST");
+                });
             }, function(e) {});
             myweixin.initial();
         });
@@ -180,16 +180,19 @@
                     <input type="hidden" id="license_takekind">
                     <input type="hidden" id="lisencePic1">
                 </form>
-                <div class="row important-notify text-center">
-                    <h3>重要提示</h3>
-                    <div class="clearfix">
-                        <ul>
-                            <li>快递资料为：工商营业执照正（副）本、公章、财务专用章、法人章、数字证书及其发票。</li>
-                            <li>收到企业资料后，请在第一时间办理银行开户手续。</li>
-                            <li>收到《银行开户许可证》请及时完善开户及三方协议信息。</li>
-                            <li>如有任何问题请致电岗位服务电话021-57320084。</li>
-                        </ul>
-                    </div>
+
+            </div>
+        </div>
+        <div class="container">
+            <div class="row important-notify text-center">
+                <h3>重要提示</h3>
+                <div class="clearfix">
+                    <ul>
+                        <li>快递资料为：工商营业执照正（副）本、公章、财务专用章、法人章、数字证书及其发票。</li>
+                        <li>收到企业资料后，请在第一时间办理银行开户手续。</li>
+                        <li>收到《银行开户许可证》请及时完善开户及三方协议信息。</li>
+                        <li>如有任何问题请致电岗位服务电话021-57320084。</li>
+                    </ul>
                 </div>
             </div>
         </div>

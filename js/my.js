@@ -243,44 +243,53 @@ var myweixin = (function () {
     });
     mythis.initial = function () {
         debugger;
+        var openifFunc = mythis.onOpenid;
         console.log("微信配置初始化中");
 
         if (GetRequest()["code"] != null && GetRequest()["code"] != undefined) {
             mythis.code = GetRequest()["code"];
-            console.log("myweixin got a code:"+mythis.code);
+            console.log("myweixin got a code:" + mythis.code);
             if (localStorage.getItem("wxopenid") == undefined || localStorage.getItem("wxopenid") == null) {
+                mythis.onOpenid = function () {
+                    if (openifFunc) openifFunc();
+                }
                 mythis.requestOpenid(mythis.code);
             }
         } else {
-            var thewxcode = GetRequest()["code"];
+
+
             var openid = localStorage.getItem("wxopenid");
-            debugger;
+
             if (openid) {
-                mythis.openid = localStorage.getItem("wxopenid");
-                mythis.webtoken = localStorage.getItem("wxwebtoken");
-                mythis.webrefreshtoken = localStorage.getItem("wxwebrefreshtoken");
-                mythis.webtokenexpires = localStorage.getItem("wxwebtokenexpires");
-                mythis.wxhead_img_url = localStorage.getItem("wxhead_img_url");
-                var d1 = parseInt(mythis.webtokenexpires);
-                var d2 = parseInt(new Date().getTime());
-                if (d1 < d2) {
-                    console.log("web token expired");
-                    localStorage.clear();
-                    mythis.requestCode();
+                if (localStorage.getItem("userid")&&localStorage.getItem("userid")!="null") {
+                    mythis.openid = localStorage.getItem("wxopenid");
+                    mythis.webtoken = localStorage.getItem("wxwebtoken");
+                    mythis.webrefreshtoken = localStorage.getItem("wxwebrefreshtoken");
+                    mythis.webtokenexpires = localStorage.getItem("wxwebtokenexpires");
+                    mythis.wxhead_img_url = localStorage.getItem("wxhead_img_url");
+                    var d1 = parseInt(mythis.webtokenexpires);
+                    var d2 = parseInt(new Date().getTime());
+                    if (d1 < d2 || Number.isNaN(d1)) {
+                        console.log("web token expired");
+                        mythis.requestCode();
+                    } else {
+                        if (mythis.onOpenid) mythis.onOpenid();
+                        if (mythis.onUser) mythis.onUser();
+                        mythis.requestTicket(mythis.webtoken);
+                        //                    if (mythis.onConfig) mythis.onConfig();
+                        //                    if (mythis.onInitial) mythis.onInitial();
+                    }
                 } else {
-                    if (mythis.onOpenid) mythis.onOpenid();
-                    if (mythis.onUser) mythis.onUser();
-                    mythis.requestTicket(mythis.webtoken);
-//                    if (mythis.onConfig) mythis.onConfig();
-//                    if (mythis.onInitial) mythis.onInitial();
+                    mythis.requestCode();
                 }
+
             } else {
                 mythis.requestCode();
             }
         }
     };
     mythis.config = function (wxticket) {
-        if(mythis.isConfiged){
+        if (mythis.isConfiged) {
             if (mythis.onConfig) mythis.onConfig();
             if (mythis.onInitial) mythis.onInitial();
             return;
@@ -304,10 +313,9 @@ var myweixin = (function () {
             if (mythis.onConfig) mythis.onConfig();
             if (mythis.onInitial) mythis.onInitial();
         }
-        if (wxjsapi_ticket){
+        if (wxjsapi_ticket) {
             configRun();
-        }
-        else{
+        } else {
             mythis.onTicketGet = configRun;
             mythis.requestTicket(mythis.webtoken);
         }
@@ -328,12 +336,12 @@ var myweixin = (function () {
                     localStorage.setItem("wxopenid", result.openid);
                     localStorage.setItem("wxwebtoken", result.access_token);
                     localStorage.setItem("wxwebrefreshtoken", result.refresh_token);
-                    localStorage.setItem("wxwebtokenexpires", (new Date().getTime()) + parseInt(result.expires_in) * 1000);
+                    localStorage.setItem("wxwebtokenexpires", (new Date()).getTime() + parseInt(result.expires_in) * 1000);
                     localStorage.setItem("wxname", result.realname);
                     localStorage.setItem("wxhead_img_url", result.head_img_url);
-                }else{
+                } else {
                     //openid get fail
-                    
+
                     return;
                 }
                 if (result.hasOwnProperty("username") && result.username != "undefined" && result.username != "") {
@@ -350,6 +358,8 @@ var myweixin = (function () {
                     if (mythis.onOpenid) mythis.onOpenid();
                     if (mythis.onUser) mythis.onUser();
                 }
+                if (mythis.onOpenid) mythis.onOpenid();
+                if (mythis.onUser) mythis.onUser();
             }, function (req, e, data) {
                 if (myerror && myerror.hasOwnProperty(onWXError)) myerror.onWXError(req, e, data);
             });
@@ -382,9 +392,9 @@ var myweixin = (function () {
     mythis.requestTicket = function (mytoken = null) {
         var myapi = restapis;
         myapi.request("getJSApiTicket", null, "yxName=" + mythis.yxName + "&timestamp=" + (new Date().getTime()), function (result) {
-            if (result.errcode == 0) {
+            if (result.hasOwnProperty("ticket")) {
                 localStorage.setItem("wxticket", result.ticket);
-                localStorage.setItem("wxticketexpires", (new Date().getTime()) + parseInt(result.expires_in) * 1000);
+                localStorage.setItem("wxticketexpires", (new Date().getTime()) + parseInt(result.expiresIn) * 1000);
             } else {
                 if (myerror && myerror.hasOwnProperty(onWXError)) myerror.onWXError(null, null, result);
             }
@@ -396,6 +406,12 @@ var myweixin = (function () {
         });
     }
     mythis.requestCode = function () {
+        localStorage.removeItem("wxopenid");
+        localStorage.removeItem("wxwebtoken");
+        localStorage.removeItem("wxwebrefreshtoken");
+        localStorage.removeItem("wxwebtokenexpires");
+        localStorage.removeItem("wxname");
+        localStorage.removeItem("wxhead_img_url");
         window.location = authurl + "authorize" + "?" + "appid=" + appid + "&redirect_uri=" + mylocation + "&response_type=code&scope=snsapi_base&state=0#wechat_redirect";
     }
     mythis.checkapi = function (theapis, successCallback, errorCallback, toConfig = true) {
@@ -552,7 +568,7 @@ function previewImagebyWX(theimg) {
         myweixin.onConfig = function () {
             mypreviewRun();
         }
-        if(myweixin.isConfiged) mypreviewRun();
+        if (myweixin.isConfiged) mypreviewRun();
         else myweixin.requestTicket();
     });
 }

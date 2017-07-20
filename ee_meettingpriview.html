@@ -100,7 +100,7 @@
             if (data.hasOwnProperty("actual_address")) $("#actual_address").text(data.actual_address);
             if (data.hasOwnProperty("manage_range")) $("#manage_range").text(data.manage_range);
             if (data.hasOwnProperty("register_money")) $("#register_money").text(data.register_money);
-            if (data.hasOwnProperty("register_kind")) $("#register_kind").text(data.register_kind);
+            if (data.hasOwnProperty("register_kind")) $("#register_kind").html("<b>企业注册类型：</b>"+data.register_kind);
             if (data.hasOwnProperty("tzfr_name")) $("#tzfr_name").text(data.tzfr_name);
             if (data.hasOwnProperty("tzfr_name")) {
                 var tzfr = {
@@ -224,13 +224,12 @@
                     </div>
                 </div>
                 <label>注册资本：</label>
-                <div class="form-group">
+                <div style="height: 60px;clear: both;">
                     <div id="register_money" class="well well-lg col-xs-8">&nbsp;
                     </div>
                     <div class="wanyuan col-xs-4" style="padding-top: 20px;">万元</div>
                 </div>
-                <div class="form-group">
-                    <label for="register_kind">企业注册类型：</label>
+                <div class="form-group my-gap-top">
                     <div id="register_kind" class="well well-lg">&nbsp;
                     </div>
                 </div>
@@ -335,6 +334,17 @@
                     </div>
                     <input type="hidden" id="qyjs_pic1">
                     <input type="hidden" id="qyjs_pic2">
+                    <div class="row important-notify text-center">
+                        <h3>重要提示</h3>
+                        <div class="clearfix">
+                            <ul>
+                                <li>独资企业——负责人本人带身份证原件，财务本人带身份证、上岗证原件。</li>
+                                <li>合资企业——法定代表人本人带身份证原件、全体股东本人带身份证原件 、监事本人带身份证原件 、财务身份证原件 、上岗证原件。</li>
+                                <li>面签现场必须出示上述提供的所有证照原件，由工商机构进行比对核查。</li>
+                                <li>如有任何问题，请致电岗位服务电话：021-57320084</li>
+                            </ul>
+                        </div>
+                    </div>
                     <button id="thesubmit" class="btn btn-primary form-control" type="button">提交</button>
                 </form>
             </div>
