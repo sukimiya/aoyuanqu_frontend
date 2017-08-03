@@ -126,8 +126,15 @@
                 var today = new Date(data.appointment_time.time);
                 $("#appointment_time").text(today.Format("yyyy-MM-dd hh:mm"));
             }
-            if (data.hasOwnProperty("appointment_address"))
-                $("#appointment_address").text(data.appointment_address);
+            if (data.hasOwnProperty("appointment_address")){
+                var addrifo;
+                if(data.appointment_address == distAddress.address2.name){
+                    addrifo = '<a href="' + distAddress.address2.nav + '">' + distAddress.address2.address + '</a>';
+                }else{
+                    addrifo = '<a href="' + distAddress.address1.nav + '">' + distAddress.address1.address + '</a>';
+                }
+                $("#appointment_address").html(addrifo);
+            }
             if (data.hasOwnProperty("zip_code")) $("#zip_code").text(data.zip_code);
             if (data.hasOwnProperty("qyfr_name")) $("#qyfr_name").text(data.qyfr_name);
             if (data.hasOwnProperty("qyfr_telephone")) $("#qyfr_telephone").text(data.qyfr_telephone);

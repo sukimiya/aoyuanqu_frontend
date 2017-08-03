@@ -24,6 +24,14 @@
         var curCount; //当前剩余秒数
         $(document).ready(function() {
             var myapi = restapis;
+            var rmr = localStorage.getItem("reqMRCompanyName","confirm_name");
+            if(!rmr||rmr=="undefined"){
+                $("#companyname").text(decodeURI(GetRequest()["confirm_name"]));
+                localStorage.setItem("reqMRCompanyName",decodeURI(GetRequest()["confirm_name"]));
+            }else{
+                $("#companyname").text(rmr);
+                localStorage.removeItem("reqMRCompanyName");
+            }
             myweixin.initial();
             $('form').bootstrapValidator({
                 feedbackIcons: {
@@ -72,7 +80,7 @@
                 debugger;
                 debugger;
                 //完成员工注册的接口，需要季键修改的地方
-                myapi.request("insert_company_user_staff", null, "mobilephone=" + fv_mobileNumber + "&user_name=" + fv_nickname + "&fjob=" + fv_jobtitle + "&open_id=" + wx_openid+"&company_name="+GetRequest()["confirm_name"], function(result) {
+                myapi.request("insert_company_user_staff", null, "mobilephone=" + fv_mobileNumber + "&user_name=" + fv_nickname + "&fjob=" + fv_jobtitle + "&open_id=" + wx_openid+"&company_name="+decodeURI(GetRequest()["confirm_name"]), function(result) {
                     if (result) {
                         localStorage.removeItem("userid");
                         localStorage.removeItem("wxopenid");
@@ -145,7 +153,7 @@
                     alert("网络错误，请稍后再试");
                 });
             });
-            $("#companyname").text(GetRequest()["confirm_name"]);
+            
         }); //ready
 
     </script>

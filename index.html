@@ -1,6 +1,7 @@
 <html>
 
 <head>
+    <title>&nbsp;</title>
     <meta charset="utf-8">
     <meta http-equiv="pragma" content="no-cache">
     <meta http-equiv="cache-control" content="no-cache">
@@ -16,22 +17,40 @@
     <script src="https://cdn.bootcss.com/json2/20160511/json2.min.js"></script>
     <script type="text/javascript" src="js/my.js"></script>
     <script type="text/javascript">
+        function pressroleid(roleid) {
+            if (roleid==("402880e74d75c4dd014d75d3c5f40001") ||
+                roleid==("402881875b19f141015b19fb1d490019") ||
+                roleid==("8a8ab0b246dc81120146dc81818b0051") ||
+                roleid==("8a9ea1305d886cbc015d96803d0104e7") ||
+                roleid==("8a9ea1305d886cbc015d9681f27404ea") ||
+                roleid==("8a9ea1305d886cbc015d9682581a04ec")) {
+                $("#o2o_admin").removeClass("hide");
+            }
+        }
         $(document).ready(function() {
             myweixin;
             debugger;
             var isReload;
-            if(!sessionStorage.hasOwnProperty("isReload"))
-                isReload = sessionStorage.setItem("isReload",false) = false;
+            if (!sessionStorage.hasOwnProperty("isReload"))
+                isReload = sessionStorage.setItem("isReload", false) = false;
             else
                 isReload = sessionStorage.getItem("isReload");
-            myweixin.onInitial=function(){
+            myweixin.onInitial = function() {
                 var user = myweixin.getUserInfo();
-                if (user.hasOwnProperty("userid")&&user.userid!="undefined") {
+                if (myweixin.hasOwnProperty("openid") && myweixin.openid != null && myweixin.openid != "undefined") {
+                    myapi.request("getRole", null, "open_id=" + myweixin.openid, function(result) {
+                        if (result.reuslt == 0) {
+                            if (result.roleid) {
+                                if (typeof(result.roleid) == "string") pressroleid(result.roleid);
+                                else
+                                    for (var i = 0; i < result.roleid.length; i++) pressroleid(result.roleid[i]);
+                            }
+                        }
+                    })
+                }
+                if (user.hasOwnProperty("userid") && user.userid != "undefined") {
                     console.log("login success");
-                    debugger;
-                    if (user.hasPri("402880e74d75c4dd014d75d3c5f40001") || user.hasPri("402881875b19f141015b19fb1d490019") || user.hasPri("8a8ab0b246dc81120146dc81818b0051")) {
-                        $("#o2o_admin").removeClass("hide");
-                    }
+
                 } else {
                     console.log("no user");
                     window.location = "registbymobile.html";
@@ -40,20 +59,20 @@
             myweixin.onUser = function() {
                 var user = myweixin.getUserInfo();
                 debugger;
-                if (user.hasOwnProperty("userid")&&user.userid!="undefined") {
+                if (user.hasOwnProperty("userid") && user.userid != "undefined") {
                     console.log("login success");
                     debugger;
                     if (user.hasPri("402880e74d75c4dd014d75d3c5f40001") || user.hasPri("402881875b19f141015b19fb1d490019") || user.hasPri("8a8ab0b246dc81120146dc81818b0051")) {
                         $("#o2o_admin").removeClass("hide");
                     }
-                    if(!isReload)
+                    if (!isReload)
                         isReload = true;
                 } else {
                     console.log("no user");
                     window.location = "registbymobile.html";
                 }
             }
-            if(!isReload)
+            if (!isReload)
                 myweixin.clearLocal();
             myweixin.initial();
             $('.carousel').carousel();
@@ -78,7 +97,7 @@
         <!-- Wrapper for slides -->
         <div class="carousel-inner" role="listbox">
             <div class="item active">
-                <img src="images/banner2_lx.jpg" alt="...">
+                <img src="images/banner2.jpg" alt="...">
                 <div class="carousel-caption">
                     ...
                 </div>
@@ -110,7 +129,7 @@
     <div class="section my-gap-top">
         <div class="container">
             <div class="my-icon-container col-xs-3 text-center">
-                <a href="/wordpress/I0027" class="text-center">
+                <a href="/wordpress/i0018" class="text-center">
                     <img src="images/ao_icons_glance.png" class="img-responsive my-icon">
                     <span class="my-icon-text">园区介绍</span>
                 </a>

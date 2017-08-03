@@ -48,8 +48,12 @@
 
             if (data.hasOwnProperty("szhd_state"))
                 if (data.szhd_state1 == 1) {
-                    if (data.hasOwnProperty("szhd_address"))
+                    if (data.hasOwnProperty("szhd_address")) {
                         $("#appointment_address").val(data.szhd_address);
+                        if (data.szhd_address == distAddress.address4.name) {
+                            $("#addressInfo").html('<a href="' + distAddress.address4.nav + '">' + distAddress.address4.address + '</a>');
+                        }
+                    }
                     var todaystr = formatDateTo(data.szhd_time);
                     var today = new Date(todaystr)
                     if (data.szhd_state == 2) {
@@ -68,7 +72,16 @@
                             var month = new Date(new Date().setMonth(today.getMonth() + 6));
                             $("#appointment_time").attr('max', month.Format("yyyy-MM-ddThh:mm"));
                         }
-                        if (data.hasOwnProperty("szhd_address")) $("#appointment_address").val(data.szhd_address);
+                        if (data.hasOwnProperty("szhd_address")) {
+                            var addrifo;
+                            $("#appointment_address").val(data.szhd_address);
+                            if (data.szhd_address == distAddress.address4.name) {
+                                addrifo = '<a href="' + distAddress.address4.nav + '">' + distAddress.address4.address + '</a>';
+                            } else {
+                                addrifo = '<a href="' + distAddress.address3.nav + '">' + distAddress.address3.address + '</a>';
+                            }
+                            $("#addressInfo").html(addrifo);
+                        }
                         if (data.szhd_state == 1) {
                             $("#thesubmit").attr("disabled", "yes");
                         }
@@ -79,7 +92,19 @@
                         var today = new Date(todaystr)
                         $("#appointment_time").val(todaystr.replace(" ", "T"));
                     }
-                    $("#appointment_address").val(data.szhd_address);
+                    if (data.hasOwnProperty("szhd_address")) {
+                        var addrifo;
+                        $("#appointment_address").val(data.szhd_address);
+                        if (data.szhd_address == distAddress.address4.name) {
+                            addrifo = '<a href="' + distAddress.address4.nav + '">' + distAddress.address4.address + '</a>';
+                        } else {
+                            addrifo = '<a href="' + distAddress.address3.nav + '">' + distAddress.address3.address + '</a>';
+                        }
+                        $("#addressInfo").html(addrifo);
+                    }
+                    if (data.szhd_state == 1) {
+                        $("#thesubmit").attr("disabled", "yes");
+                    }
                     if (data.szhd_license == null || data.szhd_license) {
                         $("#szhd_license_img").attr("src", getRemotePic(data.szhd_license));
                     }
@@ -123,7 +148,7 @@
             myapi.request("searchSZHD", null, "id=" + GetRequest()["id"], function(result) {
                 initial(result);
             }, function(e) {});
-
+            createAppointmentAddress("#appointment_address", "#addressInfo",distAddress.address3,distAddress.address4);
         })
 
     </script>
@@ -155,9 +180,9 @@
                     <div class="form-group">
                         <label class="clearfix">面签预约地点</label>
                         <select id="appointment_address" name="appointment_address" class="mycompany-select">
-                            <option title="小区总部" value="小区总部"><span style="font-size:12;color:#cccccc">园区小区总部，地址是：上海市XX区XX路233号</span></option>
-                            <option title="市区总部" value="市区总部"><span style="font-size:12;color:#cccccc">园区市区总部，地址是：上海市XX区XX路233号</span></option>
                         </select>
+                        <div id="addressInfo" class="well">&nbsp;
+                        </div>
                     </div>
                     <div id="photoGroup" class="text-center hide">
                         <hr>

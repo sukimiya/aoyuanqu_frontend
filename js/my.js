@@ -181,12 +181,12 @@ var errorHandler = (function () {
 }());
 //--------------------restful apis-----------------------
 var restapis = (function () {
-    var requestRoot = "http://119.29.153.19:8082/";
+    var requestRoot = "http://aoyuanqu.cn:8080/aoyqapi/";
     var appid = "wx7a6967db884b7058";
     var mythis = {};
     mythis.yxName = "廊下经济园区";
     mythis.openid = "";
-    mythis.requestRoot = "http://119.29.153.19:8082/";
+    mythis.requestRoot = "http://aoyuanqu.cn:8080/aoyqapi/";
     mythis.redictlocation = window.location.href.split("#")[0];
     /**
      *function(mothed,module,data,onSeccess,onError,post="GET",dataType="json")
@@ -213,7 +213,7 @@ var restapis = (function () {
         });
     }
     mythis.getRoot = function () {
-        return "http://119.29.153.19:8082/";
+        return "http://aoyuanqu.cn:8080/aoyqapi/";
     }
     return mythis;
 }())
@@ -226,7 +226,7 @@ var myweixin = (function () {
     mythis.yxName = "廊下经济园区";
     mythis.openid = localStorage.getItem("wxopenid");
     mythis.isConfiged = false;
-    mythis.requestRoot = "http://119.29.153.19:8082/";
+    mythis.requestRoot = "http://aoyuanqu.cn:8080/aoyqapi/";
     mythis.apilist = ['checkJsApi'
                         , 'chooseImage'
                         , 'previewImage'
@@ -261,8 +261,9 @@ var myweixin = (function () {
             var openid = localStorage.getItem("wxopenid");
 
             if (openid) {
-                if (localStorage.getItem("userid")&&localStorage.getItem("userid")!="null") {
+                if (localStorage.getItem("userid") && localStorage.getItem("userid") != "null") {
                     mythis.openid = localStorage.getItem("wxopenid");
+                    mythis.realname = localStorage.getItem("realname");;
                     mythis.webtoken = localStorage.getItem("wxwebtoken");
                     mythis.webrefreshtoken = localStorage.getItem("wxwebrefreshtoken");
                     mythis.webtokenexpires = localStorage.getItem("wxwebtokenexpires");
@@ -334,6 +335,7 @@ var myweixin = (function () {
                 console.log("getOppen_id result" + JSON.stringify(result));
                 if (result.hasOwnProperty("openid") && result.openid != "undefined" && result.openid != "") {
                     localStorage.setItem("wxopenid", result.openid);
+                    localStorage.setItem("nick_name", result.realname);
                     localStorage.setItem("wxwebtoken", result.access_token);
                     localStorage.setItem("wxwebrefreshtoken", result.refresh_token);
                     localStorage.setItem("wxwebtokenexpires", (new Date()).getTime() + parseInt(result.expires_in) * 1000);
@@ -394,7 +396,7 @@ var myweixin = (function () {
         myapi.request("getJSApiTicket", null, "yxName=" + mythis.yxName + "&timestamp=" + (new Date().getTime()), function (result) {
             if (result.hasOwnProperty("ticket")) {
                 localStorage.setItem("wxticket", result.ticket);
-                localStorage.setItem("wxticketexpires", (new Date().getTime()) + parseInt(result.expiresIn) * 1000);
+                localStorage.setItem("wxticketexpires", parseInt(result.ticket_time));
             } else {
                 if (myerror && myerror.hasOwnProperty(onWXError)) myerror.onWXError(null, null, result);
             }
@@ -407,6 +409,7 @@ var myweixin = (function () {
     }
     mythis.requestCode = function () {
         localStorage.removeItem("wxopenid");
+        localStorage.removeItem("realname");
         localStorage.removeItem("wxwebtoken");
         localStorage.removeItem("wxwebrefreshtoken");
         localStorage.removeItem("wxwebtokenexpires");
@@ -966,3 +969,41 @@ function validateIdCard(idCard) {
     }
     return false;
 }
+//
+function createAppointmentAddress(thetarget, info,addr1=distAddress.address1,addr2=distAddress.address2) {
+    $(info).html('<a href="' + addr1.nav + '">' + addr1.address + '</a>');
+    $(thetarget).append('<option title="' + addr1.name + '" value="' + addr1.name + '"><span style="font-size:12;color:#cccccc">' + addr1.name + '</span></option>');
+    $(thetarget).append('<option title="' + addr2.name + '" value="' + addr2.name + '"><span style="font-size:12;color:#cccccc">' + addr2.name + '</span></option>');
+    $(thetarget).on("change", function (e) {
+        if ($(thetarget).val() == addr1.name) {
+            $(info).text(addr1.address);
+            $(info).html('<a href="' + addr1.nav + '">' + addr1.address + '</a>')
+        } else {
+            $(info).html('<a href="' + addr2.nav + '">' + addr2.address + '</a>')
+        }
+    });
+}
+var distAddress = (function () {
+    var mythis = {};
+    mythis.address2 = {
+        name: "市区办事处",
+        address: "上海市闵行区碧泉路36号1号楼801室（金霄大厦）莘庄地铁站北广场西侧。 电话：021-52961848",
+        nav: "http://j.map.baidu.com/k45aL"
+    };
+    mythis.address1 = {
+        name: "园区总部",
+        address: "园区总部：上海市金山区亭林镇亭枫公路333号（农业银行2楼）西侧。电话：021-67233928,吴老师",
+        nav: "http://j.map.baidu.com/nF09e"
+    };
+    mythis.address4 = {
+        name: "市区办事处",
+        address: "上海市闵行区碧泉路36号1号楼801室（金霄大厦）莘庄地铁站北广场西侧。 电话：021-52961848,许老师",
+        nav: "http://j.map.baidu.com/k45aL"
+    };
+    mythis.address3 = {
+        name: "园区总部",
+        address: "园区总部：上海市金山区亭林镇亭枫公路333号（农业银行2楼）西侧。电话：021-67233920,郑老师",
+        nav: "http://j.map.baidu.com/nF09e"
+    };
+    return mythis;
+}());

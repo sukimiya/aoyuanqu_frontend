@@ -28,22 +28,29 @@
     <script type="text/javascript">
         var investorAry = [];
         var isAddMode = true;
-        function formatDateTo(dstr){
+
+        function formatDateTo(dstr) {
             var result = dstr;
-            if(result.indexOf(" ")!=-1){
+            if (result.indexOf(" ") != -1) {
                 var thedatearr = result.split(" ");
                 var timearr = thedatearr[1].split(":");
-                result = thedatearr[0] +" " + timearr[0]+":"+timearr[1];
+                result = thedatearr[0] + " " + timearr[0] + ":" + timearr[1];
                 return result;
             }
         }
+
         function initial(data) {
             debugger;
             if (data.confirm_name)
                 $("#confirm_name").text(data.confirm_name);
             var today = new Date(formatDateTo(data.szhd_time));
             $("#appointment_time").val(today.Format("yyyy-MM-ddThh:mm"));
-            if (data.hasOwnProperty("szhd_address")) $("#szhd_address").val(data.szhd_address);
+            if (data.hasOwnProperty("szhd_address")) {
+                $("#szhd_address").val(data.szhd_address);
+                if (data.szhd_address == distAddress.address4.name) {
+                    $("#addressInfo").html('<a href="' + distAddress.address4.nav + '">' + distAddress.address4.address + '</a>');
+                }
+            }
             if (data.szhd_state1 == 2) {
                 //已完成
                 myweixin.initial();
@@ -75,12 +82,54 @@
                 }
             }
             checkInputFileImg();
+            var myvalidator = $('#bookform').bootstrapValidator({
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    appointment_time: {
+                        validators: {
+                            message: '请正确填写预约时间',
+                            notEmpty: {
+                                message: '预约时间不能为空',
+                            }
+                        }
+                    },
+                    szhd_address: {
+                        validators: {
+                            message: '请选择预约地点',
+                            notEmpty: {
+                                message: '预约地点不能为空',
+                            }
+                        }
+                    },
+                    express_address: {
+                        validators: {
+                            message: '请正确填写收件地址',
+                            notEmpty: {
+                                message: '收件地址不能为空',
+                            }
+                        }
+                    }
+                }
+            });
+            myvalidator.on('success.form.bv', function(e) {
+                $("#submitbtn").on("click", function(events) {
+                    var params = "id=" + GetRequest()["id"] + "&szhd_time=" + $("#appointment_time").val().replace("/", "-") + "&szhd_address=" + $("#szhd_address").val() + "&szhd_state=2";
+                    myapi.request("updateStartSZHD", null, params, function(result) {
+                        window.location = "ee_progress.html?id=" + GetRequest()["id"];
+                    }, function() {});
+                });
+            });
         }
         var myapi = restapis;
         $(document).ready(function() {
             myapi.request("searchSZHD", null, "id=" + GetRequest()["id"], function(result) {
                 initial(result);
             }, function(e) {});
+            createAppointmentAddress("#szhd_address", "#addressInfo", distAddress.address3, distAddress.address4);
         })
 
         function onpreview() {
@@ -116,9 +165,9 @@
                     <div class="form-group">
                         <label class="clearfix">面签预约地点</label>
                         <select id="szhd_address" name="szhd_address" class="mycompany-select">
-                            <option title="小区总部" value="小区总部"><span style="font-size:12;color:#cccccc">园区小区总部，地址是：上海市XX区XX路233号</span></option>
-                            <option title="市区总部" value="市区总部"><span style="font-size:12;color:#cccccc">园区市区总部，地址是：上海市XX区XX路233号</span></option>
                         </select>
+                        <div id="addressInfo" class="well">&nbsp;
+                        </div>
                     </div>
                     <div id="photoGroup" class="text-center hide">
                         <hr>
@@ -135,7 +184,7 @@
                             </ul>
                         </div>
                     </div>
-                    <a id="submitbtn" class="btn btn-primary col-xs-12 my-gap-top">提交</a>
+                    <button id="submitbtn" class="btn btn-primary col-xs-12 my-gap-top">提交</button>
                 </form>
             </div>
         </div>

@@ -126,8 +126,12 @@
                 var today = new Date(data.appointment_time.time);
                 $("#appointment_time").val(today.Format("yyyy-MM-dd hh:mm"));
             }
-            if (data.hasOwnProperty("appointment_address"))
+            if (data.hasOwnProperty("appointment_address")){
                 $("#appointment_address").val(data.appointment_address);
+                if(data.appointment_address == distAddress.address2.name){
+                    $("#addressInfo").html('<a href="' + distAddress.address2.nav + '">' + distAddress.address2.address + '</a>');
+                }
+            }
             if (data.hasOwnProperty("zip_code")) $("#zip_code").val(data.zip_code);
             if (data.hasOwnProperty("qyfr_name")) $("#qyfr_name").val(data.qyfr_name);
             if (data.hasOwnProperty("qyfr_telephone")) $("#qyfr_telephone").val(data.qyfr_telephone);
@@ -206,6 +210,7 @@
                 });
             });
             getmeetingdata();
+            createAppointmentAddress("#appointment_address","#addressInfo");
         })
 
     </script>
@@ -257,9 +262,9 @@
                     <div class="form-group">
                         <label class="clearfix">面签预约地点</label>
                         <select id="appointment_address" name="appointment_address" class="mycompany-select">
-                        <option title="小区总部" value="小区总部"><span style="font-size:12;color:#cccccc">园区小区总部，地址是：上海市XX区XX路233号</span></option>
-                        <option title="市区总部" value="市区总部"><span style="font-size:12;color:#cccccc">园区市区总部，地址是：上海市XX区XX路233号</span></option>
                         </select>
+                        <div id="addressInfo" class="well">&nbsp;
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="zip_code">区域邮政编码</label>

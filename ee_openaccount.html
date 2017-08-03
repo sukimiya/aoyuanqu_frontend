@@ -30,18 +30,7 @@
             if (itype == 1) {
                 if (data != null) {
                     $("#submitBtn").on("click", function() {
-                        var postobj = {
-                            "id": GetRequest()["id"],
-                            "swsf_license": $("#swsf_license").val(),
-                            "account_bank": $("#account_bank").val(),
-                            "account_number": $("#account_number").val(),
-                            "swsf_state": 2,
-                            "account_state": 2
-                        };
-                        myapi.request("updateYHKH.do", "page", JSON.stringify(postobj), function(result) {
-                            console.log("deliver infomation had been record.");
-                            window.location = "ee_progress.html?id=" + GetRequest()["id"];
-                        }, function(e) {}, "POST");
+                        sendDatas();
                     });
                 }
             } else if (itype == 2) {
@@ -58,8 +47,8 @@
                         $("#uploadbtn").addClass("hide");
 
                     };
-                $("#account_bank").attr("disabled","yes");
-                $("#account_number").attr("disabled","yes");
+                $("#account_bank").attr("disabled", "yes");
+                $("#account_number").attr("disabled", "yes");
             }
         }
         $(document).ready(function() {
@@ -78,7 +67,59 @@
                     alert("上传失败");
                 });
             });
+            var myvalidator = $('#openaccount').bootstrapValidator({
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    account_bank: {
+                        validators: {
+                            message: '请正确填写开户银行',
+                            notEmpty: {
+                                message: '开户银行不能为空',
+                            }
+                        }
+                    },
+                    file: {
+                        validators: {
+                            message: '请上传《金税三方协议》',
+                            notEmpty: {
+                                message: '需要上传《金税三方协议》',
+                            }
+                        }
+                    },
+                    account_number: {
+                        validators: {
+                            message: '请正确填写开户银行账号',
+                            notEmpty: {
+                                message: '开户银行账号不能为空',
+                            }
+                        }
+                    }
+                }
+            });
+            myvalidator.on('success.form.bv', function(e) {
+                sendDatas();
+            });
         });
+
+        function sendDatas() {
+            var myapi = restapis;
+            var postobj = {
+                "id": GetRequest()["id"],
+                "swsf_license": $("#swsf_license").val(),
+                "account_bank": $("#account_bank").val(),
+                "account_number": $("#account_number").val(),
+                "swsf_state": 2,
+                "account_state": 2
+            };
+            myapi.request("updateYHKH.do", "page", JSON.stringify(postobj), function(result) {
+                console.log("deliver infomation had been record.");
+                window.location = "ee_progress.html?id=" + GetRequest()["id"];
+            }, function(e) {}, "POST");
+        }
         //
         function previewImgWithName() {
             var imgpath = $("#lisenceImg").attr("src");
@@ -102,14 +143,14 @@
             </div>
             &nbsp;
 
-            <form id="openaccount">
+            <form id="openaccount" role="form" data-toggle="validator">
                 <div class="form-group">
                     <label>开户银行</label>
-                    <input type="text" class="form-control" id="account_bank" required/>
+                    <input type="text" class="form-control" id="account_bank"/>
                 </div>
                 <div class="form-group">
                     <label>开户银行账号</label>
-                    <input type="number" class="form-control" id="account_number" required/>
+                    <input type="number" class="form-control" id="account_number"/>
                 </div>
                 <input type="hidden" id="swsf_license">
 
@@ -134,18 +175,19 @@
                         <h3>&nbsp;</h3>
                     </div>
                 </div>
-            </form>
-            <div class="row important-notify text-center">
-                    <h3>重要提示</h3>
-                    <div class="clearfix">
-                        <ul>
-                            <li>完善开户信息后并上传“金税三方协议”照片。</li>
-                            <li>成功上传后请及时查看“税种核定”预约进度。</li>
-                            <li>如有任何问题，请致电岗位服务电话：021-57320084。</li>
-                        </ul>
-                    </div>
+                <div class="row important-notify text-center">
+                <h3>重要提示</h3>
+                <div class="clearfix">
+                    <ul>
+                        <li>完善开户信息后并上传“金税三方协议”照片。</li>
+                        <li>成功上传后请及时查看“税种核定”预约进度。</li>
+                        <li>如有任何问题，请致电岗位服务电话：021-57320084。</li>
+                    </ul>
                 </div>
-            <a id="submitBtn" class="btn btn-primary col-xs-12 my-gap-bottom">提交</a>
+            </div>
+            <button id="submitBtn" class="btn btn-primary col-xs-12 my-gap-bottom">提交</button>
+            </form>
+            
         </div>
     </div>
 </body>

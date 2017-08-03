@@ -123,7 +123,10 @@
                 return;
             }
             if ($("#qygd_investment").val() == null || $("#qygd_investment").val() == undefined || $("#qygd_investment").val() == "") {
-                alert("请填写投资金额")
+                alert("请填写投资金额");
+                return;
+            }else if($("#qygd_investment").val()=="0"&&$("#qygd_jobtitle").val()=="股东"){
+                alert("股东投资金额不能为0");
                 return;
             }
             if ($("#qygd_pic1").val() == null || $("#qygd_pic1").val() == undefined || $("#qygd_pic1").val() == "") {
@@ -446,11 +449,11 @@
                     alert("请填写法人和投资人信息");
                     return;
                 } else {
-                    var qyfrnum = 0;
-                    var investorSum = 0;
+                    var qyfrnum = 0.0000;
+                    var investorSum = 0.0000;
                     for (var i = 0; i < investorAry.length; i++) {
                         var node = investorAry[i];
-                        investorSum += parseFloat(node.qygd_investment);
+                        investorSum = Math.floor((investorSum + parseFloat(node.qygd_investment))*1000000.0000)/1000000.0000;
                         if (node["qygd_jobtitle"] == "法人") {
                             qyfrnum++;
                         }

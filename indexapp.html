@@ -16,21 +16,40 @@
     <script src="https://cdn.bootcss.com/json2/20160511/json2.min.js"></script>
     <script type="text/javascript" src="js/my.js"></script>
     <script type="text/javascript">
+        function pressroleid(roleid) {
+            if (roleid == ("402880e74d75c4dd014d75d3c5f40001") ||
+                roleid == ("402881875b19f141015b19fb1d490019") ||
+                roleid == ("8a8ab0b246dc81120146dc81818b0051") ||
+                roleid == ("8a9ea1305d886cbc015d96803d0104e7") ||
+                roleid == ("8a9ea1305d886cbc015d9681f27404ea") ||
+                roleid == ("8a9ea1305d886cbc015d9682581a04ec")) {
+                $("#o2o_admin").removeClass("hide");
+                $("#o2o_data").removeClass("hide");
+                $("#o2o_text1").addClass("hide");
+                $("#o2o_text2").addClass("hide");
+            }
+        }
         $(document).ready(function() {
+            var myapi = restapis;
             myweixin;
             debugger;
             myweixin.onUser = function() {
                 var user = myweixin.getUserInfo();
                 debugger;
-                if (user.hasOwnProperty("userid")&&user.userid!="undefined") {
+                if (myweixin.hasOwnProperty("openid") && myweixin.openid != null && myweixin.openid != "undefined") {
+                    myapi.request("getRole", null, "open_id=" + myweixin.openid, function(result) {
+                        if (result.reuslt == 0) {
+                            if (result.roleid) {
+                                if (typeof(result.roleid) == "string") pressroleid(result.roleid);
+                                else
+                                    for (var i = 0; i < result.roleid.length; i++) pressroleid(result.roleid[i]);
+                            }
+                        }
+                    })
+                }
+                if (user.hasOwnProperty("userid") && user.userid != "undefined") {
                     console.log("login success");
-                    debugger;
-                    if (user.hasPri("402880e74d75c4dd014d75d3c5f40001") || user.hasPri("402881875b19f141015b19fb1d490019") || user.hasPri("8a8ab0b246dc81120146dc81818b0051")) {
-                        $("#o2o_admin").removeClass("hide");
-                        $("#o2o_data").removeClass("hide");
-                        $("#o2o_text1").addClass("hide");
-                        $("#o2o_text2").addClass("hide");
-                    }
+
                 } else {
                     console.log("no user");
                     window.location = "registbymobile.html";
@@ -40,30 +59,30 @@
         });
 
         function popApps() {
-            
+
         }
 
     </script>
 </head>
 
 <body>
-    
+
     <div class="section my-gap-top">
         <div class="container">
             <div class="my-icon-container col-xs-4 text-center" style="padding-right:30px;padding-top:30px">
-                <a href="/wordpress/I0027" class="text-center">
+                <a href="/wordpress/i0018" class="text-center">
                     <img src="images/ao_icons_glance.png" class="img-responsive my-icon">
                     <span class="my-icon-text">园区介绍</span>
                 </a>
             </div>
             <div class="my-icon-container col-xs-4 text-center" style="padding-left:23px;padding-right:22px;padding-top:30px">
-                <a href="/wordpress/I0027/优惠政策" class="text-center">
+                <a href="/wordpress/i0018/优惠政策" class="text-center">
                     <img src="images/ao_icons_policy.png" class="img-responsive my-icon">
                     <span class="my-icon-text">优惠政策</span>
                 </a>
             </div>
             <div class="my-icon-container col-xs-4 text-center" style="padding-left:30px;padding-top:30px">
-                <a href="/wordpress/I0027/通知公告" class="text-center">
+                <a href="/wordpress/i0018/通知公告" class="text-center">
                     <img src="images/ao_icons_notify.png" class="img-responsive my-icon">
                     <span class="my-icon-text">通知公告</span>
                 </a>
@@ -92,7 +111,7 @@
                     <span class="my-icon-text">金山财政</span>
                 </a>
             </div>
-            
+
             <div class="my-icon-container col-xs-4 text-center" style="padding-left:23px;padding-right:22px;padding-top:30px">
                 <a href="/yq/page/taxation/t_index.html" class="text-center">
                     <img src="images/ao_icons_tex.png" class="img-responsive my-icon">

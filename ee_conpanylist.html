@@ -57,6 +57,7 @@
             isunfinishList = !isunfinishList;
             $('#mycrews').html("");
             if (dropload) me = dropload;
+            if(me)
             if (me.isLockUp || me.isLockDown) {
                 me.isLockUp = false;
                 me.isLockDown = false;

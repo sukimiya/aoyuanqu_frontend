@@ -74,8 +74,8 @@
         }
 
         function pressData(data) {
-            if(!data.hasOwnProperty("confirm_name")){
-                window.location.replace("ee_progress.html?id"+GetRequest()["id"]);
+            if (!data.hasOwnProperty("confirm_name")) {
+                window.location.replace("ee_progress.html?id" + GetRequest()["id"]);
             }
             if (data.hasOwnProperty("confirm_name")) $("#companyname").text(data.confirm_name);
             if (data.hasOwnProperty("actual_address")) $("#actual_address").text(data.actual_address);
@@ -95,8 +95,12 @@
                 $("#appointment_time").attr("min", today.Format("yyyy-MM-ddThh:mm"))
                 $("#appointment_time").attr("max", lastday.Format("yyyy-MM-ddThh:mm"))
             }
-            if (data.hasOwnProperty("appointment_address"))
+            if (data.hasOwnProperty("appointment_address")){
                 $("#appointment_address").val(data.appointment_address);
+                if(data.appointment_address == distAddress.address2.name){
+                    $("#addressInfo").html('<a href="' + distAddress.address2.nav + '">' + distAddress.address2.address + '</a>');
+                }
+            }
             if (data.hasOwnProperty("tzfr_name")) {
                 var tzfr = {
                     qygd_name: data["tzfr_name"],
@@ -236,8 +240,37 @@
                 if ($(thename).val() != "") {
                     return true;
                 }
-
+            if ($(thename)[0].previousElementSibling && $(thename)[0].previousElementSibling.textContent)
+                alert($(thename)[0].previousElementSibling.textContent + "不能为空");
+            else
+                alert("字段不能为空");
+            document.getElementById($(thename)[0].id).focus();
+            var parent = $(thename)[0].parentElement;
+            if (parent.classList) parent.classList.add("has-error");
             return false;
+        }
+
+        function m_checkInputSame(thename, nocall) {
+            if ($(thename).val()) {
+                var inary = $("input");
+                for (var i = 0; i < inary.length; i++) {
+                    if (("#"+inary[i].id)!=thename&&inary[i].value == $(thename).val()) {
+                        if (nocall) {
+                            if (typeof(nocall) == "Function")
+                                nocall();
+                            if (typeof(nocall) == "String")
+                                alert(nocall);
+                        }
+                        if ($(thename)[0].previousElementSibling)
+                            alert($(thename)[0].previousElementSibling.textContent + "不能和别的字段一样");
+                        document.getElementById($(thename)[0].id).focus();
+                        var parent = $(thename)[0].parentElement;
+                        if (parent.classList) parent.classList.add("has-error");
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
 
         function checkFrom() {
@@ -246,6 +279,9 @@
                 m_checkInputNotEmpty("#qyfr_telephone") &&
                 m_checkInputNotEmpty("#qyfr_mobile") &&
                 m_checkInputNotEmpty("#qyfr_email") &&
+                m_checkInputSame("#qyfr_email") &&
+                m_checkInputSame("#qyfr_mobile", "企业法人手机号码不能与别的号码重复") &&
+                m_checkInputSame("#qyfr_telephone", "企业法人电话号码不能与别的号码重复") &&
                 m_checkInputNotEmpty("#qyjs_name") &&
                 m_checkInputNotEmpty("#qyjs_idnumber") &&
                 m_checkInputNotEmpty("#qyjs_pic1") &&
@@ -255,9 +291,12 @@
                         m_checkInputNotEmpty("#qycw_telephone") &&
                         m_checkInputNotEmpty("#qycw_mobile") &&
                         m_checkInputNotEmpty("#qycw_email") &&
+                        m_checkInputSame("#qycw_email") &&
                         m_checkInputNotEmpty("#qycw_pic1") &&
                         m_checkInputNotEmpty("#qycw_pic2") &&
-                        m_checkInputNotEmpty("#qycw_pic3")
+                        m_checkInputNotEmpty("#qycw_pic3") &&
+                        m_checkInputSame("#qycw_mobile", "企业财务手机号码不能与别的号码重复") &&
+                        m_checkInputSame("#qycw_telephone", "企业财务电话号码不能与别的号码重复")
                     ) {
                         return true;
                     } else {
@@ -267,12 +306,102 @@
                     return true;
                 }
             }
-            alert("请填完整填写表单");
             return false;
         }
-
+        
         $(document).ready(function() {
-            $("#thesubmit").on("click", function(events) {
+            createAppointmentAddress("#appointment_address","#addressInfo");
+            var myvalidator = $('#bookform').bootstrapValidator({
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    qyfr_mobile: {
+                        validators: {
+                            message: '请正确填写企业法人手机',
+                            notEmpty: {
+                                message: '企业法人手机不能为空',
+                            },
+                            stringLength: {
+                                min: 11,
+                                max: 11,
+                                message: '企业法人手机为11位数字'
+                            }
+                        }
+                    },
+                    qycw_mobile: {
+                        validators: {
+                            message: '请正确填写企业财务手机',
+                            stringLength: {
+                                min: 11,
+                                max: 11,
+                                message: '企业财务手机为11位数字'
+                            }
+                        }
+                    },
+                    zip_code: {
+                        validators: {
+                            message: '请正确填写企业邮编',
+                            notEmpty: {
+                                message: '企业邮编不能为空',
+                            },
+                            stringLength: {
+                                min: 6,
+                                max: 6,
+                                message: '邮编必须为6位数字'
+                            }
+                        }
+                    },
+                    qycw_email: {
+                        validators: {
+                            message: '请正确填写财务邮箱'
+                        }
+                    },
+                    qyfr_email: {
+                        validators: {
+                            message: '请正确填写法人邮箱'
+                        }
+                    },
+                    onSeccess: function(e) {
+                        var jdata = encodeDatas();
+                        var myapi = restapis;
+                        if (checkFrom())
+                            myapi.request("updateMQ.do", "page", jdata, function(result) {
+                                //                    if (result.code == 0) {
+                                //                        if (result.message == "系统异常") {
+                                //                            alert("提交错误," + result.message);
+                                //                        }
+                                //                    } else {
+                                window.location = "ee_progress.html?id=" + GetRequest()["id"];
+                                //                    }
+                            }, function(e) {
+                                alert("提交错误,请检查参数")
+                            }, "POST");
+                    },
+                    onErrror: function(e) {
+                        alert(e);
+                    }
+                }
+            });
+            $("#thesubmit").on("click", function(e) {
+                var jdata = encodeDatas();
+                var myapi = restapis;
+                if (checkFrom())
+                    myapi.request("updateMQ.do", "page", jdata, function(result) {
+                        //                    if (result.code == 0) {
+                        //                        if (result.message == "系统异常") {
+                        //                            alert("提交错误," + result.message);
+                        //                        }
+                        //                    } else {
+                        window.location = "ee_progress.html?id=" + GetRequest()["id"];
+                        //                    }
+                    }, function(e) {
+                        alert("提交错误,请检查参数")
+                    }, "POST");
+            });
+            myvalidator.on('success.form.bv', function(e) {
                 var jdata = encodeDatas();
                 var myapi = restapis;
                 if (checkFrom())
@@ -305,6 +434,10 @@
             myweixin.initial();
         })
 
+        function onBookFormError() {
+            alert("请正确填写表单");
+        }
+
     </script>
 </head>
 
@@ -336,14 +469,17 @@
                 </div>
                 <div class="form-group">
                     <label>企业注册资本：</label>
-                    <input id="register_money" class="form-control" disabled>
+                    <div class="input-group my-form-group">
+                        <input id="register_money" class="form-control" disabled>
+                        <span class="input-group-addon">万元</span>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>企业注册类型：</label>
                     <label id="register_kind" class="my-form-label text-left clearfix">&nbsp;
                     </label>
                 </div>
-                <form id="bookform">
+                <form id="bookform" data-bv-events-form-error="onBookFormError()">
                     <div class="form-group">
                         <label class="clearfix">面签预约时间</label>
                         <input id="appointment_time" class="my-selector my-date form-control" type="datetime-local">
@@ -351,9 +487,9 @@
                     <div class="form-group">
                         <label class="clearfix">面签预约地点</label>
                         <select id="appointment_address" name="appointment_address" class="mycompany-select">
-                        <option title="小区总部" value="小区总部"><span style="font-size:12;color:#cccccc">园区小区总部，地址是：上海市XX区XX路233号</span></option>
-                        <option title="市区总部" value="市区总部"><span style="font-size:12;color:#cccccc">园区市区总部，地址是：上海市XX区XX路233号</span></option>
                         </select>
+                        <div id="addressInfo" class="well">&nbsp;
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="zip_code">区域邮政编码</label>
@@ -364,7 +500,7 @@
                         <input id="qyfr_name" name="qyfr_name" class="form-control" type="text" disabled>
                     </div>
                     <div class="form-group">
-                        <label for="qycw_telephone">企业法人电话</label>
+                        <label for="qycw_telephone">企业法人固话</label>
                         <input id="qyfr_telephone" name="qycw_telephone" class="form-control" type="tel" required>
                     </div>
                     <div class="form-group">
@@ -389,12 +525,12 @@
                             <input id="qycw_name" name="qycw_name" class="form-control" type="text">
                         </div>
                         <div class="form-group">
-                            <label for="qycw_telephone">财务电话</label>
+                            <label for="qycw_telephone">财务固话</label>
                             <input id="qycw_telephone" name="qycw_telephone" class="form-control" type="tel">
                         </div>
                         <div class="form-group">
                             <label for="qycw_mobile">财务手机</label>
-                            <input id="qycw_mobile" name="qycw_mobile" class="form-control" type="tel">
+                            <input id="qycw_mobile" name="qycw_mobile" class="form-co  ntrol" type="tel">
                         </div>
                         <div class="form-group">
                             <label for="qycw_email">财务邮箱</label>
@@ -475,7 +611,7 @@
                             </ul>
                         </div>
                     </div>
-                    <button id="thesubmit" class="btn btn-primary col-xs-12 my-gap-top" type="button" style="font-size:20px;padding-bottom:7px">提交</button>
+                    <button id="thesubmit" class="btn btn-primary col-xs-12 my-gap-top" type="button" style="font-size:20px;padding-bottom:10px">提交</button>
                 </form>
             </div>
         </div>

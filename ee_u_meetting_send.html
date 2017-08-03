@@ -47,7 +47,7 @@
                 data["qygd_jobtitle"] + '</div><div class="col-xs-4 clearfix text-right my-description" nobr>' +
                 calculate_qygd_investment(data["qygd_investment"]) + '</div></a>';
             $("#investorlists").append(rsstr);
-            if(adddata)
+            if (adddata)
                 investorAry.push(data);
         }
 
@@ -78,9 +78,9 @@
                         $("#qygd_pic1" + "_img").attr("src", "images/picframe.svg");
                         $("#qygd_pic2" + "_img").attr("src", "images/picframe.svg");
                         $("#qygd_pic3" + "_img").attr("src", "images/picframe.svg");
-                        if(ainvestor["qygd_pic1"]) $("#qygd_pic1" + "_img").attr("src", getRemotePic(ainvestor["qygd_pic1"]));
-                        if(ainvestor["qygd_pic2"]) $("#qygd_pic2" + "_img").attr("src", getRemotePic(ainvestor["qygd_pic2"]));
-                        if(ainvestor["qygd_pic3"]) $("#qygd_pic3" + "_img").attr("src", getRemotePic(ainvestor["qygd_pic3"]));
+                        if (ainvestor["qygd_pic1"]) $("#qygd_pic1" + "_img").attr("src", getRemotePic(ainvestor["qygd_pic1"]));
+                        if (ainvestor["qygd_pic2"]) $("#qygd_pic2" + "_img").attr("src", getRemotePic(ainvestor["qygd_pic2"]));
+                        if (ainvestor["qygd_pic3"]) $("#qygd_pic3" + "_img").attr("src", getRemotePic(ainvestor["qygd_pic3"]));
                         curSelectedIndex = i;
                         isAddMode = false;
                         $("#addinvestorpanel").modal("toggle");
@@ -125,13 +125,17 @@
                 var today = new Date(data.appointment_time.time);
                 var lastday = new Date(today);
 
-                lastday.setMonth(lastday.getMonth()+6);
+                lastday.setMonth(lastday.getMonth() + 6);
                 $("#appointment_time").val(today.Format("yyyy-MM-ddThh:mm"));
-                $("#appointment_time").attr("min",today.Format("yyyy-MM-ddThh:mm"))
-                $("#appointment_time").attr("max",lastday.Format("yyyy-MM-ddThh:mm"))
+                $("#appointment_time").attr("min", today.Format("yyyy-MM-ddThh:mm"))
+                $("#appointment_time").attr("max", lastday.Format("yyyy-MM-ddThh:mm"))
             }
-            if (data.hasOwnProperty("appointment_address"))
+            if (data.hasOwnProperty("appointment_address")){
                 $("#appointment_address").val(data.appointment_address);
+                if(data.appointment_address == distAddress.address2.name){
+                    $("#addressInfo").html('<a href="' + distAddress.address2.nav + '">' + distAddress.address2.address + '</a>');
+                }
+            }
             if (data.hasOwnProperty("tzfr_name")) {
                 var tzfr = {
                     qygd_name: data["tzfr_name"],
@@ -152,7 +156,7 @@
                 }
             }
             if (data.hasOwnProperty("appointment_time"))
-                $("#thesubmit").attr("disabled","disabled");
+                $("#thesubmit").attr("disabled", "disabled");
             checkInputFileImg();
         }
 
@@ -165,26 +169,26 @@
                 var myapi = restapis;
                 var theid = GetRequest()["id"];
                 var thetime = $("#appointment_time").val();
-                if($("#appointment_time").val()&&$("#appointment_time").val()!=""){
-                    
-                }else{
+                if ($("#appointment_time").val() && $("#appointment_time").val() != "") {
+
+                } else {
                     alert("没有选择面签时间");
                     return;
                 }
                 thetime = thetime.replace("/", "-");
                 var theaddress = $("#appointment_address").val();
-                var theparam = "id=" + theid 
-                + "&appointment_time=" + thetime 
-                + "&appointment_address=" + theaddress 
-                + "&confirm_name=" + $("#apply_name").val()
-                + "&manage_range=" + $("#manage_range").val()
-                + "&appointment_state=1";
+                var theparam = "id=" + theid +
+                    "&appointment_time=" + thetime +
+                    "&appointment_address=" + theaddress +
+                    "&confirm_name=" + $("#apply_name").val() +
+                    "&manage_range=" + $("#manage_range").val() +
+                    "&appointment_state=1";
                 debugger;
                 myapi.request("startMQ", null, theparam, function(result) {
                     if (result.result == 0) {
                         window.location = "ee_u_progress.html";
                     } else {
-                        if(result.result == 1)
+                        if (result.result == 1)
                             alert("选择的企业名称重复，请核实");
                         else
                             alert("提交错误，请检查提交的参数.")
@@ -197,6 +201,7 @@
         $(document).ready(function() {
             initial();
             getmeetingdata();
+            createAppointmentAddress("#appointment_address","#addressInfo");
         })
 
     </script>
@@ -233,22 +238,22 @@
                     </div>
                 </div>
                 <script type="text/javascript">
-                        function hidemarangGroup() {
-                            $("#manage_range_d").text($("#manage_range").val());
-                            $("#marangGroup").addClass("hide");
-                            $("#openmarngGroupbtn").removeClass("hide");
-                            $("#manage_range_d").removeClass("hide");
-                        }
+                    function hidemarangGroup() {
+                        $("#manage_range_d").text($("#manage_range").val());
+                        $("#marangGroup").addClass("hide");
+                        $("#openmarngGroupbtn").removeClass("hide");
+                        $("#manage_range_d").removeClass("hide");
+                    }
 
-                        function openmarngGroup() {
-                            $("#manage_range").val($("#manage_range_d").text());
-                            $("#marangGroup").removeClass("hide");
-                            $("#openmarngGroupbtn").addClass("hide");
-                            $("#manage_range_d").addClass("hide");
-                        }
+                    function openmarngGroup() {
+                        $("#manage_range").val($("#manage_range_d").text());
+                        $("#marangGroup").removeClass("hide");
+                        $("#openmarngGroupbtn").addClass("hide");
+                        $("#manage_range_d").addClass("hide");
+                    }
 
-                    </script>
-                    <hr>
+                </script>
+                <hr>
                 <div class="form-group">
                     <label>企业注册资本：</label>
                     <label id="register_money" class="my-form-label text-left clearfix">&nbsp;
@@ -269,9 +274,9 @@
                     <div class="form-group">
                         <label class="clearfix">面签预约地点</label>
                         <select id="appointment_address" name="appointment_address" class="mycompany-select">
-                        <option title="小区总部" value="小区总部"><span style="font-size:12;color:#cccccc">园区小区总部，地址是：上海市XX区XX路233号</span></option>
-                        <option title="市区总部" value="市区总部"><span style="font-size:12;color:#cccccc">园区市区总部，地址是：上海市XX区XX路233号</span></option>
                         </select>
+                        <div id="addressInfo" class="well">&nbsp;
+                        </div>
                     </div>
                     <hr>
                     <label class="my-gap-bottom">投资人信息</label>
