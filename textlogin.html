@@ -39,37 +39,23 @@
 <body class="my-body">
     <form>
         <div class="form-group">
-            <input class="form-control" label="total" id="total" type="number">
+            <input class="form-control" label="total" id="total" type="number" step="0.000001">
         </div>
         <div class="form-group">
-            <input class="form-control" label="num1" id="num1" type="number">
+            <input class="form-control" label="num1" id="num1" type="number" step="0.000001">
         </div>
         <div class="form-group">
-            <input class="form-control" label="num2" id="num2" type="number">
+            <input class="form-control" label="num2" id="num2" type="number" step="0.000001">
         </div>
-        <button id="calculate" class="form-control btn btn-primary">计算</button>
+        <a id="calculate" class="btn btn-primary col-xs-12">计算</a>
     </form>
     <script type="text/javascript">
         $(document).ready(function() {
             $("#calculate").on("click",function(e){
-                var sums = Math.floor((parseFloat($("#num1").val()) + parseFloat($("#num2").val()))*100000.0000)/100000.0000;
+                var sums = parseFloat(parseInt((parseFloat($("#num1").val())*1000000.0000 + parseFloat($("#num2").val())*1000000.0000)))/1000000.0000;
                 var t = parseFloat($("#total").val());
                 alert(t+":"+sums+":"+(t==sums));
             });
-            createAppointmentAddress("#appointment_address","#addressInfo",distAddress.address3,distAddress.address4);
-            //checkInputFileImg();
-            $('#weituo_state').on('switchChange.bootstrapSwitch', function(e, data) {
-                var $el = e,
-                    value = data;
-                if (value) {
-                    console.log("weituo_state:" + $('#weituo_state').val());
-                } else {
-                    console.log("weituo_state:" + $('#weituo_state').val());
-                }
-
-                console.log(e, $el, value);
-            });
-
         });
         $(".dragVerfy").slideToUnlock({
             text: '滑动发送验证码',

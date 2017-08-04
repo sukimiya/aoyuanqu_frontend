@@ -60,10 +60,8 @@
             if (!isfinish) {
                 ltype = 1;
                 $("#expressGroup").addClass("hide");
-                $("#submitbtn").removeClass("disabled");
             } else {
                 $("#expressGroup").removeClass("hide");
-                $("#submitbtn").addClass("disabled");
             }
         }
         //
@@ -74,47 +72,6 @@
         $(document).ready(function() {
             var myapi = restapis;
             $('textarea').flexText();
-            var myvalidator = $('#deliverform').bootstrapValidator({
-                feedbackIcons: {
-                    valid: 'glyphicon glyphicon-ok',
-                    invalid: 'glyphicon glyphicon-remove',
-                    validating: 'glyphicon glyphicon-refresh'
-                },
-                fields: {
-                    receive_phone: {
-                        validators: {
-                            message: '请正确填写收件电话',
-                            notEmpty: {
-                                message: '收件电话不能为空',
-                            },
-                            stringLength: {
-                                min: 5,
-                                max: 11,
-                                message: '收件电话为5到11位数字'
-                            }
-                        }
-                    },
-                    receive_name: {
-                        validators: {
-                            message: '请正确填写收人姓名',
-                            notEmpty: {
-                                message: '收人姓名不能为空',
-                            }
-                        }
-                    },
-                    express_address: {
-                        validators: {
-                            message: '请正确填写收件地址',
-                            notEmpty: {
-                                message: '收件地址不能为空',
-                            }
-                        }
-                    }
-                }
-            });
-            myvalidator.on('success.form.bv', function(e) {
-                sendDatas();
-            });
             myapi.request("searchZZFF", null, "id=" + GetRequest()["id"], function(data) {
                 var jdata = data;
                 if (jdata.hasOwnProperty("license_pic")) {
@@ -166,8 +123,22 @@
             }, function(e) {});
             myweixin.initial();
         });
+        function m_checkInputNotEmpty(thename) {
+            if ($(thename).val())
+                if ($(thename).val() != "") {
+                    return true;
+                }
+            if ($(thename)[0].previousElementSibling && $(thename)[0].previousElementSibling.textContent)
+                alert($(thename)[0].previousElementSibling.textContent + "不能为空");
+            else
+                alert("字段不能为空");
+            document.getElementById($(thename)[0].id).focus();
+            var parent = $(thename)[0].parentElement;
+            if (parent.classList) parent.classList.add("has-error");
+            return false;
+        }
         function checkdatas(){
-            if($("#receive_name").val()&&$("#receive_phone").val()&&$("#express_address").val()){
+            if(m_checkInputNotEmpty("#receive_name")&&m_checkInputNotEmpty("#receive_phone")&&m_checkInputNotEmpty("#express_address")){
                 return true;
             }
             return false;
@@ -181,7 +152,7 @@
             postobj["receive_phone"] = $("#receive_phone").val();
             postobj["express_address"] = $("#express_address").val();
             debugger;
-            if(checkdatas())
+            if((!isunfinishList)||checkdatas())
                 myapi.request("updateZZFF.do", "page", JSON.stringify(postobj), function(data) {
                     debugger;
                     console.log("deliver infomation had been record.");

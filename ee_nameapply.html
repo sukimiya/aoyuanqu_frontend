@@ -449,18 +449,18 @@
                     alert("请填写法人和投资人信息");
                     return;
                 } else {
-                    var qyfrnum = 0.0000;
-                    var investorSum = 0.0000;
+                    var qyfrnum = 0.000000;
+                    var investorSum = 0.000000;
                     for (var i = 0; i < investorAry.length; i++) {
                         var node = investorAry[i];
-                        investorSum = Math.floor((investorSum + parseFloat(node.qygd_investment))*1000000.0000)/1000000.0000;
+                        investorSum = (investorSum + parseFloat(parseInt(parseFloat(node.qygd_investment)*1000000.0000)));
                         if (node["qygd_jobtitle"] == "法人") {
                             qyfrnum++;
                         }
                     }
                     var registmoney = parseFloat($("#register_money").val());
-                    if (investorSum != registmoney) {
-                        alert("投资金额和股东投资金额总和不相等");
+                    if (investorSum/1000000.0000 != registmoney) {
+                        alert("投资金额和股东投资金额总和不相等:总额："+investorSum+" ;投资金额:"+registmoney);
                         return;
                     }
                     if (qyfrnum == 0) {
