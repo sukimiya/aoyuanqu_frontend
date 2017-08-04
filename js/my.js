@@ -184,8 +184,9 @@ var restapis = (function () {
     var requestRoot = "http://aoyuanqu.cn:8080/aoyqapi/";
     var appid = "wx7a6967db884b7058";
     var mythis = {};
-    mythis.yxName = "廊下经济园区";
+    mythis.yxName = "松隐经济园区";
     mythis.openid = "";
+    mythis.yxID = "i0018"
     mythis.requestRoot = "http://aoyuanqu.cn:8080/aoyqapi/";
     mythis.redictlocation = window.location.href.split("#")[0];
     /**
